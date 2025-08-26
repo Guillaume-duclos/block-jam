@@ -1,4 +1,4 @@
-package com.blockjam
+package com.anonymous.blockjam
 
 import android.os.Build
 import android.os.Bundle

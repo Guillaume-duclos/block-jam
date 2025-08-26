@@ -1,4 +1,4 @@
-package com.blockjam
+package com.anonymous.blockjam
 
 import android.app.Application
 import android.content.res.Configuration
