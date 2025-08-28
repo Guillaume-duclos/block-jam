@@ -1,7 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { JSX } from "react";
+import React, { JSX, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { StyleSheet, View, Text, Button } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 import { Language } from "../enums/language.enum";
 import {
   getStorageString,
@@ -11,6 +11,8 @@ import {
 import { StorageKey } from "../enums/storageKey.enum";
 import { useTheme } from "../providers/themeContext";
 import Theme from "../enums/theme.enum";
+import Button from "../components/Button";
+import Switch from "../components/Switch";
 
 export default function Settings(): JSX.Element {
   const navigation = useNavigation();
@@ -22,6 +24,8 @@ export default function Settings(): JSX.Element {
   console.log({ theme });
 
   const savedLanguage = getStorageString(StorageKey.LANGUAGE) || Language.EN;
+
+  const [selected, setSelected] = useState(false);
 
   const goBack = (): void => {
     navigation.goBack();
@@ -45,36 +49,40 @@ export default function Settings(): JSX.Element {
   return (
     <View style={{ ...styles.container, backgroundColor: theme.background }}>
       <Text>Settings screen</Text>
-      <Button onPress={goBack} title="Go back" />
+      <Button onPress={goBack} label="Go back" />
 
       <View style={{ ...styles.section }}>
         <Button
           onPress={() => changeLanguage(Language.EN)}
-          title={Language.EN}
+          label={Language.EN}
         />
         <Button
           onPress={() => changeLanguage(Language.FR)}
-          title={Language.FR}
+          label={Language.FR}
         />
       </View>
 
       <View style={{ ...styles.section }}>
         <Button
           onPress={() => changeColorScheme(Theme.LIGHT)}
-          title={t("light")}
+          label={t("light")}
         />
         <Button
           onPress={() => changeColorScheme(Theme.DARK)}
-          title={t("dark")}
+          label={t("dark")}
         />
         <Button
           onPress={() => changeColorScheme(Theme.SYSTEM)}
-          title={t("system")}
+          label={t("system")}
         />
       </View>
 
       <View style={{ ...styles.section }}>
-        <Button onPress={resetStorage} title="Reset storage values" />
+        <Switch selected={selected} onChange={() => setSelected(!selected)} />
+      </View>
+
+      <View style={{ ...styles.section }}>
+        <Button onPress={resetStorage} label="Reset storage values" />
       </View>
     </View>
   );
@@ -87,6 +95,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   section: {
+    gap: 10,
     marginTop: 30,
   },
 });
