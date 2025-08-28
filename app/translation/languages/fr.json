@@ -1,3 +1,6 @@
 {
-  "hello": "Bonjour"
+  "hello": "Bonjour",
+  "light": "Clair",
+  "dark": "Sombre",
+  "system": "Système"
 }

@@ -3,14 +3,13 @@
     "name": "block-jam",
     "slug": "block-jam",
     "version": "1.0.0",
+    "userInterfaceStyle": "automatic",
     "android": {
       "package": "com.anonymous.blockjam"
     },
     "ios": {
       "bundleIdentifier": "com.anonymous.blockjam"
     },
-    "plugins": [
-      "expo-localization"
-    ]
+    "plugins": ["expo-localization"]
   }
 }

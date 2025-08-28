@@ -10,7 +10,7 @@ import PlayGround from "../screens/PlayGround";
 import Settings from "../screens/Settings";
 import RootStackParamList from "../interfaces/rootStackParamList";
 import { getStorageBoolean } from "../utils/storage";
-import { StorageKey } from "../enums/storageKey";
+import { StorageKey } from "../enums/storageKey.enum";
 
 const Navigation = () => {
   const Stack = createNativeStackNavigator<RootStackParamList>();

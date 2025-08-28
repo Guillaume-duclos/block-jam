@@ -1,5 +1,5 @@
 import { MMKV } from "react-native-mmkv";
-import { StorageKey } from "../enums/storageKey";
+import { StorageKey } from "../enums/storageKey.enum";
 
 const storage = new MMKV();
 

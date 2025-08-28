@@ -1,3 +1,6 @@
 {
-  "hello": "Hello"
+  "hello": "Hello",
+  "light": "Light",
+  "dark": "Dark",
+  "system": "System"
 }
