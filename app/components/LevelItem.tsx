@@ -1,40 +1,43 @@
-import React, { JSX, memo } from "react";
-import { StyleSheet, View, Text, Pressable } from "react-native";
-import Icon from "./Icon";
-import { windowWidth } from "../constants/dimension";
-import LevelViewer from "./LevelViewer";
 import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import React, { JSX, memo } from "react";
+import { Pressable, StyleSheet, Text, View } from "react-native";
+import { windowWidth } from "../constants/dimension";
 import { Screen } from "../enums/screen.enum";
+import Level from "../types/level";
+import RootStackParamList from "../types/rootStackParamList.type";
+import Icon from "./Icon";
 
 type Props = {
-  item: any;
+  item: Level[];
 };
 
-const LevelItem = memo(({ item }: Props): JSX.Element => {
-  const navigation = useNavigation();
+type levelItemNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
-  const navigateToPlayground = (): void => {
-    navigation.navigate(Screen.PLAYGROUND);
+const LevelItem = memo(({ item }: Props): JSX.Element => {
+  const navigation = useNavigation<levelItemNavigationProp>();
+
+  const navigateToPlayground = (level: Level): void => {
+    navigation.navigate(Screen.PLAYGROUND, { level });
   };
 
   return (
-    <Pressable
-      onPress={navigateToPlayground}
-      style={{ ...styles.levelItemsContainer }}
-    >
-      {item.map((item: any, index: number) => {
+    <View style={{ ...styles.levelItemsContainer }}>
+      {item.map((level: Level, index: number) => {
         return (
-          <View key={index} style={{ gap: 2, alignItems: "center" }}>
-            {/* <LevelViewer level={item.sheme} /> */}
-
+          <Pressable
+            key={index}
+            onPress={() => navigateToPlayground(level)}
+            style={{ gap: 2, alignItems: "center" }}
+          >
             <Icon />
             <Text style={{ color: "white", fontWeight: "700" }}>
               {index + 1}
             </Text>
-          </View>
+          </Pressable>
         );
       })}
-    </Pressable>
+    </View>
   );
 });
 

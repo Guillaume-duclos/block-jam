@@ -1,18 +1,18 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { JSX, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
+import Button from "../components/Button";
+import Switch from "../components/Switch";
 import { Language } from "../enums/language.enum";
+import { StorageKey } from "../enums/storageKey.enum";
+import Theme from "../enums/theme.enum";
+import { useTheme } from "../providers/themeContext";
 import {
   getStorageString,
   removeAllStorage,
   setStorageItem,
 } from "../utils/storage";
-import { StorageKey } from "../enums/storageKey.enum";
-import { useTheme } from "../providers/themeContext";
-import Theme from "../enums/theme.enum";
-import Button from "../components/Button";
-import Switch from "../components/Switch";
 
 export default function Settings(): JSX.Element {
   const navigation = useNavigation();
@@ -20,8 +20,6 @@ export default function Settings(): JSX.Element {
   const { t, i18n } = useTranslation();
 
   const { theme, setTheme } = useTheme();
-
-  console.log({ theme });
 
   const savedLanguage = getStorageString(StorageKey.LANGUAGE) || Language.EN;
 

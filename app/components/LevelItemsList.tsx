@@ -1,15 +1,15 @@
+import { FlashList } from "@shopify/flash-list";
 import React, { JSX, memo, useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
-import { FlashList } from "@shopify/flash-list";
 import { windowHeight } from "../constants/dimension";
-import ScrollInset from "./ScrollInset";
 import ScrollInsetPosition from "../enums/scrollInsetPosition.enum";
 import LevelItem from "./LevelItem";
 import PaginationIndicator from "./PaginationIndicator";
+import ScrollInset from "./ScrollInset";
 
-interface Props {
+type Props = {
   level: any;
-}
+};
 
 const LevelItemsList = memo(({ level }: Props): JSX.Element => {
   const [activeViewIndex, setActiveViewIndex] = useState(0);

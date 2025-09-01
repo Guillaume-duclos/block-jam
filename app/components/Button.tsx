@@ -1,5 +1,5 @@
 import React, { JSX } from "react";
-import { Pressable, StyleSheet, ViewStyle, Text } from "react-native";
+import { Pressable, StyleSheet, Text, ViewStyle } from "react-native";
 
 type Props = {
   label: string;
@@ -18,7 +18,11 @@ export default function Button({
     <Pressable
       onPress={onPress}
       disabled={!onPress || disabled}
-      style={{ ...styles.container, ...style }}
+      style={({ pressed }) => [
+        pressed && { opacity: 0.5 },
+        styles.container,
+        style,
+      ]}
     >
       <Text>{label}</Text>
     </Pressable>

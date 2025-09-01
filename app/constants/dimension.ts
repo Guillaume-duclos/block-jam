@@ -1,8 +1,8 @@
-import { Dimensions } from 'react-native';
+import { Dimensions } from "react-native";
 
 // Screen sizes
-export const windowWidth = Dimensions.get('window').width;
-export const windowHeight = Dimensions.get('window').height;
+export const windowWidth = Dimensions.get("window").width;
+export const windowHeight = Dimensions.get("window").height;
 
 // Playground margins
 export const horizontalMargin: number = (windowWidth - windowWidth * 0.9) / 2;
@@ -13,9 +13,9 @@ export const gridWidth: number = windowWidth * 0.75;
 export const gridHeight: number = windowWidth * 0.75;
 
 // Case sizes
-export const caseWidth: number = gridWidth / 6;
-export const caseHeight: number = gridHeight / 6;
+export const playgroundSize: number = Dimensions.get("window").width * 0.9;
+export const caseSize: number = playgroundSize / 6;
 
 // Vehicle sizes
 export const vehicleScaleY: number = 1.16;
-export const vehicleSize: number = caseHeight * 1.6;
+export const vehicleSize: number = caseSize * 1.6;

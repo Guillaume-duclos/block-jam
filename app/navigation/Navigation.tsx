@@ -1,16 +1,16 @@
-import { View, StyleSheet } from "react-native";
 import {
   createNativeStackNavigator,
   NativeStackNavigationOptions,
 } from "@react-navigation/native-stack";
+import { StyleSheet, View } from "react-native";
 import { Screen } from "../enums/screen.enum";
-import Tutorial from "../screens/Tutorial";
+import { StorageKey } from "../enums/storageKey.enum";
 import Menu from "../screens/Menu";
 import PlayGround from "../screens/PlayGround";
 import Settings from "../screens/Settings";
-import RootStackParamList from "../interfaces/rootStackParamList";
+import Tutorial from "../screens/Tutorial";
+import RootStackParamList from "../types/rootStackParamList.type";
 import { getStorageBoolean } from "../utils/storage";
-import { StorageKey } from "../enums/storageKey.enum";
 
 const Navigation = () => {
   const Stack = createNativeStackNavigator<RootStackParamList>();

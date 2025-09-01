@@ -1,35 +1,29 @@
-import { RouteProp, useRoute } from "@react-navigation/native";
-import React, { JSX, RefObject, useEffect, useRef, useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import FixedBlock from "../components/FixedBlock";
-import Grid from "../components/Grid";
-import MovableBlock from "../components/MovableBlock";
-import { playgroundSize } from "../constants/dimension";
+import { useNavigation } from "@react-navigation/native";
+import { JSX, MutableRefObject, useEffect, useRef, useState } from "react";
+import { Button, StyleSheet, Text, View } from "react-native";
+import Block from "../components/FixedBlock";
+import { winPosition } from "../config/config";
+import levels from "../data/levels.json";
 import { BlockType } from "../enums/blockType.enum";
 import { Orientation } from "../enums/orientation.enum";
 import { Screen } from "../enums/screen.enum";
 import useGrid from "../hooks/useGrid.hook";
 import ElementData from "../types/elementData.type";
-import RootStackParamList from "../types/rootStackParamList.type";
+import HistoryPosition from "../types/historyPosition.type";
 import { firstLineCaseIndex, lastLineCaseIndex } from "../utils/line";
-
-type playGroundRouteProp = RouteProp<RootStackParamList, Screen.PLAYGROUND>;
 
 export default function PlayGround(): JSX.Element {
   const [vehiclePositions, setVehiclePositions] = useState<ElementData[]>([]);
+  const [levelPassed, setLevelPassed] = useState<boolean>(false);
   const [count, setCount] = useState<number>(0);
-  const history: RefObject<[]> = useRef([]);
+  const history: MutableRefObject<HistoryPosition[]> = useRef([]);
 
-  const route = useRoute<playGroundRouteProp>();
+  const navigation = useNavigation();
 
-  // Initialisation des tranches de déplacements possibles
+  // Initialisation des tranches de déplacement possibles
   const grid: number[] = useGrid();
 
-  useEffect((): void => {
-    // console.log(JSON.stringify(vehiclePositions));
-  }, [vehiclePositions]);
-
+  // Calcule la position des véhicules
   useEffect((): void => {
     computeVehiclePositions();
   }, []);
@@ -37,7 +31,7 @@ export default function PlayGround(): JSX.Element {
   // Initialise les valeurs de vehiclePositions
   const computeVehiclePositions = (): void => {
     // On récupère le niveau
-    const level: string = route.params?.level.layout;
+    const level: string = levels[0].grid;
 
     // Initialisation du tableau de positions de tous les véhicules
     let positions: ElementData[] = [];
@@ -150,6 +144,13 @@ export default function PlayGround(): JSX.Element {
     // On met à jour la tableau des positions et le compteur de mouvement
     setVehiclePositions(newPositions);
     setCount(count + 1);
+
+    console.log(position[1]);
+
+    // On vérifie si le niveau est résolu
+    if (label === BlockType.MAIN_CAR && position[1] === winPosition) {
+      setLevelPassed(true);
+    }
   };
 
   // Récupère toutes les positions occupées par les véhicules et les blocs fixes
@@ -225,6 +226,7 @@ export default function PlayGround(): JSX.Element {
     }
 
     setCount(0);
+    setLevelPassed(false);
   };
 
   // Annule le dernier mouvement
@@ -244,78 +246,131 @@ export default function PlayGround(): JSX.Element {
     return vehiclePositions.map((data: any, vehicleIndex: number) => {
       if (data.label !== BlockType.EMPTY && data.label !== BlockType.WALL) {
         return (
-          <MovableBlock
-            key={`${vehicleIndex}`}
-            grid={grid}
-            label={data.label}
-            range={data.range}
-            position={data.position}
-            orientation={data.orientation}
-            updatePosition={updateVehiclePosition}
-          />
+          // <Vehicle
+          //   key={`${vehicleIndex}`}
+          //   grid={grid}
+          //   label={data.label}
+          //   range={data.range}
+          //   position={data.position}
+          //   orientation={data.orientation}
+          //   updatePosition={updateVehiclePosition}
+          // />
+          <View />
         );
       } else if (data.label === BlockType.WALL) {
         return data.position.map(
           (position: number, blocIndex: number): JSX.Element => {
-            return <FixedBlock position={position} key={`${blocIndex}`} />;
+            return <Block position={position} key={`${blocIndex}`} />;
           }
         );
       }
     });
   };
 
+  // Rend les véhicules et les blocs
+  const renderVehicles2 = (): JSX.Element[] => {
+    return vehiclePositions.map((data: any, vehicleIndex: number) => {
+      if (data.label !== BlockType.EMPTY && data.label !== BlockType.WALL) {
+        return (
+          // <Vehicle2
+          //   key={`${vehicleIndex}`}
+          //   grid={grid}
+          //   label={data.label}
+          //   range={data.range}
+          //   position={data.position}
+          //   orientation={data.orientation}
+          //   updatePosition={updateVehiclePosition}
+          // />
+
+          <View />
+        );
+      } else if (data.label === BlockType.WALL) {
+        return data.position.map(
+          (position: number, blocIndex: number): JSX.Element => {
+            return null;
+          }
+        );
+      }
+    });
+  };
+
+  // const gridWidth = (): number => {
+  //   console.log('-----------------');
+  //   console.log(windowWidth * Math.tan(20 * (Math.PI / 180)));
+  //   console.log(windowWidth - windowWidth * Math.tan(20 * (Math.PI / 180)));
+  //
+  //   const size = windowWidth - windowWidth * Math.tan(20 * (Math.PI / 180));
+  //
+  //   console.log('--');
+  //   console.log(size * Math.tan(20 * (Math.PI / 180)));
+  //   console.log(windowWidth - (size + size * Math.tan(20 * (Math.PI / 180))));
+  //
+  //   const restSize =
+  //     windowWidth - (size + size * Math.tan(20 * (Math.PI / 180)));
+  //   const additionalSize = restSize / 2 / Math.tan(20);
+  //
+  //   // Calcule de la hauteur pour recréer les carrés
+  //   const angleInRadian = Math.cos(20 * (Math.PI / 180));
+  //   console.log(size * angleInRadian);
+  //
+  //   return windowWidth - windowWidth * Math.tan(20 * (Math.PI / 180));
+  // };
+
+  // const gridHeight = (size: number): number => {
+  //   return size * Math.cos(20 * (Math.PI / 180));
+  // };
+
+  const goBack = (): void => {
+    navigation.goBack();
+  };
+
+  const openSettings = (): void => {
+    navigation.navigate(Screen.SETTINGS);
+  };
+
   return (
     <View style={styles.container}>
-      <View style={styles.countContainer}>
-        <Text style={styles.count}>{count}</Text>
+      {/* <View style={{ borderWidth: 1 }}>
+        <View
+          style={[
+            styles.gridContainer,
+            { width: gridWidth, height: gridHeight },
+          ]}
+        >
+          <Grid />
+
+          <GestureHandlerRootView>
+            {grid.length > 0 && vehiclePositions && renderVehicles()}
+          </GestureHandlerRootView>
+        </View>
       </View>
 
-      <View style={styles.gridContainer}>
-        <Grid />
+      <View style={{ borderWidth: 1, marginTop: 100 }}>
+        <View
+          style={[
+            styles.gridContainer2,
+            { width: gridWidth, height: gridHeight },
+          ]}
+        >
+          <Grid />
 
-        <GestureHandlerRootView style={styles.gridContainer}>
-          {grid.length > 0 && vehiclePositions && renderVehicles()}
-        </GestureHandlerRootView>
-      </View>
+          <GestureHandlerRootView>
+            {grid.length > 0 && vehiclePositions && renderVehicles2()}
+          </GestureHandlerRootView>
+        </View>
+      </View> */}
 
-      <View style={styles.buttonsContainer}>
-        <TouchableOpacity style={styles.button} onPress={reset}>
-          <Text>Reset</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={undo}>
-          <Text>Undo</Text>
-        </TouchableOpacity>
-      </View>
+      <Text>Playground screen</Text>
+      <Button onPress={goBack} title="Go back" />
+      <Button onPress={openSettings} title="Open settings" />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    minHeight: "100%",
     alignItems: "center",
     justifyContent: "center",
-  },
-  countContainer: {
-    flex: 1,
-    justifyContent: "center",
-  },
-  count: {
-    fontSize: 50,
-  },
-  gridContainer: {
-    width: playgroundSize,
-    height: playgroundSize,
-  },
-  buttonsContainer: {
-    gap: 20,
-    height: 120,
-    alignItems: "center",
-    flexDirection: "row",
-    justifyContent: "center",
-  },
-  button: {
-    padding: 10,
-    backgroundColor: "#CDCDCD",
   },
 });

@@ -1,13 +1,13 @@
 import { FlashList } from "@shopify/flash-list";
-import React, { memo, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
-import data from "../data/bigLevels";
-import { windowHeight, windowWidth } from "../constants/dimension";
-import ScrollInset from "../components/ScrollInset";
-import ScrollInsetPosition from "../enums/scrollInsetPosition.enum";
 import LevelItemsList from "../components/LevelItemsList";
 import PaginationIndicator from "../components/PaginationIndicator";
+import ScrollInset from "../components/ScrollInset";
+import { windowHeight, windowWidth } from "../constants/dimension";
+import data from "../data/levels.json";
 import { Orientation } from "../enums/orientation.enum";
+import ScrollInsetPosition from "../enums/scrollInsetPosition.enum";
 
 export default function Menu() {
   const [activeViewIndex, setActiveViewIndex] = useState(0);

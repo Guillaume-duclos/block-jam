@@ -1,12 +1,16 @@
-import React, { JSX } from "react";
-import { StyleSheet, View, Text, Button } from "react-native";
-import { setStorageItem } from "../utils/storage";
-import { StorageKey } from "../enums/storageKey.enum";
 import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import React, { JSX } from "react";
+import { Button, StyleSheet, Text, View } from "react-native";
 import { Screen } from "../enums/screen.enum";
+import { StorageKey } from "../enums/storageKey.enum";
+import RootStackParamList from "../types/rootStackParamList.type";
+import { setStorageItem } from "../utils/storage";
+
+type tutorialNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 export default function Tutorial(): JSX.Element {
-  const navigation = useNavigation();
+  const navigation = useNavigation<tutorialNavigationProp>();
 
   const markScreenAsSeen = (): void => {
     setStorageItem(StorageKey.TUTORIAL_SCREEN_VIEWED, true);
