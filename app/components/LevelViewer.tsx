@@ -1,37 +1,35 @@
-import { useNavigation } from "@react-navigation/native";
-import { JSX, MutableRefObject, useEffect, useRef, useState } from "react";
-import { Button, StyleSheet, Text, View } from "react-native";
-import Block from "../components/FixedBlock";
-import { winPosition } from "../config/config";
-import levels from "../data/levels.json";
+import React, { JSX, RefObject, useEffect, useRef, useState } from "react";
+import { StyleSheet, View, ViewStyle } from "react-native";
 import { BlockType } from "../enums/blockType.enum";
 import { Orientation } from "../enums/orientation.enum";
-import { Screen } from "../enums/screen.enum";
 import useGrid from "../hooks/useGrid.hook";
 import ElementData from "../types/elementData.type";
-import HistoryPosition from "../types/historyPosition.type";
 import { firstLineCaseIndex, lastLineCaseIndex } from "../utils/line";
+import FixedBlock from "./FixedBlock";
+import Grid from "./Grid";
+import MovableBlock from "./MovableBlock";
 
-export default function PlayGround(): JSX.Element {
+type Props = {
+  layout: string;
+  style?: ViewStyle;
+};
+
+export default function LevelViewer({ layout, style }: Props): JSX.Element {
   const [vehiclePositions, setVehiclePositions] = useState<ElementData[]>([]);
-  const [levelPassed, setLevelPassed] = useState<boolean>(false);
   const [count, setCount] = useState<number>(0);
-  const history: MutableRefObject<HistoryPosition[]> = useRef([]);
+  const history: RefObject<[]> = useRef([]);
 
-  const navigation = useNavigation();
-
-  // Initialisation des tranches de déplacement possibles
+  // Initialisation des tranches de déplacements possibles
   const grid: number[] = useGrid();
 
-  // Calcule la position des véhicules
   useEffect((): void => {
-    computeVehiclePositions();
+    computeBlockPositions();
   }, []);
 
   // Initialise les valeurs de vehiclePositions
-  const computeVehiclePositions = (): void => {
+  const computeBlockPositions = (): void => {
     // On récupère le niveau
-    const level: string = levels[0].grid;
+    const level: string = layout;
 
     // Initialisation du tableau de positions de tous les véhicules
     let positions: ElementData[] = [];
@@ -86,7 +84,7 @@ export default function PlayGround(): JSX.Element {
       ) {
         return {
           ...position,
-          range: computeVehicleRange(position, occupiedPositions),
+          range: computeBlockRange(position, occupiedPositions),
         };
       }
 
@@ -97,7 +95,7 @@ export default function PlayGround(): JSX.Element {
   };
 
   // Mise à jour de la nouvelle position du dernier véhicule déplacé
-  const updateVehiclePosition = (
+  const updateBlockPosition = (
     position: number[],
     label: string,
     addToHistory?: boolean
@@ -134,7 +132,7 @@ export default function PlayGround(): JSX.Element {
       ) {
         return {
           ...position,
-          range: computeVehicleRange(position, occupiedPositions),
+          range: computeBlockRange(position, occupiedPositions),
         };
       }
 
@@ -144,13 +142,6 @@ export default function PlayGround(): JSX.Element {
     // On met à jour la tableau des positions et le compteur de mouvement
     setVehiclePositions(newPositions);
     setCount(count + 1);
-
-    console.log(position[1]);
-
-    // On vérifie si le niveau est résolu
-    if (label === BlockType.MAIN_CAR && position[1] === winPosition) {
-      setLevelPassed(true);
-    }
   };
 
   // Récupère toutes les positions occupées par les véhicules et les blocs fixes
@@ -169,7 +160,7 @@ export default function PlayGround(): JSX.Element {
   };
 
   // Calcule de la plage de valeur de déplacement possible
-  const computeVehicleRange = (
+  const computeBlockRange = (
     element: ElementData,
     occupiedPositions: number[]
   ): number[] => {
@@ -219,158 +210,73 @@ export default function PlayGround(): JSX.Element {
     return [min, max];
   };
 
-  // Réinitialise le niveau
-  const reset = (): void => {
-    if (history.current.length) {
-      computeVehiclePositions();
-    }
-
-    setCount(0);
-    setLevelPassed(false);
-  };
-
-  // Annule le dernier mouvement
-  const undo = (): void => {
-    if (history.current.length) {
-      const lastHistory = history.current.at(-1);
-
-      if (lastHistory) {
-        history.current.pop();
-        updateVehiclePosition(lastHistory.previousPosition, lastHistory.label);
-      }
-    }
-  };
-
   // Rend les véhicules et les blocs
-  const renderVehicles = (): JSX.Element[] => {
+  const renderBlocks = (): JSX.Element[] => {
     return vehiclePositions.map((data: any, vehicleIndex: number) => {
       if (data.label !== BlockType.EMPTY && data.label !== BlockType.WALL) {
         return (
-          // <Vehicle
-          //   key={`${vehicleIndex}`}
-          //   grid={grid}
-          //   label={data.label}
-          //   range={data.range}
-          //   position={data.position}
-          //   orientation={data.orientation}
-          //   updatePosition={updateVehiclePosition}
-          // />
-          <View />
+          <MovableBlock
+            key={`${vehicleIndex}`}
+            grid={grid}
+            label={data.label}
+            range={data.range}
+            position={data.position}
+            orientation={data.orientation}
+            updatePosition={updateBlockPosition}
+          />
         );
       } else if (data.label === BlockType.WALL) {
         return data.position.map(
           (position: number, blocIndex: number): JSX.Element => {
-            return <Block position={position} key={`${blocIndex}`} />;
+            return <FixedBlock position={position} key={`${blocIndex}`} />;
           }
         );
       }
     });
-  };
-
-  // Rend les véhicules et les blocs
-  const renderVehicles2 = (): JSX.Element[] => {
-    return vehiclePositions.map((data: any, vehicleIndex: number) => {
-      if (data.label !== BlockType.EMPTY && data.label !== BlockType.WALL) {
-        return (
-          // <Vehicle2
-          //   key={`${vehicleIndex}`}
-          //   grid={grid}
-          //   label={data.label}
-          //   range={data.range}
-          //   position={data.position}
-          //   orientation={data.orientation}
-          //   updatePosition={updateVehiclePosition}
-          // />
-
-          <View />
-        );
-      } else if (data.label === BlockType.WALL) {
-        return data.position.map(
-          (position: number, blocIndex: number): JSX.Element => {
-            return null;
-          }
-        );
-      }
-    });
-  };
-
-  // const gridWidth = (): number => {
-  //   console.log('-----------------');
-  //   console.log(windowWidth * Math.tan(20 * (Math.PI / 180)));
-  //   console.log(windowWidth - windowWidth * Math.tan(20 * (Math.PI / 180)));
-  //
-  //   const size = windowWidth - windowWidth * Math.tan(20 * (Math.PI / 180));
-  //
-  //   console.log('--');
-  //   console.log(size * Math.tan(20 * (Math.PI / 180)));
-  //   console.log(windowWidth - (size + size * Math.tan(20 * (Math.PI / 180))));
-  //
-  //   const restSize =
-  //     windowWidth - (size + size * Math.tan(20 * (Math.PI / 180)));
-  //   const additionalSize = restSize / 2 / Math.tan(20);
-  //
-  //   // Calcule de la hauteur pour recréer les carrés
-  //   const angleInRadian = Math.cos(20 * (Math.PI / 180));
-  //   console.log(size * angleInRadian);
-  //
-  //   return windowWidth - windowWidth * Math.tan(20 * (Math.PI / 180));
-  // };
-
-  // const gridHeight = (size: number): number => {
-  //   return size * Math.cos(20 * (Math.PI / 180));
-  // };
-
-  const goBack = (): void => {
-    navigation.goBack();
-  };
-
-  const openSettings = (): void => {
-    navigation.navigate(Screen.SETTINGS);
   };
 
   return (
-    <View style={styles.container}>
-      {/* <View style={{ borderWidth: 1 }}>
-        <View
-          style={[
-            styles.gridContainer,
-            { width: gridWidth, height: gridHeight },
-          ]}
-        >
-          <Grid />
+    <View style={styles.playgroundContainer}>
+      <View style={styles.gridBottomBorder} />
 
-          <GestureHandlerRootView>
-            {grid.length > 0 && vehiclePositions && renderVehicles()}
-          </GestureHandlerRootView>
+      <View style={styles.gridContainer}>
+        <Grid />
+
+        <View style={{}}>
+          {grid.length > 0 && vehiclePositions && renderBlocks()}
         </View>
       </View>
-
-      <View style={{ borderWidth: 1, marginTop: 100 }}>
-        <View
-          style={[
-            styles.gridContainer2,
-            { width: gridWidth, height: gridHeight },
-          ]}
-        >
-          <Grid />
-
-          <GestureHandlerRootView>
-            {grid.length > 0 && vehiclePositions && renderVehicles2()}
-          </GestureHandlerRootView>
-        </View>
-      </View> */}
-
-      <Text>Playground screen</Text>
-      <Button onPress={goBack} title="Go back" />
-      <Button onPress={openSettings} title="Open settings" />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    minHeight: "100%",
-    alignItems: "center",
-    justifyContent: "center",
+  playgroundContainer: {
+    width: 72,
+    height: 72,
+    boxShadow: "0 20px 16px 0 #00000050",
+    borderRadius: 20,
+    marginBottom: 50,
+  },
+  gridContainer: {
+    width: 72,
+    height: 72 + 10,
+    padding: 10,
+    paddingTop: 18,
+    borderWidth: 10,
+    borderRadius: 20,
+    borderColor: "#F5F7FF",
+    backgroundColor: "#B1BDD1",
+    boxShadow: "0 10px 2px 0 #949fb1ff inset",
+  },
+  gridBottomBorder: {
+    position: "absolute",
+    bottom: -20,
+    left: 0,
+    right: 0,
+    height: 30,
+    backgroundColor: "#CCD0DA",
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
   },
 });

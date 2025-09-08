@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/native";
 import {
   createNativeStackNavigator,
   NativeStackNavigationOptions,
@@ -7,13 +8,18 @@ import { Screen } from "../enums/screen.enum";
 import { StorageKey } from "../enums/storageKey.enum";
 import Menu from "../screens/Menu";
 import PlayGround from "../screens/PlayGround";
+import PrivacyPolicy from "../screens/PrivacyPolicy";
 import Settings from "../screens/Settings";
+import TermsOfUse from "../screens/TermsOfUse";
 import Tutorial from "../screens/Tutorial";
+import NavigationProp from "../types/navigation.type";
 import RootStackParamList from "../types/rootStackParamList.type";
 import { getStorageBoolean } from "../utils/storage";
 
 const Navigation = () => {
   const Stack = createNativeStackNavigator<RootStackParamList>();
+
+  const navigation = useNavigation<NavigationProp>();
 
   const screenOptions: NativeStackNavigationOptions = {
     headerShown: false,
@@ -39,12 +45,27 @@ const Navigation = () => {
         <Stack.Screen
           name={Screen.PLAYGROUND}
           component={PlayGround}
-          options={{ gestureEnabled: false }}
+          options={{
+            gestureEnabled: false,
+            // header: (props) => <Header />,
+          }}
         />
 
         <Stack.Screen
           name={Screen.SETTINGS}
           component={Settings}
+          options={{ presentation: "pageSheet" }}
+        />
+
+        <Stack.Screen
+          name={Screen.PRIVACY_POLICY}
+          component={PrivacyPolicy}
+          options={{ presentation: "pageSheet" }}
+        />
+
+        <Stack.Screen
+          name={Screen.TERMS_OF_USE}
+          component={TermsOfUse}
           options={{ presentation: "pageSheet" }}
         />
       </Stack.Navigator>

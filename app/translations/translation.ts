@@ -1,9 +1,9 @@
 import * as Localization from "expo-localization";
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
-import { getStorageString, setStorageItem } from "../utils/storage";
-import { StorageKey } from "../enums/storageKey.enum";
 import { Language } from "../enums/language.enum";
+import { StorageKey } from "../enums/storageKey.enum";
+import { getStorageString, setStorageItem } from "../utils/storage";
 import en from "./languages/en.json";
 import fr from "./languages/fr.json";
 

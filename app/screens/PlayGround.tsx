@@ -1,16 +1,20 @@
-import { RouteProp, useRoute } from "@react-navigation/native";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import React, { JSX, RefObject, useEffect, useRef, useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import Button from "../components/Button";
 import FixedBlock from "../components/FixedBlock";
 import Grid from "../components/Grid";
 import MovableBlock from "../components/MovableBlock";
 import { playgroundSize } from "../constants/dimension";
+import data from "../data/levels.json";
 import { BlockType } from "../enums/blockType.enum";
 import { Orientation } from "../enums/orientation.enum";
 import { Screen } from "../enums/screen.enum";
 import useGrid from "../hooks/useGrid.hook";
 import ElementData from "../types/elementData.type";
+import NavigationProp from "../types/navigation.type";
 import RootStackParamList from "../types/rootStackParamList.type";
 import { firstLineCaseIndex, lastLineCaseIndex } from "../utils/line";
 
@@ -21,21 +25,28 @@ export default function PlayGround(): JSX.Element {
   const [count, setCount] = useState<number>(0);
   const history: RefObject<[]> = useRef([]);
 
+  const insets = useSafeAreaInsets();
+
+  const navigation = useNavigation<NavigationProp>();
+
   const route = useRoute<playGroundRouteProp>();
 
   // Initialisation des tranches de déplacements possibles
   const grid: number[] = useGrid();
+
+  const difficulty: number = route.params.difficultyIndex;
+  const level: number = route.params.level.index;
 
   useEffect((): void => {
     // console.log(JSON.stringify(vehiclePositions));
   }, [vehiclePositions]);
 
   useEffect((): void => {
-    computeVehiclePositions();
+    computeBlockPositions();
   }, []);
 
   // Initialise les valeurs de vehiclePositions
-  const computeVehiclePositions = (): void => {
+  const computeBlockPositions = (): void => {
     // On récupère le niveau
     const level: string = route.params?.level.layout;
 
@@ -92,7 +103,7 @@ export default function PlayGround(): JSX.Element {
       ) {
         return {
           ...position,
-          range: computeVehicleRange(position, occupiedPositions),
+          range: computeBlockRange(position, occupiedPositions),
         };
       }
 
@@ -103,7 +114,7 @@ export default function PlayGround(): JSX.Element {
   };
 
   // Mise à jour de la nouvelle position du dernier véhicule déplacé
-  const updateVehiclePosition = (
+  const updateBlockPosition = (
     position: number[],
     label: string,
     addToHistory?: boolean
@@ -140,7 +151,7 @@ export default function PlayGround(): JSX.Element {
       ) {
         return {
           ...position,
-          range: computeVehicleRange(position, occupiedPositions),
+          range: computeBlockRange(position, occupiedPositions),
         };
       }
 
@@ -168,7 +179,7 @@ export default function PlayGround(): JSX.Element {
   };
 
   // Calcule de la plage de valeur de déplacement possible
-  const computeVehicleRange = (
+  const computeBlockRange = (
     element: ElementData,
     occupiedPositions: number[]
   ): number[] => {
@@ -218,10 +229,20 @@ export default function PlayGround(): JSX.Element {
     return [min, max];
   };
 
+  // Retour au menu
+  const goback = (): void => {
+    navigation.goBack();
+  };
+
+  // Ouvre les paramètres
+  const openSettings = (): void => {
+    navigation.navigate(Screen.SETTINGS);
+  };
+
   // Réinitialise le niveau
   const reset = (): void => {
     if (history.current.length) {
-      computeVehiclePositions();
+      computeBlockPositions();
     }
 
     setCount(0);
@@ -234,13 +255,13 @@ export default function PlayGround(): JSX.Element {
 
       if (lastHistory) {
         history.current.pop();
-        updateVehiclePosition(lastHistory.previousPosition, lastHistory.label);
+        updateBlockPosition(lastHistory.previousPosition, lastHistory.label);
       }
     }
   };
 
   // Rend les véhicules et les blocs
-  const renderVehicles = (): JSX.Element[] => {
+  const renderBlocks = (): JSX.Element[] => {
     return vehiclePositions.map((data: any, vehicleIndex: number) => {
       if (data.label !== BlockType.EMPTY && data.label !== BlockType.WALL) {
         return (
@@ -251,7 +272,7 @@ export default function PlayGround(): JSX.Element {
             range={data.range}
             position={data.position}
             orientation={data.orientation}
-            updatePosition={updateVehiclePosition}
+            updatePosition={updateBlockPosition}
           />
         );
       } else if (data.label === BlockType.WALL) {
@@ -265,26 +286,45 @@ export default function PlayGround(): JSX.Element {
   };
 
   return (
-    <View style={styles.container}>
+    <View
+      style={{
+        ...styles.container,
+        paddingTop: insets.top,
+        paddingBottom: insets.bottom,
+      }}
+    >
+      <View style={styles.header}>
+        <Button label="Go back" onPress={goback} />
+
+        <View style={{ alignItems: "center" }}>
+          <Text>Difficulté {difficulty + 1}</Text>
+          <Text>
+            Niveau {level + 1} / {data[difficulty].levels.length}
+          </Text>
+        </View>
+
+        <Button label="Settings" onPress={openSettings} />
+      </View>
+
       <View style={styles.countContainer}>
         <Text style={styles.count}>{count}</Text>
       </View>
 
-      <View style={styles.gridContainer}>
-        <Grid />
+      <View style={styles.playgroundContainer}>
+        <View style={styles.gridBottomBorder} />
 
-        <GestureHandlerRootView style={styles.gridContainer}>
-          {grid.length > 0 && vehiclePositions && renderVehicles()}
-        </GestureHandlerRootView>
+        <View style={styles.gridContainer}>
+          <Grid />
+
+          <GestureHandlerRootView style={{}}>
+            {grid.length > 0 && vehiclePositions && renderBlocks()}
+          </GestureHandlerRootView>
+        </View>
       </View>
 
       <View style={styles.buttonsContainer}>
-        <TouchableOpacity style={styles.button} onPress={reset}>
-          <Text>Reset</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={undo}>
-          <Text>Undo</Text>
-        </TouchableOpacity>
+        <Button label="Reset" onPress={reset} />
+        <Button label="Undo" onPress={undo} />
       </View>
     </View>
   );
@@ -294,7 +334,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: "#A0A5C0",
+  },
+  header: {
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 16,
   },
   countContainer: {
     flex: 1,
@@ -303,13 +350,36 @@ const styles = StyleSheet.create({
   count: {
     fontSize: 50,
   },
-  gridContainer: {
+  playgroundContainer: {
     width: playgroundSize,
     height: playgroundSize,
+    boxShadow: "0 20px 16px 0 #00000050",
+    borderRadius: 20,
+    marginBottom: 50,
+  },
+  gridContainer: {
+    width: playgroundSize,
+    height: playgroundSize + 10,
+    padding: 10,
+    paddingTop: 18,
+    borderWidth: 10,
+    borderRadius: 20,
+    borderColor: "#F5F7FF",
+    backgroundColor: "#B1BDD1",
+    boxShadow: "0 10px 2px 0 #949fb1ff inset",
+  },
+  gridBottomBorder: {
+    position: "absolute",
+    bottom: -20,
+    left: 0,
+    right: 0,
+    height: 30,
+    backgroundColor: "#CCD0DA",
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
   },
   buttonsContainer: {
     gap: 20,
-    height: 120,
     alignItems: "center",
     flexDirection: "row",
     justifyContent: "center",

@@ -13,20 +13,39 @@ export default function Block({ position }: Props): JSX.Element {
   return (
     <View
       style={{
-        top: y,
-        left: x,
-        width: caseSize,
-        height: caseSize,
+        top: y + 2,
+        left: x + 2,
+        width: caseSize - 4,
+        height: caseSize - 4,
         ...styles.container,
       }}
-    />
+    >
+      <View style={styles.blockBottomBorder} />
+      <View style={styles.block} />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#000000",
     position: "absolute",
-    borderRadius: 12,
+    paddingBottom: 5,
+    boxShadow: "0 2px 4px 0 #00000033",
+    borderRadius: 10,
+  },
+  block: {
+    width: "100%",
+    height: "100%",
+    borderRadius: 10,
+    backgroundColor: "#939EB0",
+  },
+  blockBottomBorder: {
+    width: "100%",
+    height: 20,
+    bottom: 0,
+    position: "absolute",
+    backgroundColor: "#7F899A",
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 10,
   },
 });

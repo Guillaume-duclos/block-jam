@@ -4,26 +4,31 @@ import React, { JSX, memo } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { windowWidth } from "../constants/dimension";
 import { Screen } from "../enums/screen.enum";
-import Level from "../types/level";
+import { Level } from "../types/level.type";
 import RootStackParamList from "../types/rootStackParamList.type";
 import Icon from "./Icon";
 
 type Props = {
-  item: Level[];
+  levels: Level[];
+  difficultyIndex: number;
 };
 
 type levelItemNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
-const LevelItem = memo(({ item }: Props): JSX.Element => {
+const LevelItem = memo(({ levels, difficultyIndex }: Props): JSX.Element => {
   const navigation = useNavigation<levelItemNavigationProp>();
 
+  // Redirection vers le niveau
   const navigateToPlayground = (level: Level): void => {
-    navigation.navigate(Screen.PLAYGROUND, { level });
+    navigation.navigate(Screen.PLAYGROUND, {
+      level,
+      difficultyIndex,
+    });
   };
 
   return (
     <View style={{ ...styles.levelItemsContainer }}>
-      {item.map((level: Level, index: number) => {
+      {levels.map((level: Level, index: number) => {
         return (
           <Pressable
             key={index}
@@ -32,7 +37,7 @@ const LevelItem = memo(({ item }: Props): JSX.Element => {
           >
             <Icon />
             <Text style={{ color: "white", fontWeight: "700" }}>
-              {index + 1}
+              {level.index + 1}
             </Text>
           </Pressable>
         );

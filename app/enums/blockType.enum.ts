@@ -1,5 +1,5 @@
 export enum BlockType {
-  EMPTY = 'o',
-  WALL = 'x',
-  MAIN_CAR = 'A',
+  EMPTY = "o",
+  WALL = "x",
+  MAIN_BLOCK = "A",
 }

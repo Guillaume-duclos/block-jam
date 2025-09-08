@@ -8,6 +8,7 @@ import { Language } from "../enums/language.enum";
 import { StorageKey } from "../enums/storageKey.enum";
 import Theme from "../enums/theme.enum";
 import { useTheme } from "../providers/themeContext";
+import NavigationProps from "../types/navigation.type";
 import {
   getStorageString,
   removeAllStorage,
@@ -15,7 +16,7 @@ import {
 } from "../utils/storage";
 
 export default function Settings(): JSX.Element {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProps>();
 
   const { t, i18n } = useTranslation();
 

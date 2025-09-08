@@ -1,12 +1,12 @@
 import React, { Fragment, JSX } from "react";
-import { Platform, StyleSheet, View } from "react-native";
-import ScrollInsetPosition from "../enums/scrollInsetPosition.enum";
+import { ColorValue, Platform, StyleSheet, View } from "react-native";
 import { windowHeight, windowWidth } from "../constants/dimension";
 import { PlatformName } from "../enums/platformName.enum";
+import ScrollInsetPosition from "../enums/scrollInsetPosition.enum";
 
 interface Props {
   position?: ScrollInsetPosition;
-  color?: string;
+  color?: ColorValue;
 }
 
 function ScrollInset({

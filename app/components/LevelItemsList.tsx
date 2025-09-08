@@ -1,14 +1,15 @@
 import { FlashList } from "@shopify/flash-list";
-import React, { JSX, memo, useRef, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import React, { JSX, memo, useMemo, useRef, useState } from "react";
+import { View } from "react-native";
 import { windowHeight } from "../constants/dimension";
 import ScrollInsetPosition from "../enums/scrollInsetPosition.enum";
+import { Level, MainLevel } from "../types/level.type";
 import LevelItem from "./LevelItem";
 import PaginationIndicator from "./PaginationIndicator";
 import ScrollInset from "./ScrollInset";
 
 type Props = {
-  level: any;
+  level: MainLevel;
 };
 
 const LevelItemsList = memo(({ level }: Props): JSX.Element => {
@@ -25,18 +26,40 @@ const LevelItemsList = memo(({ level }: Props): JSX.Element => {
     }
   }).current;
 
+  const splitLevels = (levels: Level[], split: number): Level[][] => {
+    const result: Level[][] = [];
+    const chunkSize = Math.ceil(levels.length / split);
+
+    for (let i = 0; i < levels.length; i += chunkSize) {
+      const chunk = levels
+        .slice(i, i + chunkSize)
+        .map((level: Level, index: number) => ({
+          ...level,
+          index: i + index,
+        }));
+
+      result.push(chunk);
+    }
+
+    return result;
+  };
+
+  const data = useMemo(() => splitLevels(level.levels, 7), [level.levels]);
+
   return (
     <View>
       {/* LISTE HORIZONTALE DE CHAQUE GRAND NIVEAU */}
       <FlashList
         horizontal
         pagingEnabled
-        data={level.levels}
+        data={data}
         maxItemsInRecyclePool={3}
         viewabilityConfig={levelItemsConfig}
         showsHorizontalScrollIndicator={false}
         onViewableItemsChanged={viewableItemsChanged}
-        renderItem={({ item }) => <LevelItem item={item} />}
+        renderItem={({ item }) => (
+          <LevelItem levels={item} difficultyIndex={level.index} />
+        )}
         keyExtractor={(_, index) => `${index}`}
         style={{ height: windowHeight }}
         contentContainerStyle={{
@@ -59,14 +82,9 @@ const LevelItemsList = memo(({ level }: Props): JSX.Element => {
       />
 
       {/* PAGINATION */}
-      <PaginationIndicator
-        levels={level.levels}
-        activeViewIndex={activeViewIndex}
-      />
+      <PaginationIndicator levels={data} activeViewIndex={activeViewIndex} />
     </View>
   );
 });
-
-const styles = StyleSheet.create({});
 
 export default LevelItemsList;

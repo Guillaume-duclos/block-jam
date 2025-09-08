@@ -1,6 +1,6 @@
 import * as Haptics from "expo-haptics";
 import React, { JSX, RefObject, useEffect, useRef } from "react";
-import { StyleSheet, Text, useWindowDimensions } from "react-native";
+import { StyleSheet, useWindowDimensions, View } from "react-native";
 import {
   Gesture,
   GestureDetector,
@@ -15,6 +15,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { animationDuration, gridCount } from "../config/config";
 import { caseSize, horizontalMargin } from "../constants/dimension";
+import { BlockType } from "../enums/blockType.enum";
 import { Orientation } from "../enums/orientation.enum";
 
 type Props = {
@@ -46,9 +47,9 @@ export default function MovableBlock({
   const dimensions = useWindowDimensions();
 
   useEffect(() => {
-    console.log({ position });
-    console.log({ range });
-  }, [position, range]);
+    // console.log({ position });
+    // console.log({ range });
+  }, [position, range, label]);
 
   useEffect(() => {
     if (orientation === Orientation.HORIZONTAL) {
@@ -79,7 +80,7 @@ export default function MovableBlock({
       height = caseSize * position.length;
     }
 
-    return { height, width };
+    return { height: height - 4, width: width - 4 };
   };
 
   // Calcule la tranche de la grille la plus proche en fonction de la position courante
@@ -203,6 +204,14 @@ export default function MovableBlock({
         const minRange = range[0] * caseSize;
         const maxRange = range[1] * caseSize - (position.length - 1) * caseSize;
 
+        console.log("------------------------------");
+        console.log({ absoluteX: event.absoluteX });
+        console.log({ caseSize });
+        console.log({ minRange });
+        console.log({ maxRange });
+        console.log({ touchPosition });
+        console.log(touchPosition >= minRange && touchPosition <= maxRange);
+
         // Vérifie si le déplacement en X est toujours compris dans le rang
         if (touchPosition >= minRange && touchPosition <= maxRange) {
           getNearestPosition(touchPosition);
@@ -242,22 +251,53 @@ export default function MovableBlock({
   return (
     <GestureDetector gesture={panGestureEvent}>
       <Animated.View
-        style={[styles.container, vehiclePosition, vehicleDimensions()]}
+        style={[styles.blockContainer, vehiclePosition, vehicleDimensions()]}
       >
-        <Text>{label}</Text>
+        <View
+          style={{
+            ...styles.blockBottomBorder,
+            ...(label === BlockType.MAIN_BLOCK && styles.mainBlockBottomBorder),
+          }}
+        />
+        <View
+          style={{
+            ...styles.block,
+            ...(label === BlockType.MAIN_BLOCK && styles.mainBlock),
+          }}
+        />
       </Animated.View>
     </GestureDetector>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    alignItems: "center",
-    justifyContent: "center",
-    borderWidth: 1,
-    borderColor: "#000000",
-    backgroundColor: "#eb4d4b",
+  blockContainer: {
+    top: 2,
+    left: 2,
+    paddingBottom: 5,
     position: "absolute",
-    borderRadius: 12,
+    boxShadow: "0 2px 4px 0 #00000033",
+    borderRadius: 10,
+  },
+  block: {
+    width: "100%",
+    height: "100%",
+    backgroundColor: "#F5F7FF",
+    borderRadius: 10,
+  },
+  blockBottomBorder: {
+    width: "100%",
+    height: 20,
+    bottom: 0,
+    position: "absolute",
+    backgroundColor: "#D6DBE2",
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 10,
+  },
+  mainBlock: {
+    backgroundColor: "#DA6C6C",
+  },
+  mainBlockBottomBorder: {
+    backgroundColor: "#CD5656",
   },
 });
