@@ -1,6 +1,10 @@
 import React, { JSX } from "react";
-import { StyleSheet, Text, View, ViewStyle } from "react-native";
-import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import { StyleSheet, View, ViewStyle } from "react-native";
+import {
+  Gesture,
+  GestureDetector,
+  TapGesture,
+} from "react-native-gesture-handler";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -11,6 +15,7 @@ type Props = {
   label: string;
   disabled?: boolean;
   onPress?: () => void;
+  children?: JSX.Element;
   style?: ViewStyle;
 };
 
@@ -18,6 +23,7 @@ export default function Button({
   label,
   disabled,
   onPress,
+  children,
   style,
 }: Props): JSX.Element {
   const progress = useSharedValue(0);
@@ -26,7 +32,7 @@ export default function Button({
     transform: [{ translateY: progress.value }],
   }));
 
-  const tapGesture = Gesture.Tap()
+  const tapGesture: TapGesture = Gesture.Tap()
     .maxDuration(Number.MAX_SAFE_INTEGER)
     .onBegin(() => {
       progress.value = withTiming(6, { duration: 80 });
@@ -46,7 +52,8 @@ export default function Button({
       <View style={{ ...styles.container, ...style }}>
         <View style={styles.blockBottomBorder} />
         <Animated.View style={[styles.block, buttonStyle]}>
-          <Text>{label}</Text>
+          {/* <Text>{label}</Text> */}
+          {children}
         </Animated.View>
       </View>
     </GestureDetector>
@@ -55,27 +62,28 @@ export default function Button({
 
 const styles = StyleSheet.create({
   container: {
-    height: 60,
-    minWidth: 50,
-    alignItems: "center",
-    borderRadius: 10,
-    boxShadow: "0 3px 10px 0 #00000030",
+    height: 64,
+    borderRadius: 32,
+    borderCurve: "continuous",
+    // boxShadow: "0 3px 10px 0 #00000030",
   },
   block: {
     width: "100%",
     height: 50,
+    alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#F5F7FF",
     paddingHorizontal: 20,
-    borderRadius: 10,
+    borderRadius: 32,
   },
   blockBottomBorder: {
     width: "100%",
-    height: 20,
-    bottom: 0,
+    height: 32,
+    bottom: 4,
     position: "absolute",
     backgroundColor: "#D6DBE2",
-    borderBottomLeftRadius: 10,
-    borderBottomRightRadius: 10,
+    borderBottomLeftRadius: 28,
+    borderBottomRightRadius: 28,
+    borderCurve: "continuous",
   },
 });

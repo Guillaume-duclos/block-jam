@@ -29,6 +29,7 @@ export default function Menu() {
       <FlashList
         data={data}
         pagingEnabled
+        style={styles.list}
         maxItemsInRecyclePool={3}
         viewabilityConfig={levelItemsConfig}
         onViewableItemsChanged={viewableItemsChanged}
@@ -44,6 +45,7 @@ export default function Menu() {
         )}
       />
 
+      {/* PAGINATION */}
       <PaginationIndicator
         levels={data}
         activeViewIndex={activeViewIndex}
@@ -52,6 +54,7 @@ export default function Menu() {
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     width: windowWidth,
@@ -60,14 +63,6 @@ const styles = StyleSheet.create({
     borderWidth: 0,
   },
   list: {
-    width: "100%",
-  },
-  listHeaderComponent: {
-    width: "100%",
-    height: windowHeight,
-    position: "absolute",
-  },
-  levelSection: {
     width: "100%",
   },
 });

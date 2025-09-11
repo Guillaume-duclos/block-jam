@@ -1,8 +1,16 @@
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
+import { LinearGradient } from "expo-linear-gradient";
 import React, { JSX, RefObject, useEffect, useRef, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import ArrowShapeLeftFill from "../assets/icons/ArrowShapeLeftFill";
+import ArrowShapeTurnUpLeft from "../assets/icons/ArrowShapeTurnUpLeft";
+import ArrowTriangleHead2ClockwiseRotate90 from "../assets/icons/ArrowTriangleHead2ClockwiseRotate90";
+import ArrowTriangleLeft from "../assets/icons/ArrowTriangleLeft";
+import ArrowTriangleRight from "../assets/icons/ArrowTriangleRight";
+import Settings from "../assets/icons/GearShapeFill";
+import SparkleMagnifyingGlass from "../assets/icons/SparkleMagnifyingGlass";
 import Button from "../components/Button";
 import FixedBlock from "../components/FixedBlock";
 import Grid from "../components/Grid";
@@ -286,47 +294,72 @@ export default function PlayGround(): JSX.Element {
   };
 
   return (
-    <View
-      style={{
-        ...styles.container,
-        paddingTop: insets.top,
-        paddingBottom: insets.bottom,
-      }}
-    >
-      <View style={styles.header}>
-        <Button label="Go back" onPress={goback} />
+    <LinearGradient style={{ flex: 1 }} colors={["#D7F3C0", "#D7F3C0"]}>
+      <View
+        style={{
+          ...styles.container,
+          paddingTop: insets.top,
+          paddingBottom: insets.bottom,
+        }}
+      >
+        <View style={styles.header}>
+          <Pressable onPress={goback}>
+            <ArrowShapeLeftFill color="#71C146" />
+          </Pressable>
 
-        <View style={{ alignItems: "center" }}>
-          <Text>Difficulté {difficulty + 1}</Text>
-          <Text>
-            Niveau {level + 1} / {data[difficulty].levels.length}
-          </Text>
+          <View style={{ alignItems: "center" }}>
+            <Text style={styles.headerDificulty}>
+              Difficulté {difficulty + 1}
+            </Text>
+            <Text style={styles.headerLevel}>
+              Niveau {level + 1} / {data[difficulty].levels.length}
+            </Text>
+          </View>
+
+          <Pressable onPress={openSettings}>
+            <Settings color="#71C146" />
+          </Pressable>
         </View>
 
-        <Button label="Settings" onPress={openSettings} />
-      </View>
+        <View style={styles.countContainer}>
+          <Text style={styles.count}>{count}</Text>
+        </View>
 
-      <View style={styles.countContainer}>
-        <Text style={styles.count}>{count}</Text>
-      </View>
+        <View style={styles.playgroundContainer}>
+          <View style={styles.gridBottomBorder} />
 
-      <View style={styles.playgroundContainer}>
-        <View style={styles.gridBottomBorder} />
+          <View style={styles.gridContainer}>
+            <Grid />
 
-        <View style={styles.gridContainer}>
-          <Grid />
+            <GestureHandlerRootView style={{}}>
+              {grid.length > 0 && vehiclePositions && renderBlocks()}
+            </GestureHandlerRootView>
+          </View>
+        </View>
 
-          <GestureHandlerRootView style={{}}>
-            {grid.length > 0 && vehiclePositions && renderBlocks()}
-          </GestureHandlerRootView>
+        <View style={styles.buttonsContainer}>
+          <Button label="Previous" onPress={reset} style={{ width: 64 - 10 }}>
+            <ArrowTriangleLeft style={{ left: -2 }} color="#71C146" />
+          </Button>
+
+          <Button label="Reset" onPress={reset} style={{ flex: 1 }}>
+            <ArrowTriangleHead2ClockwiseRotate90 color="#71C146" />
+          </Button>
+
+          <Button label="Undo" onPress={undo} style={{ flex: 1 }}>
+            <ArrowShapeTurnUpLeft color="#71C146" />
+          </Button>
+
+          <Button label="Undo" onPress={undo} style={{ flex: 1 }}>
+            <SparkleMagnifyingGlass color="#71C146" />
+          </Button>
+
+          <Button label="Next" onPress={undo} style={{ width: 64 - 10 }}>
+            <ArrowTriangleRight style={{ right: -2 }} color="#71C146" />
+          </Button>
         </View>
       </View>
-
-      <View style={styles.buttonsContainer}>
-        <Button label="Reset" onPress={reset} />
-        <Button label="Undo" onPress={undo} />
-      </View>
-    </View>
+    </LinearGradient>
   );
 }
 
@@ -334,7 +367,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    backgroundColor: "#A0A5C0",
   },
   header: {
     width: "100%",
@@ -342,6 +374,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: 16,
+  },
+  headerDificulty: {
+    fontSize: 20,
+    fontWeight: 800,
+    color: "#71C146",
+  },
+  headerLevel: {
+    fontSize: 18,
+    fontWeight: 700,
+    color: "#71C146",
   },
   countContainer: {
     flex: 1,
@@ -359,18 +401,19 @@ const styles = StyleSheet.create({
   },
   gridContainer: {
     width: playgroundSize,
-    height: playgroundSize + 10,
+    height: playgroundSize,
     padding: 10,
-    paddingTop: 18,
+    paddingTop: 10,
     borderWidth: 10,
     borderRadius: 20,
     borderColor: "#F5F7FF",
     backgroundColor: "#B1BDD1",
-    boxShadow: "0 10px 2px 0 #949fb1ff inset",
+    // boxShadow: "0 10px 2px 0 #949fb1ff inset",
+    boxShadow: "0 0 1px 0.5px #838d9cff inset",
   },
   gridBottomBorder: {
     position: "absolute",
-    bottom: -20,
+    bottom: -12,
     left: 0,
     right: 0,
     height: 30,
@@ -379,10 +422,11 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 20,
   },
   buttonsContainer: {
-    gap: 20,
-    alignItems: "center",
+    gap: 12,
+    width: "100%",
     flexDirection: "row",
-    justifyContent: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 20,
   },
   button: {
     padding: 10,

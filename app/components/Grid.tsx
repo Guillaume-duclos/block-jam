@@ -34,7 +34,7 @@ export default function Grid({ style }: Props): JSX.Element {
 
 const styles = StyleSheet.create({
   gridContainer: {
-    top: 18,
+    top: 10,
     left: 10,
     width: "100%",
     height: "100%",

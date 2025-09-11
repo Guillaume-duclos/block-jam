@@ -1,23 +1,24 @@
-import React, { JSX, RefObject, useEffect, useRef, useState } from "react";
-import { StyleSheet, View, ViewStyle } from "react-native";
+import { Canvas, RoundedRect } from "@shopify/react-native-skia";
+import React, { JSX, useEffect, useState } from "react";
+import { StyleSheet, ViewStyle } from "react-native";
+import { gridCount } from "../config/config";
 import { BlockType } from "../enums/blockType.enum";
 import { Orientation } from "../enums/orientation.enum";
 import useGrid from "../hooks/useGrid.hook";
-import ElementData from "../types/elementData.type";
-import { firstLineCaseIndex, lastLineCaseIndex } from "../utils/line";
-import FixedBlock from "./FixedBlock";
-import Grid from "./Grid";
-import MovableBlock from "./MovableBlock";
 
 type Props = {
   layout: string;
   style?: ViewStyle;
 };
 
+type BlockData = {
+  label: string;
+  position: number[];
+  orientation?: Orientation;
+};
+
 export default function LevelViewer({ layout, style }: Props): JSX.Element {
-  const [vehiclePositions, setVehiclePositions] = useState<ElementData[]>([]);
-  const [count, setCount] = useState<number>(0);
-  const history: RefObject<[]> = useRef([]);
+  const [vehiclePositions, setVehiclePositions] = useState<BlockData[]>([]);
 
   // Initialisation des tranches de déplacements possibles
   const grid: number[] = useGrid();
@@ -26,13 +27,17 @@ export default function LevelViewer({ layout, style }: Props): JSX.Element {
     computeBlockPositions();
   }, []);
 
+  useEffect((): void => {
+    // console.log(vehiclePositions);
+  }, [vehiclePositions]);
+
   // Initialise les valeurs de vehiclePositions
   const computeBlockPositions = (): void => {
     // On récupère le niveau
     const level: string = layout;
 
     // Initialisation du tableau de positions de tous les véhicules
-    let positions: ElementData[] = [];
+    let positions: BlockData[] = [];
 
     // On parse toutes les lettres de la description de la grille
     for (let i: number = 0; i < level.length; i++) {
@@ -66,169 +71,80 @@ export default function LevelViewer({ layout, style }: Props): JSX.Element {
       } else {
         positions.push({
           label,
-          range: [],
           position: [i],
           orientation,
         });
       }
     }
 
-    // 5. On récupère toutes les positions occupées
-    const occupiedPositions = computesOccupiedPositions(positions);
-
-    // 6. On récupère les plages de valeur min et max
-    positions = positions.map((position) => {
-      if (
-        position.label !== BlockType.WALL &&
-        position.label !== BlockType.EMPTY
-      ) {
-        return {
-          ...position,
-          range: computeBlockRange(position, occupiedPositions),
-        };
-      }
-
-      return { ...position };
-    });
-
     setVehiclePositions(positions);
-  };
-
-  // Mise à jour de la nouvelle position du dernier véhicule déplacé
-  const updateBlockPosition = (
-    position: number[],
-    label: string,
-    addToHistory?: boolean
-  ): void => {
-    // On récupère l'index du véhicule dans le tableau des positions avec le label
-    const index = vehiclePositions.findIndex(
-      (position) => position.label === label
-    );
-
-    // On ajoute la nouvelle position dans l'historique si l'option est activé
-    if (addToHistory) {
-      const newHistoricPositions = {
-        previousPosition: vehiclePositions[index].position,
-        label,
-      };
-
-      history.current.push(newHistoricPositions);
-    }
-
-    // On récupère toutes les positions
-    let newPositions = vehiclePositions;
-
-    // On ajoute les nouvelles valeurs du véhicule
-    newPositions[index].position = position;
-
-    // On met à jour la valeur du range des autres véhicules
-    const occupiedPositions = computesOccupiedPositions(newPositions);
-
-    // On récupère les plages de valeur min et max
-    newPositions = vehiclePositions.map((position: ElementData) => {
-      if (
-        position.label !== BlockType.WALL &&
-        position.label !== BlockType.EMPTY
-      ) {
-        return {
-          ...position,
-          range: computeBlockRange(position, occupiedPositions),
-        };
-      }
-
-      return { ...position };
-    });
-
-    // On met à jour la tableau des positions et le compteur de mouvement
-    setVehiclePositions(newPositions);
-    setCount(count + 1);
-  };
-
-  // Récupère toutes les positions occupées par les véhicules et les blocs fixes
-  const computesOccupiedPositions = (positions: ElementData[]): number[] => {
-    const occupiedPositions: number[] = [];
-
-    for (let i: number = 0; i < positions.length; i++) {
-      if (positions[i].label !== BlockType.EMPTY) {
-        for (let y: number = 0; y < positions[i].position.length; y++) {
-          occupiedPositions.push(positions[i].position[y]);
-        }
-      }
-    }
-
-    return occupiedPositions;
-  };
-
-  // Calcule de la plage de valeur de déplacement possible
-  const computeBlockRange = (
-    element: ElementData,
-    occupiedPositions: number[]
-  ): number[] => {
-    // On récupère la plage de valeur minimum et maximum du véhicule
-    let min = firstLineCaseIndex(element.position, element.orientation);
-    let max = lastLineCaseIndex(element.position, element.orientation);
-
-    // On calcule les positions minimum et maximum pour le véhicule
-    const lineCases: number[] = [];
-
-    // 1. On récupère toutes les cases de la ligne
-    if (element.orientation === Orientation.HORIZONTAL) {
-      for (let i: number = min; i <= max; i++) {
-        lineCases.push(i);
-      }
-    } else {
-      for (let i: number = min; i <= max; i += 6) {
-        lineCases.push(i);
-      }
-    }
-
-    // 2. On récupère les cases libres dans la ligne
-    const emptyCases: number[] = lineCases.filter(
-      (value: number) => !occupiedPositions.includes(value)
-    );
-
-    // 3. On récupère les positions minimum et maximum disponibles
-    let minPosition: number = element.position[0];
-    let maxPosition: number = element.position[element.position.length - 1];
-
-    const offset = element.orientation === Orientation.HORIZONTAL ? 1 : 6;
-
-    // On récupère la position minimum
-    while (emptyCases.includes(minPosition - offset)) {
-      minPosition -= offset;
-    }
-
-    // On récupère la position maximum
-    while (emptyCases.includes(maxPosition + offset)) {
-      maxPosition += offset;
-    }
-
-    // 4. On convertit les positions minimale et maximale au format correspondant
-    min = lineCases.indexOf(minPosition);
-    max = lineCases.indexOf(maxPosition);
-
-    return [min, max];
   };
 
   // Rend les véhicules et les blocs
   const renderBlocks = (): JSX.Element[] => {
-    return vehiclePositions.map((data: any, vehicleIndex: number) => {
+    return vehiclePositions.map((data: BlockData, vehicleIndex: number) => {
+      const unit = (72 - 8 - 8) / 6;
+
       if (data.label !== BlockType.EMPTY && data.label !== BlockType.WALL) {
+        const x =
+          (data.position[0] -
+            gridCount * Math.floor(data.position[0] / gridCount)) *
+            unit +
+          6 +
+          1 *
+            (data.position[0] -
+              gridCount * Math.floor(data.position[0] / gridCount));
+
+        const y =
+          Math.floor(data.position[0] / gridCount) * unit +
+          6 +
+          1 * Math.floor(data.position[0] / gridCount);
+
+        const width =
+          data.orientation === Orientation.HORIZONTAL
+            ? data.position.length * unit
+            : unit;
+
+        const heigth =
+          data.orientation === Orientation.HORIZONTAL
+            ? unit
+            : data.position.length * unit;
+
         return (
-          <MovableBlock
-            key={`${vehicleIndex}`}
-            grid={grid}
-            label={data.label}
-            range={data.range}
-            position={data.position}
-            orientation={data.orientation}
-            updatePosition={updateBlockPosition}
+          <RoundedRect
+            key={vehicleIndex}
+            x={x}
+            y={y}
+            r={2}
+            width={width}
+            height={heigth}
+            color={data.label === BlockType.MAIN_BLOCK ? "#FEBAAF" : "#F5F7FF"}
           />
         );
       } else if (data.label === BlockType.WALL) {
         return data.position.map(
           (position: number, blocIndex: number): JSX.Element => {
-            return <FixedBlock position={position} key={`${blocIndex}`} />;
+            const x: number =
+              (position - gridCount * Math.floor(position / gridCount)) * unit +
+              6 +
+              1 * (position - gridCount * Math.floor(position / gridCount));
+
+            const y: number =
+              Math.floor(position / gridCount) * unit +
+              6 +
+              1 * Math.floor(position / gridCount);
+
+            return (
+              <RoundedRect
+                key={blocIndex}
+                x={x}
+                y={y}
+                r={2}
+                width={unit}
+                height={unit}
+                color="#6f7785ff"
+              />
+            );
           }
         );
       }
@@ -236,27 +152,31 @@ export default function LevelViewer({ layout, style }: Props): JSX.Element {
   };
 
   return (
-    <View style={styles.playgroundContainer}>
-      <View style={styles.gridBottomBorder} />
+    <Canvas style={styles.playgroundContainer}>
+      <RoundedRect x={0} y={4} r={12} width={72} height={72} color="#CCD0DA" />
 
-      <View style={styles.gridContainer}>
-        <Grid />
+      <RoundedRect x={0} y={0} r={12} width={72} height={72} color="#F5F7FF">
+        <RoundedRect
+          x={4}
+          y={4}
+          r={8}
+          width={72 - 8}
+          height={72 - 8}
+          color="#B1BDD1"
+        />
 
-        <View style={{}}>
-          {grid.length > 0 && vehiclePositions && renderBlocks()}
-        </View>
-      </View>
-    </View>
+        {renderBlocks()}
+      </RoundedRect>
+    </Canvas>
   );
 }
 
 const styles = StyleSheet.create({
   playgroundContainer: {
     width: 72,
-    height: 72,
-    boxShadow: "0 20px 16px 0 #00000050",
-    borderRadius: 20,
-    marginBottom: 50,
+    height: 72 + 4,
+    //boxShadow: "0 10px 10px 0 #00000050",
+    borderRadius: 12,
   },
   gridContainer: {
     width: 72,

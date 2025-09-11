@@ -6,7 +6,7 @@ import { windowWidth } from "../constants/dimension";
 import { Screen } from "../enums/screen.enum";
 import { Level } from "../types/level.type";
 import RootStackParamList from "../types/rootStackParamList.type";
-import Icon from "./Icon";
+import LevelViewer from "./LevelViewer";
 
 type Props = {
   levels: Level[];
@@ -35,7 +35,7 @@ const LevelItem = memo(({ levels, difficultyIndex }: Props): JSX.Element => {
             onPress={() => navigateToPlayground(level)}
             style={{ gap: 2, alignItems: "center" }}
           >
-            <Icon />
+            <LevelViewer layout={level.layout} />
             <Text style={{ color: "white", fontWeight: "700" }}>
               {level.index + 1}
             </Text>
@@ -50,9 +50,7 @@ const styles = StyleSheet.create({
   levelItemsContainer: {
     gap: 10,
     width: windowWidth,
-    height: "100%",
     paddingHorizontal: 28,
-    alignContent: "center",
     justifyContent: "space-between",
     flexDirection: "row",
     flexWrap: "wrap",

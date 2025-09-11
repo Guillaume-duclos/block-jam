@@ -13,6 +13,10 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
+import ArrowTriangleDownFill from "../assets/icons/ArrowTriangleDownFill";
+import ArrowTriangleLeftFill from "../assets/icons/ArrowTriangleLeftFill";
+import ArrowTriangleRightFill from "../assets/icons/ArrowTriangleRightFill";
+import ArrowTriangleUpFill from "../assets/icons/ArrowTriangleUpFill";
 import { animationDuration, gridCount } from "../config/config";
 import { caseSize, horizontalMargin } from "../constants/dimension";
 import { BlockType } from "../enums/blockType.enum";
@@ -45,6 +49,12 @@ export default function MovableBlock({
   const vibrationEnable: RefObject<boolean> = useRef(true);
 
   const dimensions = useWindowDimensions();
+
+  const progress = useSharedValue(0);
+
+  const arrowStyle = useAnimatedStyle(() => ({
+    opacity: progress.value,
+  }));
 
   useEffect(() => {
     // console.log({ position });
@@ -196,6 +206,9 @@ export default function MovableBlock({
   // Gestion des événements lorsque l'utilisateur déplace un véhicule
   const panGestureEvent: PanGesture = Gesture.Pan()
     .minDistance(0)
+    .onBegin(() => {
+      progress.value = withTiming(1, { duration: 150 });
+    })
     .onUpdate((event): void => {
       const isHorizontal = orientation === Orientation.HORIZONTAL;
 
@@ -246,6 +259,9 @@ export default function MovableBlock({
 
       vibrationEnable.current = true;
     })
+    .onFinalize(() => {
+      progress.value = withTiming(0, { duration: 150 });
+    })
     .runOnJS(true);
 
   return (
@@ -265,6 +281,32 @@ export default function MovableBlock({
             ...(label === BlockType.MAIN_BLOCK && styles.mainBlock),
           }}
         />
+
+        {orientation === Orientation.HORIZONTAL && (
+          <Animated.View
+            style={[
+              styles.arrowContainer,
+              styles.arrowHorizontalContainer,
+              arrowStyle,
+            ]}
+          >
+            <ArrowTriangleLeftFill style={styles.arrow} color="#B4B4B4" />
+            <ArrowTriangleRightFill style={styles.arrow} color="#B4B4B4" />
+          </Animated.View>
+        )}
+
+        {orientation === Orientation.VERTICAL && (
+          <Animated.View
+            style={[
+              styles.arrowContainer,
+              styles.arrowVerticaleContainer,
+              arrowStyle,
+            ]}
+          >
+            <ArrowTriangleUpFill style={styles.arrow} color="#B4B4B4" />
+            <ArrowTriangleDownFill style={styles.arrow} color="#B4B4B4" />
+          </Animated.View>
+        )}
       </Animated.View>
     </GestureDetector>
   );
@@ -299,5 +341,23 @@ const styles = StyleSheet.create({
   },
   mainBlockBottomBorder: {
     backgroundColor: "#CD5656",
+  },
+  arrowContainer: {
+    width: "100%",
+    height: "100%",
+    position: "absolute",
+    justifyContent: "space-between",
+  },
+  arrowHorizontalContainer: {
+    flexDirection: "row",
+    paddingHorizontal: 6,
+  },
+  arrowVerticaleContainer: {
+    paddingVertical: 6,
+  },
+  arrow: {
+    alignSelf: "center",
+    alignContent: "center",
+    transform: [{ scale: 0.6 }],
   },
 });
