@@ -21,6 +21,7 @@ import { animationDuration, gridCount } from "../config/config";
 import { caseSize, horizontalMargin } from "../constants/dimension";
 import { BlockType } from "../enums/blockType.enum";
 import { Orientation } from "../enums/orientation.enum";
+import { darken } from "../utils/color";
 
 type Props = {
   grid: number[];
@@ -28,6 +29,7 @@ type Props = {
   range: number[];
   position: number[];
   orientation: Orientation;
+  color: string;
   updatePosition: (
     label: string,
     position: number[],
@@ -41,6 +43,7 @@ export default function MovableBlock({
   range,
   position,
   orientation,
+  color,
   updatePosition,
 }: Props): JSX.Element {
   const x: SharedValue<number> = useSharedValue(0);
@@ -55,6 +58,9 @@ export default function MovableBlock({
   const arrowStyle = useAnimatedStyle(() => ({
     opacity: progress.value,
   }));
+
+  const mainBlockColor = label === BlockType.MAIN_BLOCK ? "#DA6C6C" : color;
+  const secondBlockColor = darken(mainBlockColor, 0.2);
 
   useEffect(() => {
     // console.log({ position });
@@ -267,18 +273,24 @@ export default function MovableBlock({
   return (
     <GestureDetector gesture={panGestureEvent}>
       <Animated.View
-        style={[styles.blockContainer, vehiclePosition, vehicleDimensions()]}
+        style={[
+          styles.blockContainer,
+          { boxShadow: `0 2px 4px 0 ${darken(color, 0.35)}` },
+          vehicleDimensions(),
+          vehiclePosition,
+        ]}
       >
         <View
           style={{
             ...styles.blockBottomBorder,
-            ...(label === BlockType.MAIN_BLOCK && styles.mainBlockBottomBorder),
+            backgroundColor: darken(mainBlockColor, 0.12),
           }}
         />
         <View
           style={{
             ...styles.block,
             ...(label === BlockType.MAIN_BLOCK && styles.mainBlock),
+            backgroundColor: mainBlockColor,
           }}
         />
 
@@ -290,8 +302,14 @@ export default function MovableBlock({
               arrowStyle,
             ]}
           >
-            <ArrowTriangleLeftFill style={styles.arrow} color="#B4B4B4" />
-            <ArrowTriangleRightFill style={styles.arrow} color="#B4B4B4" />
+            <ArrowTriangleLeftFill
+              style={styles.arrow}
+              color={secondBlockColor}
+            />
+            <ArrowTriangleRightFill
+              style={styles.arrow}
+              color={secondBlockColor}
+            />
           </Animated.View>
         )}
 
@@ -303,8 +321,14 @@ export default function MovableBlock({
               arrowStyle,
             ]}
           >
-            <ArrowTriangleUpFill style={styles.arrow} color="#B4B4B4" />
-            <ArrowTriangleDownFill style={styles.arrow} color="#B4B4B4" />
+            <ArrowTriangleUpFill
+              style={styles.arrow}
+              color={secondBlockColor}
+            />
+            <ArrowTriangleDownFill
+              style={styles.arrow}
+              color={secondBlockColor}
+            />
           </Animated.View>
         )}
       </Animated.View>
@@ -318,13 +342,11 @@ const styles = StyleSheet.create({
     left: 2,
     paddingBottom: 5,
     position: "absolute",
-    boxShadow: "0 2px 4px 0 #00000033",
     borderRadius: 10,
   },
   block: {
     width: "100%",
     height: "100%",
-    backgroundColor: "#F5F7FF",
     borderRadius: 10,
   },
   blockBottomBorder: {
@@ -332,15 +354,11 @@ const styles = StyleSheet.create({
     height: 20,
     bottom: 0,
     position: "absolute",
-    backgroundColor: "#D6DBE2",
     borderBottomLeftRadius: 10,
     borderBottomRightRadius: 10,
   },
   mainBlock: {
     backgroundColor: "#DA6C6C",
-  },
-  mainBlockBottomBorder: {
-    backgroundColor: "#CD5656",
   },
   arrowContainer: {
     width: "100%",
@@ -359,5 +377,6 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     alignContent: "center",
     transform: [{ scale: 0.6 }],
+    opacity: 0.7,
   },
 });

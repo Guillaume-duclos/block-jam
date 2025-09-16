@@ -10,6 +10,17 @@
     "ios": {
       "bundleIdentifier": "com.anonymous.blockjam"
     },
-    "plugins": ["expo-localization"]
+    "plugins": [
+      "expo-localization",
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "./app/assets/fonts/Rubik/RubikItalicVariable.ttf",
+            "./app/assets/fonts/Rubik/RubikVariable.ttf"
+          ]
+        }
+      ]
+    ]
   }
 }

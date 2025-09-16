@@ -24,6 +24,7 @@ import useGrid from "../hooks/useGrid.hook";
 import ElementData from "../types/elementData.type";
 import NavigationProp from "../types/navigation.type";
 import RootStackParamList from "../types/rootStackParamList.type";
+import { darken } from "../utils/color";
 import { firstLineCaseIndex, lastLineCaseIndex } from "../utils/line";
 
 type playGroundRouteProp = RouteProp<RootStackParamList, Screen.PLAYGROUND>;
@@ -44,6 +45,9 @@ export default function PlayGround(): JSX.Element {
 
   const difficulty: number = route.params.difficultyIndex;
   const level: number = route.params.level.index;
+
+  const mainColor: string = "#FAF7F2";
+  const topColor: string = darken("#D6F5BC", 0.3) || "";
 
   useEffect((): void => {
     // console.log(JSON.stringify(vehiclePositions));
@@ -280,13 +284,20 @@ export default function PlayGround(): JSX.Element {
             range={data.range}
             position={data.position}
             orientation={data.orientation}
+            color="#F5F7FF"
             updatePosition={updateBlockPosition}
           />
         );
       } else if (data.label === BlockType.WALL) {
         return data.position.map(
           (position: number, blocIndex: number): JSX.Element => {
-            return <FixedBlock position={position} key={`${blocIndex}`} />;
+            return (
+              <FixedBlock
+                position={position}
+                key={`${blocIndex}`}
+                color="#939EB0"
+              />
+            );
           }
         );
       }
@@ -294,7 +305,13 @@ export default function PlayGround(): JSX.Element {
   };
 
   return (
-    <LinearGradient style={{ flex: 1 }} colors={["#D7F3C0", "#D7F3C0"]}>
+    <LinearGradient
+      colors={[topColor, "#D6F5BC"]}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 0, y: 1 }}
+      locations={[0, 0.25]}
+      style={{ flex: 1 }}
+    >
       <View
         style={{
           ...styles.container,
@@ -302,9 +319,10 @@ export default function PlayGround(): JSX.Element {
           paddingBottom: insets.bottom,
         }}
       >
+        {/* HEADER */}
         <View style={styles.header}>
           <Pressable onPress={goback}>
-            <ArrowShapeLeftFill color="#71C146" />
+            <ArrowShapeLeftFill color="#FFFFFF" />
           </Pressable>
 
           <View style={{ alignItems: "center" }}>
@@ -312,50 +330,78 @@ export default function PlayGround(): JSX.Element {
               Difficulté {difficulty + 1}
             </Text>
             <Text style={styles.headerLevel}>
-              Niveau {level + 1} / {data[difficulty].levels.length}
+              Niveau <Text style={styles.headerLevelNumber}>{level + 1}</Text>/
+              {data[difficulty].levels.length}
             </Text>
           </View>
 
           <Pressable onPress={openSettings}>
-            <Settings color="#71C146" />
+            <Settings color="#FFFFFF" />
           </Pressable>
         </View>
 
+        {/* SCORES */}
         <View style={styles.countContainer}>
+          <Text style={styles.countTitle}>Coups</Text>
           <Text style={styles.count}>{count}</Text>
         </View>
 
+        {/* PLAYGROUND */}
         <View style={styles.playgroundContainer}>
-          <View style={styles.gridBottomBorder} />
+          <View
+            style={{
+              ...styles.gridBottomBorder,
+              backgroundColor: darken(mainColor, 0.16),
+            }}
+          />
 
-          <View style={styles.gridContainer}>
-            <Grid />
+          <View
+            style={{
+              ...styles.gridContainer,
+              borderColor: mainColor,
+              backgroundColor: darken("#D6F5BC", 0.2),
+              boxShadow: `0 0 1px 0.5px ${darken("#D6F5BC", 0.35)} inset`,
+            }}
+          >
+            <Grid color="#D6F5BC" />
 
-            <GestureHandlerRootView style={{}}>
+            <GestureHandlerRootView>
               {grid.length > 0 && vehiclePositions && renderBlocks()}
             </GestureHandlerRootView>
           </View>
         </View>
 
+        {/* BUTTONS CRONTROLS */}
         <View style={styles.buttonsContainer}>
-          <Button label="Previous" onPress={reset} style={{ width: 64 - 10 }}>
-            <ArrowTriangleLeft style={{ left: -2 }} color="#71C146" />
+          <Button onPress={reset} style={{ width: 64 - 10 }}>
+            <ArrowTriangleLeft
+              style={{ left: -2 }}
+              color={darken(mainColor, 0.3)}
+            />
           </Button>
 
-          <Button label="Reset" onPress={reset} style={{ flex: 1 }}>
-            <ArrowTriangleHead2ClockwiseRotate90 color="#71C146" />
+          <Button onPress={reset} style={{ flex: 1 }}>
+            <ArrowTriangleHead2ClockwiseRotate90
+              color={darken(mainColor, 0.3)}
+            />
           </Button>
 
-          <Button label="Undo" onPress={undo} style={{ flex: 1 }}>
-            <ArrowShapeTurnUpLeft color="#71C146" />
+          <Button onPress={undo} style={{ flex: 1 }}>
+            <ArrowShapeTurnUpLeft
+              style={{ top: -1, left: -1 }}
+              color={darken(mainColor, 0.3)}
+            />
           </Button>
 
-          <Button label="Undo" onPress={undo} style={{ flex: 1 }}>
-            <SparkleMagnifyingGlass color="#71C146" />
+          <Button onPress={undo} style={{ flex: 1 }}>
+            <SparkleMagnifyingGlass color={darken(mainColor, 0.3)} />
           </Button>
 
-          <Button label="Next" onPress={undo} style={{ width: 64 - 10 }}>
-            <ArrowTriangleRight style={{ right: -2 }} color="#71C146" />
+          <Button onPress={undo} style={{ width: 64 - 10 }}>
+            <ArrowTriangleRight
+              style={{ right: -2 }}
+              color={darken(mainColor, 0.3)}
+            />
           </Button>
         </View>
       </View>
@@ -377,20 +423,40 @@ const styles = StyleSheet.create({
   },
   headerDificulty: {
     fontSize: 20,
-    fontWeight: 800,
-    color: "#71C146",
+    fontWeight: 700,
+    fontFamily: "Rubik",
+    color: "#FFFFFF",
   },
   headerLevel: {
-    fontSize: 18,
-    fontWeight: 700,
-    color: "#71C146",
+    fontSize: 17,
+    fontWeight: 600,
+    fontFamily: "Rubik",
+    color: "#FFFFFF",
+    lineHeight: 27,
+  },
+  headerLevelNumber: {
+    fontSize: 24,
   },
   countContainer: {
     flex: 1,
+    width: "100%",
+    paddingHorizontal: 20,
     justifyContent: "center",
   },
+  countTitle: {
+    fontSize: 30,
+    fontWeight: 700,
+    textTransform: "uppercase",
+    fontFamily: "Rubik",
+    color: "#71C146",
+  },
   count: {
-    fontSize: 50,
+    fontSize: 120,
+    fontWeight: 600,
+    fontFamily: "Rubik",
+    textTransform: "uppercase",
+    color: "#71C146",
+    lineHeight: 124,
   },
   playgroundContainer: {
     width: playgroundSize,
@@ -406,10 +472,6 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     borderWidth: 10,
     borderRadius: 20,
-    borderColor: "#F5F7FF",
-    backgroundColor: "#B1BDD1",
-    // boxShadow: "0 10px 2px 0 #949fb1ff inset",
-    boxShadow: "0 0 1px 0.5px #838d9cff inset",
   },
   gridBottomBorder: {
     position: "absolute",
@@ -417,7 +479,6 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     height: 30,
-    backgroundColor: "#CCD0DA",
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
   },

@@ -1,15 +1,18 @@
 import React, { JSX } from "react";
 import { StyleSheet, View, ViewStyle } from "react-native";
+import Star from "../assets/icons/Star";
 import { goalCaseIndex } from "../config/config";
 import { caseSize } from "../constants/dimension";
+import { darken, lighten } from "../utils/color";
 
 type Props = {
+  color: string;
   style?: ViewStyle;
 };
 
-export default function Grid({ style }: Props): JSX.Element {
+export default function Grid({ color, style }: Props): JSX.Element {
   return (
-    <View style={[styles.gridContainer, style]}>
+    <View style={{ ...styles.gridContainer, ...style }}>
       {[...Array(36)].map((_, index: number) => {
         const col = index % 6;
         const row = Math.floor(index / 6);
@@ -23,9 +26,12 @@ export default function Grid({ style }: Props): JSX.Element {
               height: caseSize - 5,
               left: col * caseSize + 2,
               top: row * caseSize + 2,
+              borderColor: darken(color, 0.3),
               ...(index === goalCaseIndex && styles.goalCase),
             }}
-          />
+          >
+            {index === goalCaseIndex && <Star color={lighten("#DA6C6C")} />}
+          </View>
         );
       })}
     </View>
@@ -44,12 +50,11 @@ const styles = StyleSheet.create({
     position: "absolute",
     alignItems: "center",
     justifyContent: "center",
-    borderColor: "#A2AEC1",
     borderRadius: 10,
     borderWidth: 1,
   },
   goalCase: {
-    borderWidth: 2.5,
-    borderColor: "#DA6C6C",
+    borderWidth: 2,
+    borderColor: lighten("#DA6C6C"),
   },
 });

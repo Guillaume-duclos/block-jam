@@ -10,20 +10,21 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
+import { darken } from "../utils/color";
 
 type Props = {
-  label: string;
   disabled?: boolean;
   onPress?: () => void;
   children?: JSX.Element;
+  color?: string;
   style?: ViewStyle;
 };
 
 export default function Button({
-  label,
   disabled,
   onPress,
   children,
+  color = "#F5F7FF",
   style,
 }: Props): JSX.Element {
   const progress = useSharedValue(0);
@@ -50,9 +51,15 @@ export default function Button({
   return (
     <GestureDetector gesture={tapGesture}>
       <View style={{ ...styles.container, ...style }}>
-        <View style={styles.blockBottomBorder} />
-        <Animated.View style={[styles.block, buttonStyle]}>
-          {/* <Text>{label}</Text> */}
+        <View
+          style={{
+            ...styles.blockBottomBorder,
+            backgroundColor: darken(color, 0.15),
+          }}
+        />
+        <Animated.View
+          style={[styles.block, { backgroundColor: color }, buttonStyle]}
+        >
           {children}
         </Animated.View>
       </View>
@@ -72,7 +79,6 @@ const styles = StyleSheet.create({
     height: 50,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#F5F7FF",
     paddingHorizontal: 20,
     borderRadius: 32,
   },
@@ -81,7 +87,6 @@ const styles = StyleSheet.create({
     height: 32,
     bottom: 4,
     position: "absolute",
-    backgroundColor: "#D6DBE2",
     borderBottomLeftRadius: 28,
     borderBottomRightRadius: 28,
     borderCurve: "continuous",

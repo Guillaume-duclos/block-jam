@@ -1,12 +1,14 @@
 import React, { JSX } from "react";
 import { StyleSheet, View } from "react-native";
 import { caseSize } from "../constants/dimension";
+import { darken } from "../utils/color";
 
 type Props = {
   position: number;
+  color: string;
 };
 
-export default function Block({ position }: Props): JSX.Element {
+export default function Block({ position, color }: Props): JSX.Element {
   const x: number = (position - 6 * Math.floor(position / 6)) * caseSize;
   const y: number = Math.floor(position / 6) * caseSize;
 
@@ -17,11 +19,47 @@ export default function Block({ position }: Props): JSX.Element {
         left: x + 2,
         width: caseSize - 4,
         height: caseSize - 4,
+        // boxShadow: `0 2px 4px 0 ${darken(color, 0.2)}`,
         ...styles.container,
       }}
     >
-      <View style={styles.blockBottomBorder} />
-      <View style={styles.block} />
+      <View
+        style={{
+          ...styles.blockBottomBorder,
+          backgroundColor: darken(color, 0.12),
+        }}
+      />
+
+      <View style={{ ...styles.block, backgroundColor: color }} />
+
+      <View
+        style={{
+          ...styles.screw,
+          ...styles.topLeftScrew,
+          backgroundColor: darken(color),
+        }}
+      />
+      <View
+        style={{
+          ...styles.screw,
+          ...styles.topRightScrew,
+          backgroundColor: darken(color),
+        }}
+      />
+      <View
+        style={{
+          ...styles.screw,
+          ...styles.bottomLeftScrew,
+          backgroundColor: darken(color),
+        }}
+      />
+      <View
+        style={{
+          ...styles.screw,
+          ...styles.bottomRightScrew,
+          backgroundColor: darken(color),
+        }}
+      />
     </View>
   );
 }
@@ -30,22 +68,41 @@ const styles = StyleSheet.create({
   container: {
     position: "absolute",
     paddingBottom: 5,
-    boxShadow: "0 2px 4px 0 #00000033",
     borderRadius: 10,
   },
   block: {
     width: "100%",
     height: "100%",
     borderRadius: 10,
-    backgroundColor: "#939EB0",
   },
   blockBottomBorder: {
     width: "100%",
     height: 20,
     bottom: 0,
     position: "absolute",
-    backgroundColor: "#7F899A",
     borderBottomLeftRadius: 10,
     borderBottomRightRadius: 10,
+  },
+  screw: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    position: "absolute",
+  },
+  topLeftScrew: {
+    top: 6,
+    left: 6,
+  },
+  topRightScrew: {
+    top: 6,
+    right: 6,
+  },
+  bottomLeftScrew: {
+    bottom: 6 + 3,
+    left: 6,
+  },
+  bottomRightScrew: {
+    bottom: 6 + 3,
+    right: 6,
   },
 });
