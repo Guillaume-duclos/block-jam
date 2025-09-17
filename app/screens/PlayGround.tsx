@@ -330,8 +330,10 @@ export default function PlayGround(): JSX.Element {
               Difficulté {difficulty + 1}
             </Text>
             <Text style={styles.headerLevel}>
-              Niveau <Text style={styles.headerLevelNumber}>{level + 1}</Text>/
-              {data[difficulty].levels.length}
+              Niveau{" "}
+              <Text style={styles.headerLevelNumber}>
+                {level + 1}/{data[difficulty].levels.length}
+              </Text>
             </Text>
           </View>
 
@@ -435,7 +437,7 @@ const styles = StyleSheet.create({
     lineHeight: 27,
   },
   headerLevelNumber: {
-    fontSize: 24,
+    fontSize: 20,
   },
   countContainer: {
     flex: 1,
@@ -448,14 +450,14 @@ const styles = StyleSheet.create({
     fontWeight: 700,
     textTransform: "uppercase",
     fontFamily: "Rubik",
-    color: "#71C146",
+    color: darken("#D6F5BC", 0.3),
   },
   count: {
     fontSize: 120,
     fontWeight: 600,
     fontFamily: "Rubik",
     textTransform: "uppercase",
-    color: "#71C146",
+    color: darken("#D6F5BC", 0.3),
     lineHeight: 124,
   },
   playgroundContainer: {

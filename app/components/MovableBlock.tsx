@@ -209,12 +209,20 @@ export default function MovableBlock({
     Haptics.selectionAsync();
   };
 
-  // Gestion des événements lorsque l'utilisateur déplace un véhicule
-  const panGestureEvent: PanGesture = Gesture.Pan()
-    .minDistance(0)
-    .onBegin(() => {
+  // Gestion des événements lorsque l'utilisateur appuis longtemps
+  const longPressGesture = Gesture.LongPress()
+    .minDuration(1000)
+    .onStart(() => {
       progress.value = withTiming(1, { duration: 150 });
     })
+    .onEnd(() => {
+      progress.value = withTiming(0, { duration: 150 });
+    })
+    .runOnJS(true);
+
+  // Gestion des événements lorsque l'utilisateur déplace un bloc
+  const panGesture: PanGesture = Gesture.Pan()
+    .minDistance(0)
     .onUpdate((event): void => {
       const isHorizontal = orientation === Orientation.HORIZONTAL;
 
@@ -265,13 +273,12 @@ export default function MovableBlock({
 
       vibrationEnable.current = true;
     })
-    .onFinalize(() => {
-      progress.value = withTiming(0, { duration: 150 });
-    })
     .runOnJS(true);
 
+  const composedGesure = Gesture.Simultaneous(longPressGesture, panGesture);
+
   return (
-    <GestureDetector gesture={panGestureEvent}>
+    <GestureDetector gesture={composedGesure}>
       <Animated.View
         style={[
           styles.blockContainer,
