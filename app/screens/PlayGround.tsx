@@ -1,8 +1,14 @@
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
+import { FlashList, FlashListRef } from "@shopify/flash-list";
 import { LinearGradient } from "expo-linear-gradient";
-import React, { JSX, RefObject, useEffect, useRef, useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
+import React, { JSX, useRef, useState } from "react";
+import {
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import ArrowShapeLeftFill from "../assets/icons/ArrowShapeLeftFill";
 import ArrowShapeTurnUpLeft from "../assets/icons/ArrowShapeTurnUpLeft";
@@ -12,36 +18,25 @@ import ArrowTriangleRight from "../assets/icons/ArrowTriangleRight";
 import Settings from "../assets/icons/GearShapeFill";
 import SparkleMagnifyingGlass from "../assets/icons/SparkleMagnifyingGlass";
 import Button from "../components/Button";
-import FixedBlock from "../components/FixedBlock";
-import Grid from "../components/Grid";
-import MovableBlock from "../components/MovableBlock";
-import { playgroundSize } from "../constants/dimension";
+import LevelPlayground, {
+  LevelPlaygroundRef,
+} from "../components/LevelPlayground";
+import PressableIcon from "../components/PressableIcon";
 import data from "../data/levels.json";
-import { BlockType } from "../enums/blockType.enum";
-import { Orientation } from "../enums/orientation.enum";
 import { Screen } from "../enums/screen.enum";
-import useGrid from "../hooks/useGrid.hook";
-import ElementData from "../types/elementData.type";
+import { Level } from "../types/level.type";
 import NavigationProp from "../types/navigation.type";
 import RootStackParamList from "../types/rootStackParamList.type";
 import { darken } from "../utils/color";
-import { firstLineCaseIndex, lastLineCaseIndex } from "../utils/line";
 
 type playGroundRouteProp = RouteProp<RootStackParamList, Screen.PLAYGROUND>;
 
 export default function PlayGround(): JSX.Element {
-  const [vehiclePositions, setVehiclePositions] = useState<ElementData[]>([]);
-  const [count, setCount] = useState<number>(0);
-  const history: RefObject<[]> = useRef([]);
-
   const insets = useSafeAreaInsets();
 
   const navigation = useNavigation<NavigationProp>();
 
   const route = useRoute<playGroundRouteProp>();
-
-  // Initialisation des tranches de déplacements possibles
-  const grid: number[] = useGrid();
 
   const difficulty: number = route.params.difficultyIndex;
   const level: number = route.params.level.index;
@@ -49,196 +44,33 @@ export default function PlayGround(): JSX.Element {
   const mainColor: string = "#FAF7F2";
   const topColor: string = darken("#D6F5BC", 0.3) || "";
 
-  useEffect((): void => {
-    // console.log(JSON.stringify(vehiclePositions));
-  }, [vehiclePositions]);
+  const [activeLevelIndex, setActiveLevelIndex] = useState(level);
+  const [isResetDisabled, setIsResetDisabled] = useState(false);
+  const [isUndoDisabled, setIsUndoDisabled] = useState(false);
 
-  useEffect((): void => {
-    computeBlockPositions();
-  }, []);
+  const levelsListRef = useRef<FlashListRef<Level>>(null);
+  const levelPlaygroundRef = useRef<LevelPlaygroundRef | null>(null);
 
-  // Initialise les valeurs de vehiclePositions
-  const computeBlockPositions = (): void => {
-    // On récupère le niveau
-    const level: string = route.params?.level.layout;
+  const levelsList = data[difficulty].levels;
 
-    // Initialisation du tableau de positions de tous les véhicules
-    let positions: ElementData[] = [];
+  const previousLevelDisabled = activeLevelIndex === 0;
+  const nextLevelDisabled = activeLevelIndex === levelsList.length - 1;
 
-    // On parse toutes les lettres de la description de la grille
-    for (let i: number = 0; i < level.length; i++) {
-      // 1. On récupère le label
-      const label: string = level.charAt(i);
+  // Configuration de la liste
+  const levelListConfig = useRef({
+    minimumViewTime: 0,
+    viewAreaCoveragePercentThreshold: 50,
+  }).current;
 
-      // 2. On vérifie si le label n'a pas déjà été inséré
-      const previousSameLabel: number = positions.findIndex(
-        (position): boolean => position.label === label
-      );
-
-      // 3. On récupère l'orientation
-      let orientation: Orientation = Orientation.NULL;
-
-      if (previousSameLabel === -1) {
-        if (level[i + 1] === label) {
-          orientation = Orientation.HORIZONTAL;
-        } else {
-          orientation = Orientation.VERTICAL;
-        }
-      }
-
-      // 4. On ajoute les données pour chaque élément
-      if (previousSameLabel !== -1) {
-        positions[previousSameLabel].position.push(i);
-      } else if (label === BlockType.EMPTY || label === BlockType.WALL) {
-        positions.push({
-          label,
-          position: [i],
-        });
-      } else {
-        positions.push({
-          label,
-          range: [],
-          position: [i],
-          orientation,
-        });
-      }
-    }
-
-    // 5. On récupère toutes les positions occupées
-    const occupiedPositions = computesOccupiedPositions(positions);
-
-    // 6. On récupère les plages de valeur min et max
-    positions = positions.map((position) => {
-      if (
-        position.label !== BlockType.WALL &&
-        position.label !== BlockType.EMPTY
-      ) {
-        return {
-          ...position,
-          range: computeBlockRange(position, occupiedPositions),
-        };
-      }
-
-      return { ...position };
-    });
-
-    setVehiclePositions(positions);
-  };
-
-  // Mise à jour de la nouvelle position du dernier véhicule déplacé
-  const updateBlockPosition = (
-    position: number[],
-    label: string,
-    addToHistory?: boolean
-  ): void => {
-    // On récupère l'index du véhicule dans le tableau des positions avec le label
-    const index = vehiclePositions.findIndex(
-      (position) => position.label === label
+  // Lorsque le scroll de la liste des niveau est terminé
+  const onMomentumScrollEnd = ({
+    nativeEvent,
+  }: NativeSyntheticEvent<NativeScrollEvent>): void => {
+    const index = Math.round(
+      nativeEvent.contentOffset.x / nativeEvent.layoutMeasurement.width
     );
 
-    // On ajoute la nouvelle position dans l'historique si l'option est activé
-    if (addToHistory) {
-      const newHistoricPositions = {
-        previousPosition: vehiclePositions[index].position,
-        label,
-      };
-
-      history.current.push(newHistoricPositions);
-    }
-
-    // On récupère toutes les positions
-    let newPositions = vehiclePositions;
-
-    // On ajoute les nouvelles valeurs du véhicule
-    newPositions[index].position = position;
-
-    // On met à jour la valeur du range des autres véhicules
-    const occupiedPositions = computesOccupiedPositions(newPositions);
-
-    // On récupère les plages de valeur min et max
-    newPositions = vehiclePositions.map((position: ElementData) => {
-      if (
-        position.label !== BlockType.WALL &&
-        position.label !== BlockType.EMPTY
-      ) {
-        return {
-          ...position,
-          range: computeBlockRange(position, occupiedPositions),
-        };
-      }
-
-      return { ...position };
-    });
-
-    // On met à jour la tableau des positions et le compteur de mouvement
-    setVehiclePositions(newPositions);
-    setCount(count + 1);
-  };
-
-  // Récupère toutes les positions occupées par les véhicules et les blocs fixes
-  const computesOccupiedPositions = (positions: ElementData[]): number[] => {
-    const occupiedPositions: number[] = [];
-
-    for (let i: number = 0; i < positions.length; i++) {
-      if (positions[i].label !== BlockType.EMPTY) {
-        for (let y: number = 0; y < positions[i].position.length; y++) {
-          occupiedPositions.push(positions[i].position[y]);
-        }
-      }
-    }
-
-    return occupiedPositions;
-  };
-
-  // Calcule de la plage de valeur de déplacement possible
-  const computeBlockRange = (
-    element: ElementData,
-    occupiedPositions: number[]
-  ): number[] => {
-    // On récupère la plage de valeur minimum et maximum du véhicule
-    let min = firstLineCaseIndex(element.position, element.orientation);
-    let max = lastLineCaseIndex(element.position, element.orientation);
-
-    // On calcule les positions minimum et maximum pour le véhicule
-    const lineCases: number[] = [];
-
-    // 1. On récupère toutes les cases de la ligne
-    if (element.orientation === Orientation.HORIZONTAL) {
-      for (let i: number = min; i <= max; i++) {
-        lineCases.push(i);
-      }
-    } else {
-      for (let i: number = min; i <= max; i += 6) {
-        lineCases.push(i);
-      }
-    }
-
-    // 2. On récupère les cases libres dans la ligne
-    const emptyCases: number[] = lineCases.filter(
-      (value: number) => !occupiedPositions.includes(value)
-    );
-
-    // 3. On récupère les positions minimum et maximum disponibles
-    let minPosition: number = element.position[0];
-    let maxPosition: number = element.position[element.position.length - 1];
-
-    const offset = element.orientation === Orientation.HORIZONTAL ? 1 : 6;
-
-    // On récupère la position minimum
-    while (emptyCases.includes(minPosition - offset)) {
-      minPosition -= offset;
-    }
-
-    // On récupère la position maximum
-    while (emptyCases.includes(maxPosition + offset)) {
-      maxPosition += offset;
-    }
-
-    // 4. On convertit les positions minimale et maximale au format correspondant
-    min = lineCases.indexOf(minPosition);
-    max = lineCases.indexOf(maxPosition);
-
-    return [min, max];
+    setActiveLevelIndex(index);
   };
 
   // Retour au menu
@@ -253,55 +85,32 @@ export default function PlayGround(): JSX.Element {
 
   // Réinitialise le niveau
   const reset = (): void => {
-    if (history.current.length) {
-      computeBlockPositions();
-    }
-
-    setCount(0);
+    levelPlaygroundRef?.current?.reset();
   };
 
   // Annule le dernier mouvement
   const undo = (): void => {
-    if (history.current.length) {
-      const lastHistory = history.current.at(-1);
-
-      if (lastHistory) {
-        history.current.pop();
-        updateBlockPosition(lastHistory.previousPosition, lastHistory.label);
-      }
-    }
+    levelPlaygroundRef?.current?.undo();
   };
 
-  // Rend les véhicules et les blocs
-  const renderBlocks = (): JSX.Element[] => {
-    return vehiclePositions.map((data: any, vehicleIndex: number) => {
-      if (data.label !== BlockType.EMPTY && data.label !== BlockType.WALL) {
-        return (
-          <MovableBlock
-            key={`${vehicleIndex}`}
-            grid={grid}
-            label={data.label}
-            range={data.range}
-            position={data.position}
-            orientation={data.orientation}
-            color="#F5F7FF"
-            updatePosition={updateBlockPosition}
-          />
-        );
-      } else if (data.label === BlockType.WALL) {
-        return data.position.map(
-          (position: number, blocIndex: number): JSX.Element => {
-            return (
-              <FixedBlock
-                position={position}
-                key={`${blocIndex}`}
-                color="#939EB0"
-              />
-            );
-          }
-        );
-      }
-    });
+  // Display previous level
+  const previousLevel = (): void => {
+    levelsListRef.current.scrollToIndex({ index: activeLevelIndex - 1 });
+  };
+
+  // Display next level
+  const nextLevel = (): void => {
+    levelsListRef.current.scrollToIndex({ index: activeLevelIndex + 1 });
+  };
+
+  const updateResetDisabled = (value: boolean): void => {
+    console.log({ value });
+    setIsResetDisabled(value);
+  };
+
+  const updateUndoDisabled = (value: boolean): void => {
+    console.log({ value });
+    setIsUndoDisabled(value);
   };
 
   return (
@@ -321,9 +130,9 @@ export default function PlayGround(): JSX.Element {
       >
         {/* HEADER */}
         <View style={styles.header}>
-          <Pressable onPress={goback}>
+          <PressableIcon onPress={goback}>
             <ArrowShapeLeftFill color="#FFFFFF" />
-          </Pressable>
+          </PressableIcon>
 
           <View style={{ alignItems: "center" }}>
             <Text style={styles.headerDificulty}>
@@ -332,74 +141,90 @@ export default function PlayGround(): JSX.Element {
             <Text style={styles.headerLevel}>
               Niveau{" "}
               <Text style={styles.headerLevelNumber}>
-                {level + 1}/{data[difficulty].levels.length}
+                {activeLevelIndex + 1}/{data[difficulty].levels.length}
               </Text>
             </Text>
           </View>
 
-          <Pressable onPress={openSettings}>
+          <PressableIcon onPress={openSettings}>
             <Settings color="#FFFFFF" />
-          </Pressable>
+          </PressableIcon>
         </View>
 
-        {/* SCORES */}
-        <View style={styles.countContainer}>
-          <Text style={styles.countTitle}>Coups</Text>
-          <Text style={styles.count}>{count}</Text>
-        </View>
-
-        {/* PLAYGROUND */}
-        <View style={styles.playgroundContainer}>
-          <View
-            style={{
-              ...styles.gridBottomBorder,
-              backgroundColor: darken(mainColor, 0.16),
-            }}
-          />
-
-          <View
-            style={{
-              ...styles.gridContainer,
-              borderColor: mainColor,
-              backgroundColor: darken("#D6F5BC", 0.2),
-              boxShadow: `0 0 1px 0.5px ${darken("#D6F5BC", 0.35)} inset`,
-            }}
-          >
-            <Grid color="#D6F5BC" />
-
-            <GestureHandlerRootView>
-              {grid.length > 0 && vehiclePositions && renderBlocks()}
-            </GestureHandlerRootView>
-          </View>
-        </View>
+        <FlashList
+          ref={levelsListRef}
+          data={levelsList}
+          horizontal={true}
+          pagingEnabled={true}
+          scrollEnabled={false}
+          maxItemsInRecyclePool={3}
+          initialScrollIndex={level}
+          viewabilityConfig={levelListConfig}
+          showsHorizontalScrollIndicator={false}
+          onMomentumScrollEnd={onMomentumScrollEnd}
+          renderItem={({ item }) => (
+            <LevelPlayground
+              ref={levelPlaygroundRef}
+              level={item}
+              updateUndoDisabled={updateUndoDisabled}
+              updateResetDisabled={updateResetDisabled}
+            />
+          )}
+          style={styles.levelList}
+        />
 
         {/* BUTTONS CRONTROLS */}
         <View style={styles.buttonsContainer}>
-          <Button onPress={reset} style={{ width: 64 - 10 }}>
+          <Button
+            onPress={previousLevel}
+            style={{ width: 64 - 10 }}
+            disabled={previousLevelDisabled}
+          >
             <ArrowTriangleLeft
               style={{ left: -2 }}
               color={darken(mainColor, 0.3)}
             />
           </Button>
 
-          <Button onPress={reset} style={{ flex: 1 }}>
-            <ArrowTriangleHead2ClockwiseRotate90
-              color={darken(mainColor, 0.3)}
-            />
-          </Button>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              flex: 1,
+              gap: 6,
+            }}
+          >
+            <Button
+              onPress={reset}
+              style={{ flex: 1 }}
+              disabled={isResetDisabled}
+            >
+              <ArrowTriangleHead2ClockwiseRotate90
+                color={darken(mainColor, 0.3)}
+              />
+            </Button>
 
-          <Button onPress={undo} style={{ flex: 1 }}>
-            <ArrowShapeTurnUpLeft
-              style={{ top: -1, left: -1 }}
-              color={darken(mainColor, 0.3)}
-            />
-          </Button>
+            <Button
+              onPress={undo}
+              style={{ flex: 1 }}
+              disabled={isUndoDisabled}
+            >
+              <ArrowShapeTurnUpLeft
+                style={{ top: -1, left: -1 }}
+                color={darken(mainColor, 0.3)}
+              />
+            </Button>
 
-          <Button onPress={undo} style={{ flex: 1 }}>
-            <SparkleMagnifyingGlass color={darken(mainColor, 0.3)} />
-          </Button>
+            <Button onPress={undo} style={{ flex: 1 }} disabled>
+              <SparkleMagnifyingGlass color={darken(mainColor, 0.3)} />
+            </Button>
+          </View>
 
-          <Button onPress={undo} style={{ width: 64 - 10 }}>
+          <Button
+            onPress={nextLevel}
+            style={{ width: 64 - 10 }}
+            disabled={nextLevelDisabled}
+          >
             <ArrowTriangleRight
               style={{ right: -2 }}
               color={darken(mainColor, 0.3)}
@@ -439,57 +264,15 @@ const styles = StyleSheet.create({
   headerLevelNumber: {
     fontSize: 20,
   },
-  countContainer: {
+  levelList: {
     flex: 1,
-    width: "100%",
-    paddingHorizontal: 20,
-    justifyContent: "center",
-  },
-  countTitle: {
-    fontSize: 30,
-    fontWeight: 700,
-    textTransform: "uppercase",
-    fontFamily: "Rubik",
-    color: darken("#D6F5BC", 0.3),
-  },
-  count: {
-    fontSize: 120,
-    fontWeight: 600,
-    fontFamily: "Rubik",
-    textTransform: "uppercase",
-    color: darken("#D6F5BC", 0.3),
-    lineHeight: 124,
-  },
-  playgroundContainer: {
-    width: playgroundSize,
-    height: playgroundSize,
-    boxShadow: "0 20px 16px 0 #00000050",
-    borderRadius: 20,
-    marginBottom: 50,
-  },
-  gridContainer: {
-    width: playgroundSize,
-    height: playgroundSize,
-    padding: 10,
-    paddingTop: 10,
-    borderWidth: 10,
-    borderRadius: 20,
-  },
-  gridBottomBorder: {
-    position: "absolute",
-    bottom: -12,
-    left: 0,
-    right: 0,
-    height: 30,
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
   },
   buttonsContainer: {
     gap: 12,
     width: "100%",
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingHorizontal: 20,
+    paddingHorizontal: 16,
   },
   button: {
     padding: 10,

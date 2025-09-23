@@ -14,7 +14,7 @@ import { darken } from "../utils/color";
 
 type Props = {
   disabled?: boolean;
-  onPress?: () => void;
+  onPress: () => void;
   children?: JSX.Element;
   color?: string;
   style?: ViewStyle;
@@ -34,6 +34,7 @@ export default function Button({
   }));
 
   const tapGesture: TapGesture = Gesture.Tap()
+    .enabled(!disabled)
     .maxDuration(Number.MAX_SAFE_INTEGER)
     .onBegin(() => {
       progress.value = withTiming(6, { duration: 80 });
@@ -42,9 +43,7 @@ export default function Button({
       progress.value = withTiming(0, { duration: 80 });
     })
     .onEnd(() => {
-      if (onPress && !disabled) {
-        onPress();
-      }
+      onPress();
     })
     .runOnJS(true);
 
@@ -60,7 +59,7 @@ export default function Button({
         <Animated.View
           style={[styles.block, { backgroundColor: color }, buttonStyle]}
         >
-          {children}
+          <View style={{ opacity: disabled ? 0.4 : 1 }}>{children}</View>
         </Animated.View>
       </View>
     </GestureDetector>

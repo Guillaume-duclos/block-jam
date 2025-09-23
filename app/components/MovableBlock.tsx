@@ -231,13 +231,13 @@ export default function MovableBlock({
         const minRange = range[0] * caseSize;
         const maxRange = range[1] * caseSize - (position.length - 1) * caseSize;
 
-        console.log("------------------------------");
-        console.log({ absoluteX: event.absoluteX });
-        console.log({ caseSize });
-        console.log({ minRange });
-        console.log({ maxRange });
-        console.log({ touchPosition });
-        console.log(touchPosition >= minRange && touchPosition <= maxRange);
+        // console.log("------------------------------");
+        // console.log({ absoluteX: event.absoluteX });
+        // console.log({ caseSize });
+        // console.log({ minRange });
+        // console.log({ maxRange });
+        // console.log({ touchPosition });
+        // console.log(touchPosition >= minRange && touchPosition <= maxRange);
 
         // Vérifie si le déplacement en X est toujours compris dans le rang
         if (touchPosition >= minRange && touchPosition <= maxRange) {
@@ -282,7 +282,7 @@ export default function MovableBlock({
       <Animated.View
         style={[
           styles.blockContainer,
-          { boxShadow: `0 2px 4px 0 ${darken(color, 0.35)}` },
+          { boxShadow: `0 2px 4px 0 ${darken(color, 0.3)}` },
           vehicleDimensions(),
           vehiclePosition,
         ]}
