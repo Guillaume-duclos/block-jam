@@ -1,15 +1,16 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { JSX, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { StyleSheet, Text, View } from "react-native";
-import XMark from "../assets/icons/XMark";
-import PressableIcon from "../components/PressableIcon";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
+import ArrowTriangleRightFill from "../assets/icons/ArrowTriangleRightFill";
+import PressableView from "../components/PressableView";
+import ScreenHeader from "../components/ScreenHeader";
 import { Language } from "../enums/language.enum";
+import { Screen } from "../enums/screen.enum";
 import { StorageKey } from "../enums/storageKey.enum";
 import Theme from "../enums/theme.enum";
 import { useTheme } from "../providers/themeContext";
 import NavigationProps from "../types/navigation.type";
-import { darken } from "../utils/color";
 import {
   getStorageString,
   removeAllStorage,
@@ -46,15 +47,50 @@ export default function Settings(): JSX.Element {
     removeAllStorage();
   };
 
-  return (
-    <View
-      style={{ ...styles.container, backgroundColor: darken("#D6F5BC", 0.3) }}
-    >
-      <Text style={styles.title}>Settings</Text>
+  const navigate = (screen: Screen): void => {
+    navigation.navigate(screen);
+  };
 
-      <PressableIcon onPress={goBack} style={styles.exitButton}>
-        <XMark color="#FFFFFF" />
-      </PressableIcon>
+  return (
+    <View style={styles.container}>
+      <ScreenHeader label="Settings" onPressExit={goBack} />
+
+      <ScrollView style={styles.scrollView}>
+        <View style={styles.section}>
+          <PressableView
+            minimumScale={0.98}
+            onPress={() => navigate(Screen.TERMS_OF_USE)}
+            style={styles.link}
+          >
+            <View style={styles.linkContentContainer}>
+              <Text style={styles.linkLabel}>Terms of use</Text>
+              <ArrowTriangleRightFill color="#FFFFFF" style={styles.linkIcon} />
+            </View>
+          </PressableView>
+
+          <PressableView
+            minimumScale={0.98}
+            onPress={() => navigate(Screen.PRIVACY_POLICY)}
+            style={styles.link}
+          >
+            <View style={styles.linkContentContainer}>
+              <Text style={styles.linkLabel}>Privacy policy</Text>
+              <ArrowTriangleRightFill color="#FFFFFF" style={styles.linkIcon} />
+            </View>
+          </PressableView>
+
+          <PressableView
+            minimumScale={0.98}
+            onPress={() => {}}
+            style={styles.link}
+          >
+            <View style={styles.linkContentContainer}>
+              <Text style={styles.linkLabel}>CGU</Text>
+              <ArrowTriangleRightFill color="#FFFFFF" style={styles.linkIcon} />
+            </View>
+          </PressableView>
+        </View>
+      </ScrollView>
 
       {/* <Button onPress={goBack} label="Go back" />
 
@@ -98,24 +134,36 @@ export default function Settings(): JSX.Element {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingTop: 20,
     alignItems: "center",
-    paddingVertical: 20,
   },
-  title: {
+  scrollView: {
+    padding: 20,
+  },
+  section: {
+    gap: 28,
+    marginTop: 10,
+  },
+  link: {
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  linkContentContainer: {
+    gap: 20,
+    alignItems: "center",
+    flexDirection: "row",
+  },
+  linkLabel: {
     flex: 1,
-    fontSize: 26,
+    fontSize: 20,
     fontWeight: 700,
     fontFamily: "Rubik",
     textTransform: "uppercase",
     color: "#FFFFFF",
   },
-  exitButton: {
-    top: 23,
-    right: 20,
-    position: "absolute",
-  },
-  section: {
-    gap: 10,
-    marginTop: 30,
+  linkIcon: {
+    transform: [{ scale: 0.7 }],
   },
 });

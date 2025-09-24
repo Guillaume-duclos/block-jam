@@ -14,6 +14,7 @@ import TermsOfUse from "../screens/TermsOfUse";
 import Tutorial from "../screens/Tutorial";
 import NavigationProp from "../types/navigation.type";
 import RootStackParamList from "../types/rootStackParamList.type";
+import { darken } from "../utils/color";
 import { getStorageBoolean } from "../utils/storage";
 
 const Navigation = () => {
@@ -31,6 +32,22 @@ const Navigation = () => {
   );
 
   const initialRouteName = turialScreenViewed ? Screen.MENU : Screen.TUTORIAL;
+
+  function SettingsStack() {
+    return (
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false,
+          presentation: "card",
+          contentStyle: { backgroundColor: darken("#D6F5BC", 0.3) },
+        }}
+      >
+        <Stack.Screen name={Screen.SETTINGS} component={Settings} />
+        <Stack.Screen name={Screen.TERMS_OF_USE} component={TermsOfUse} />
+        <Stack.Screen name={Screen.PRIVACY_POLICY} component={PrivacyPolicy} />
+      </Stack.Navigator>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -53,19 +70,7 @@ const Navigation = () => {
 
         <Stack.Screen
           name={Screen.SETTINGS}
-          component={Settings}
-          options={{ presentation: "pageSheet" }}
-        />
-
-        <Stack.Screen
-          name={Screen.PRIVACY_POLICY}
-          component={PrivacyPolicy}
-          options={{ presentation: "pageSheet" }}
-        />
-
-        <Stack.Screen
-          name={Screen.TERMS_OF_USE}
-          component={TermsOfUse}
+          component={SettingsStack}
           options={{ presentation: "pageSheet" }}
         />
       </Stack.Navigator>

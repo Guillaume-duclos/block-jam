@@ -21,7 +21,7 @@ import Button from "../components/Button";
 import LevelPlayground, {
   LevelPlaygroundRef,
 } from "../components/LevelPlayground";
-import PressableIcon from "../components/PressableIcon";
+import PressableView from "../components/PressableView";
 import data from "../data/levels.json";
 import { Screen } from "../enums/screen.enum";
 import { Level } from "../types/level.type";
@@ -130,9 +130,9 @@ export default function PlayGround(): JSX.Element {
       >
         {/* HEADER */}
         <View style={styles.header}>
-          <PressableIcon onPress={goback}>
+          <PressableView onPress={goback}>
             <ArrowShapeLeftFill color="#FFFFFF" />
-          </PressableIcon>
+          </PressableView>
 
           <View style={{ alignItems: "center" }}>
             <Text style={styles.headerDificulty}>
@@ -146,9 +146,9 @@ export default function PlayGround(): JSX.Element {
             </Text>
           </View>
 
-          <PressableIcon onPress={openSettings}>
+          <PressableView onPress={openSettings}>
             <Settings color="#FFFFFF" />
-          </PressableIcon>
+          </PressableView>
         </View>
 
         <FlashList

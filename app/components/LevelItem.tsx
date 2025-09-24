@@ -27,7 +27,7 @@ const LevelItem = memo(({ levels, difficultyIndex }: Props): JSX.Element => {
   };
 
   return (
-    <View style={{ ...styles.levelItemsContainer }}>
+    <View style={styles.levelItemsContainer}>
       {levels.map((level: Level, index: number) => {
         return (
           <Pressable

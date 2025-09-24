@@ -15,13 +15,15 @@ type Props = {
   disabled?: boolean;
   onPress: () => void;
   children?: JSX.Element;
+  minimumScale?: number;
   style?: ViewStyle;
 };
 
-export default function PressableIcon({
+export default function PressableView({
   disabled,
   onPress,
   children,
+  minimumScale = 0.92,
   style,
 }: Props): JSX.Element {
   const progress = useSharedValue(1);
@@ -34,7 +36,7 @@ export default function PressableIcon({
     .enabled(!disabled)
     .maxDuration(Number.MAX_SAFE_INTEGER)
     .onBegin(() => {
-      progress.value = withTiming(0.92, { duration: 100 });
+      progress.value = withTiming(minimumScale, { duration: 100 });
     })
     .onFinalize(() => {
       progress.value = withTiming(1, { duration: 100 });
