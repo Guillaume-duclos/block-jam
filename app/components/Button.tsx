@@ -16,16 +16,20 @@ type Props = {
   disabled?: boolean;
   onPress: () => void;
   children?: JSX.Element;
+  deep?: number;
   color?: string;
   style?: ViewStyle;
+  contentContainerStyle?: ViewStyle;
 };
 
 export default function Button({
   disabled,
   onPress,
   children,
+  deep = 12,
   color = "#F5F7FF",
   style,
+  contentContainerStyle,
 }: Props): JSX.Element {
   const progress = useSharedValue(0);
 
@@ -37,7 +41,7 @@ export default function Button({
     .enabled(!disabled)
     .maxDuration(Number.MAX_SAFE_INTEGER)
     .onBegin(() => {
-      progress.value = withTiming(6, { duration: 80 });
+      progress.value = withTiming(deep - deep / 3, { duration: 80 });
     })
     .onFinalize(() => {
       progress.value = withTiming(0, { duration: 80 });
@@ -54,10 +58,17 @@ export default function Button({
           style={{
             ...styles.blockBottomBorder,
             backgroundColor: darken(color, 0.15),
+            height: "50%",
+            bottom: 16 - deep,
           }}
         />
         <Animated.View
-          style={[styles.block, { backgroundColor: color }, buttonStyle]}
+          style={[
+            styles.block,
+            contentContainerStyle,
+            { backgroundColor: color },
+            buttonStyle,
+          ]}
         >
           <View style={{ opacity: disabled ? 0.4 : 1 }}>{children}</View>
         </Animated.View>
@@ -71,7 +82,6 @@ const styles = StyleSheet.create({
     height: 64,
     borderRadius: 32,
     borderCurve: "continuous",
-    // boxShadow: "0 3px 10px 0 #00000030",
   },
   block: {
     width: "100%",
@@ -82,12 +92,11 @@ const styles = StyleSheet.create({
     borderRadius: 32,
   },
   blockBottomBorder: {
-    width: "100%",
-    height: 32,
-    bottom: 4,
+    left: 0,
+    right: 0,
     position: "absolute",
+    borderCurve: "continuous",
     borderBottomLeftRadius: 28,
     borderBottomRightRadius: 28,
-    borderCurve: "continuous",
   },
 });

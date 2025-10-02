@@ -24,6 +24,7 @@ import LevelPlayground, {
 import PressableView from "../components/PressableView";
 import data from "../data/levels.json";
 import { Screen } from "../enums/screen.enum";
+import { useLevelStore } from "../store/level";
 import { Level } from "../types/level.type";
 import NavigationProp from "../types/navigation.type";
 import RootStackParamList from "../types/rootStackParamList.type";
@@ -37,6 +38,9 @@ export default function PlayGround(): JSX.Element {
   const navigation = useNavigation<NavigationProp>();
 
   const route = useRoute<playGroundRouteProp>();
+
+  const isResetEnabled = useLevelStore((value) => value.isResetEnabled);
+  const isUndoEnabled = useLevelStore((value) => value.isUndoEnabled);
 
   const difficulty: number = route.params.difficultyIndex;
   const level: number = route.params.level.index;
@@ -103,16 +107,6 @@ export default function PlayGround(): JSX.Element {
     levelsListRef.current.scrollToIndex({ index: activeLevelIndex + 1 });
   };
 
-  const updateResetDisabled = (value: boolean): void => {
-    console.log({ value });
-    setIsResetDisabled(value);
-  };
-
-  const updateUndoDisabled = (value: boolean): void => {
-    console.log({ value });
-    setIsUndoDisabled(value);
-  };
-
   return (
     <LinearGradient
       colors={[topColor, "#D6F5BC"]}
@@ -163,12 +157,7 @@ export default function PlayGround(): JSX.Element {
           showsHorizontalScrollIndicator={false}
           onMomentumScrollEnd={onMomentumScrollEnd}
           renderItem={({ item }) => (
-            <LevelPlayground
-              ref={levelPlaygroundRef}
-              level={item}
-              updateUndoDisabled={updateUndoDisabled}
-              updateResetDisabled={updateResetDisabled}
-            />
+            <LevelPlayground ref={levelPlaygroundRef} level={item} />
           )}
           style={styles.levelList}
         />
@@ -197,7 +186,7 @@ export default function PlayGround(): JSX.Element {
             <Button
               onPress={reset}
               style={{ flex: 1 }}
-              disabled={isResetDisabled}
+              disabled={!isResetEnabled}
             >
               <ArrowTriangleHead2ClockwiseRotate90
                 color={darken(mainColor, 0.3)}
@@ -207,7 +196,7 @@ export default function PlayGround(): JSX.Element {
             <Button
               onPress={undo}
               style={{ flex: 1 }}
-              disabled={isUndoDisabled}
+              disabled={!isUndoEnabled}
             >
               <ArrowShapeTurnUpLeft
                 style={{ top: -1, left: -1 }}

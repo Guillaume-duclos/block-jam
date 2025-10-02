@@ -3,6 +3,7 @@ import React, { JSX } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import ScreenHeader from "../components/ScreenHeader";
+import { text } from "../theme/text";
 import NavigationProp from "../types/navigation.type";
 
 export default function PrivacyPolicy(): JSX.Element {
@@ -21,10 +22,10 @@ export default function PrivacyPolicy(): JSX.Element {
       <ScrollView
         contentContainerStyle={{
           ...styles.scrollView,
-          paddingBottom: insets.bottom,
+          paddingBottom: insets.bottom + 20,
         }}
       >
-        <View style={styles.section}>
+        <View>
           <Text style={styles.subTitle}>
             The standard Lorem Ipsum passage, used since the 1500s
           </Text>
@@ -39,7 +40,7 @@ export default function PrivacyPolicy(): JSX.Element {
           </Text>
         </View>
 
-        <View style={styles.section}>
+        <View>
           <Text style={styles.subTitle}>1914 translation by H. Rackham</Text>
           <Text style={styles.paragraph}>
             But I must explain to you how all this mistaken idea of denouncing
@@ -71,26 +72,20 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   scrollView: {
+    gap: 30,
     paddingTop: 20,
-    paddingBottom: 20,
     paddingHorizontal: 20,
   },
   section: {
     marginBottom: 40,
   },
   subTitle: {
-    fontSize: 24,
-    lineHeight: 28,
-    fontWeight: 700,
-    fontFamily: "Rubik",
     color: "#FFFFFF",
+    ...text.title2,
   },
   paragraph: {
-    fontSize: 18,
-    lineHeight: 22,
-    fontWeight: 500,
-    fontFamily: "Rubik",
     color: "#FFFFFF",
     marginTop: 10,
+    ...text.paragraph,
   },
 });

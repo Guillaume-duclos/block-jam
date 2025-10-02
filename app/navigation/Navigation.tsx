@@ -42,7 +42,7 @@ const Navigation = () => {
           contentStyle: { backgroundColor: darken("#D6F5BC", 0.3) },
         }}
       >
-        <Stack.Screen name={Screen.SETTINGS} component={Settings} />
+        <Stack.Screen name={Screen.SETTINGS_MENU} component={Settings} />
         <Stack.Screen name={Screen.TERMS_OF_USE} component={TermsOfUse} />
         <Stack.Screen name={Screen.PRIVACY_POLICY} component={PrivacyPolicy} />
       </Stack.Navigator>

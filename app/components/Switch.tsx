@@ -1,6 +1,6 @@
 import * as Haptics from "expo-haptics";
 import React, { JSX, useEffect } from "react";
-import { Pressable, StyleSheet, View, ViewStyle } from "react-native";
+import { Pressable, StyleSheet, ViewStyle } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
   interpolateColor,
@@ -60,8 +60,6 @@ export default function Switch({
 
   return (
     <Pressable onPress={onChange} disabled={!onChange || disabled}>
-      <View style={styles.containerBorderBottom} />
-
       <Animated.View style={[styles.container, style, containerStyle]}>
         <GestureDetector gesture={panGesture}>
           <Animated.View style={[styles.switch, thumbStyle]} />
@@ -78,37 +76,15 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     borderColor: "#F5F7FF",
     justifyContent: "center",
-    boxShadow: "0 6px 2px 0 #00000030 inset",
     borderRadius: 4,
   },
-  containerBorderBottom: {
-    width: "100%",
-    height: 20,
-    bottom: -6,
-    position: "absolute",
-    backgroundColor: "#D6DBE2",
-    boxShadow: "0 3px 10px 0 #00000030",
-    borderBottomLeftRadius: 4,
-    borderBottomRightRadius: 4,
-  },
   switch: {
-    top: -3,
+    top: -2,
     left: 1,
     width: 24,
-    height: 24 - 6,
+    height: 24 - 4,
     backgroundColor: "#F5F7FF",
-    boxShadow: "0 6px 0px 0 #D6DBE2",
+    boxShadow: "0 4px 0px 0 #D6DBE2",
     borderRadius: 2,
   },
-  // switchBorderBottom: {
-  //   left: 1,
-  //   width: 24,
-  //   height: 20,
-  //   bottom: -6,
-  //   position: "absolute",
-  //   backgroundColor: "#D6DBE2",
-  //   boxShadow: "0 3px 10px 0 #00000030",
-  //   borderBottomLeftRadius: 4,
-  //   borderBottomRightRadius: 4,
-  // },
 });

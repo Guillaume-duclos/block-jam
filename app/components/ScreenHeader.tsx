@@ -2,6 +2,7 @@ import React, { JSX } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import ArrowShapeLeftFill from "../assets/icons/ArrowShapeLeftFill";
 import XMark from "../assets/icons/XMark";
+import { text } from "../theme/text";
 import PressableView from "./PressableView";
 
 type Props = {
@@ -45,12 +46,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 68,
   },
   title: {
-    fontSize: 26,
-    fontWeight: 700,
-    fontFamily: "Rubik",
-    textTransform: "uppercase",
     textAlign: "center",
     color: "#FFFFFF",
+    ...text.title1,
   },
   button: {
     position: "absolute",
