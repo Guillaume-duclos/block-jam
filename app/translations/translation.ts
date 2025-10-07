@@ -5,6 +5,7 @@ import { Language } from "../enums/language.enum";
 import { StorageKey } from "../enums/storageKey.enum";
 import { getStorageString, setStorageItem } from "../utils/storage";
 import en from "./languages/en.json";
+import es from "./languages/es.json";
 import fr from "./languages/fr.json";
 
 const initI18n = async () => {
@@ -13,6 +14,7 @@ const initI18n = async () => {
   const resources = {
     en: { translation: en },
     fr: { translation: fr },
+    es: { translation: es },
   };
 
   if (!savedLanguage) {

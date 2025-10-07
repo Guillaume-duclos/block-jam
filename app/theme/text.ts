@@ -29,4 +29,10 @@ export const text = {
     fontWeight: 500,
     fontFamily: "Rubik",
   },
+  digit: {
+    fontSize: 14,
+    lineHeight: 18,
+    fontWeight: 400,
+    fontFamily: "GoogleSansCode",
+  },
 };

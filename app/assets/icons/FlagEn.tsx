@@ -1,5 +1,5 @@
 import { ViewStyle } from "react-native";
-import Svg, { ClipPath, Defs, G, Mask, Path, Rect } from "react-native-svg";
+import Svg, { Path } from "react-native-svg";
 
 type Props = {
   style?: ViewStyle;
@@ -9,44 +9,26 @@ export default function FlagDe({ style }: Props) {
   return (
     <Svg
       fill="none"
-      viewBox="0 0 600 600"
-      style={{ width: 600, height: 600, ...style }}
+      viewBox="0 0 500 500"
+      style={{ width: 500, height: 500, ...style }}
     >
-      <G clip-Path="url(#clip0_150_113)">
-        <Path d="M0 0V600H600V0H0Z" fill="#012169" />
-        <Path d="M0 0L600 600ZM600 0L0 600Z" fill="black" />
-        <Path d="M0 0L600 600M600 0L0 600" stroke="white" stroke-width="120" />
-        <Mask
-          id="mask0_150_113"
-          maskUnits="userSpaceOnUse"
-          x="0"
-          y="0"
-          width="600"
-          height="600"
-        >
-          <Path
-            d="M300 300H600V600L300 300ZM300 300V600H0L300 300ZM300 300H0V0L300 300ZM300 300V0H600L300 300Z"
-            fill="white"
-          />
-        </Mask>
-        <G mask="url(#mask0_150_113)">
-          <Path d="M0 0L600 600ZM600 0L0 600Z" fill="black" />
-          <Path
-            d="M0 0L600 600M600 0L0 600"
-            stroke="#C8102E"
-            stroke-width="80"
-          />
-        </G>
-        <Path d="M300 0V600ZM0 300H600Z" fill="black" />
-        <Path d="M300 0V600M0 300H600" stroke="white" stroke-width="200" />
-        <Path d="M300 0V600ZM0 300H600Z" fill="black" />
-        <Path d="M300 0V600M0 300H600" stroke="#C8102E" stroke-width="120" />
-      </G>
-      <Defs>
-        <ClipPath id="clip0_150_113">
-          <Rect width="600" height="600" fill="white" />
-        </ClipPath>
-      </Defs>
+      <Path d="M500.01 0H0V500.01H500.01V0Z" fill="#000066" />
+      <Path
+        d="M0 0V55.9028L444.109 500.012H500.01V444.111L55.9011 0.0016667L0 0ZM500.01 0V55.9011L55.9011 500.01H0V444.109L444.109 0H500.01Z"
+        fill="#FFFFFF"
+      />
+      <Path
+        d="M208.337 0V500.01H291.672V0H208.337ZM0 166.67V333.34H500.01V166.67H0Z"
+        fill="#FFFFFF"
+      />
+      <Path
+        d="M0 200.004V300.006H500.01V200.004H0ZM225.004 0V500.01H275.005V0H225.004Z"
+        fill="#CC0000"
+      />
+      <Path
+        d="M0 500.01L166.67 333.34H203.937L37.2674 500.01H0ZM0 0L166.67 166.67H129.403L0 37.2691L0 0ZM296.073 166.67L462.743 0H500.01L333.34 166.67H296.073ZM500.01 500.01L333.34 333.34H370.607L500.01 462.743V500.01Z"
+        fill="#CC0000"
+      />
     </Svg>
   );
 }

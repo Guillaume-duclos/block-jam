@@ -1,4 +1,5 @@
 import * as Haptics from "expo-haptics";
+import { LinearGradient } from "expo-linear-gradient";
 import React, { JSX, RefObject, useEffect, useRef } from "react";
 import { StyleSheet, useWindowDimensions, View } from "react-native";
 import {
@@ -60,7 +61,8 @@ export default function MovableBlock({
   }));
 
   const mainBlockColor = label === BlockType.MAIN_BLOCK ? "#DA6C6C" : color;
-  const secondBlockColor = darken(mainBlockColor, 0.2);
+  const secondBlockColor = darken(mainBlockColor, 0.08);
+  const arrowColor = darken(mainBlockColor, 0.2);
 
   useEffect(() => {
     // console.log({ position });
@@ -293,11 +295,12 @@ export default function MovableBlock({
             backgroundColor: darken(mainBlockColor, 0.12),
           }}
         />
-        <View
+
+        <LinearGradient
+          colors={[secondBlockColor, mainBlockColor]}
           style={{
             ...styles.block,
             ...(label === BlockType.MAIN_BLOCK && styles.mainBlock),
-            backgroundColor: mainBlockColor,
           }}
         />
 
@@ -309,14 +312,8 @@ export default function MovableBlock({
               arrowStyle,
             ]}
           >
-            <ArrowTriangleLeftFill
-              style={styles.arrow}
-              color={secondBlockColor}
-            />
-            <ArrowTriangleRightFill
-              style={styles.arrow}
-              color={secondBlockColor}
-            />
+            <ArrowTriangleLeftFill style={styles.arrow} color={arrowColor} />
+            <ArrowTriangleRightFill style={styles.arrow} color={arrowColor} />
           </Animated.View>
         )}
 
@@ -328,14 +325,8 @@ export default function MovableBlock({
               arrowStyle,
             ]}
           >
-            <ArrowTriangleUpFill
-              style={styles.arrow}
-              color={secondBlockColor}
-            />
-            <ArrowTriangleDownFill
-              style={styles.arrow}
-              color={secondBlockColor}
-            />
+            <ArrowTriangleUpFill style={styles.arrow} color={arrowColor} />
+            <ArrowTriangleDownFill style={styles.arrow} color={arrowColor} />
           </Animated.View>
         )}
       </Animated.View>

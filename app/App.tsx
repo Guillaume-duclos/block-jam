@@ -12,6 +12,8 @@ export default function App() {
   useFonts({
     Rubik: require("./assets/fonts/Rubik/RubikVariable.ttf"),
     RubikItalic: require("./assets/fonts/Rubik/RubikItalicVariable.ttf"),
+    GoogleSansCode: require("./assets/fonts/GoogleSansCode/GoogleSansCodeVariable.ttf"),
+    GoogleSansCodeItalic: require("./assets/fonts/GoogleSansCode/GoogleSansCodeItalicVariable.ttf"),
   });
 
   return (

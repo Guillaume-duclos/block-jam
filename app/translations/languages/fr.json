@@ -1,6 +1,3 @@
 {
-  "hello": "Bonjour",
-  "light": "Clair",
-  "dark": "Sombre",
-  "system": "Système"
+  "settings": "Paramètres"
 }

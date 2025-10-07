@@ -41,7 +41,7 @@ export default function Button({
     .enabled(!disabled)
     .maxDuration(Number.MAX_SAFE_INTEGER)
     .onBegin(() => {
-      progress.value = withTiming(deep - deep / 3, { duration: 80 });
+      progress.value = withTiming(deep - deep / 1.5, { duration: 80 });
     })
     .onFinalize(() => {
       progress.value = withTiming(0, { duration: 80 });
@@ -58,8 +58,8 @@ export default function Button({
           style={{
             ...styles.blockBottomBorder,
             backgroundColor: darken(color, 0.15),
-            height: "50%",
             bottom: 16 - deep,
+            height: "50%",
           }}
         />
         <Animated.View

@@ -297,6 +297,7 @@ const LevelPlayground = memo(({ ref, level }: Props): JSX.Element => {
       }
     });
   };
+
   return (
     <View style={styles.container}>
       {/* SCORES */}

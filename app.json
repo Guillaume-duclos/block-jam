@@ -17,7 +17,9 @@
         {
           "fonts": [
             "./app/assets/fonts/Rubik/RubikItalicVariable.ttf",
-            "./app/assets/fonts/Rubik/RubikVariable.ttf"
+            "./app/assets/fonts/Rubik/RubikVariable.ttf",
+            "./app/assets/fonts/GoogleSansCode/GoogleSansCodeVariable.ttf",
+            "./app/assets/fonts/GoogleSansCode/GoogleSansCodeItalicVariable.ttf"
           ]
         }
       ]

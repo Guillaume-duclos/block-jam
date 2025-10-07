@@ -8,6 +8,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
+import { darken } from "../utils/color";
 
 type Props = {
   selected: boolean;
@@ -23,6 +24,8 @@ export default function Switch({
   style,
 }: Props): JSX.Element {
   const progress = useSharedValue(selected ? 26 : 0);
+
+  const activeColor = darken("#D6F5BC", 0.38);
 
   useEffect(() => {
     progress.value = withTiming(selected ? 26 : 0, { duration: 180 });
@@ -40,7 +43,7 @@ export default function Switch({
     backgroundColor: interpolateColor(
       progress.value,
       [0, 26],
-      ["#B1BDD1", "#4CAF50"]
+      ["#B1BDD1", activeColor]
     ),
   }));
 
@@ -76,7 +79,7 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     borderColor: "#F5F7FF",
     justifyContent: "center",
-    borderRadius: 4,
+    borderRadius: 6,
   },
   switch: {
     top: -2,
@@ -85,6 +88,6 @@ const styles = StyleSheet.create({
     height: 24 - 4,
     backgroundColor: "#F5F7FF",
     boxShadow: "0 4px 0px 0 #D6DBE2",
-    borderRadius: 2,
+    borderRadius: 4,
   },
 });

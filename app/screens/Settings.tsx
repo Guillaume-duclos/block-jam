@@ -1,204 +1,150 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { JSX, useState } from "react";
+import * as Application from "expo-application";
+import React, { Fragment, JSX, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
-import FlagDe from "../assets/icons/FlagDe";
-import FlagEn from "../assets/icons/FlagEn";
-import FlagEs from "../assets/icons/FlagEs";
-import FlagFr from "../assets/icons/FlagFr";
-import FlagIt from "../assets/icons/FlagIt";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import Checkmark from "../assets/icons/Checkmark";
 import Button from "../components/Button";
 import NavigationLink from "../components/NavigationLink";
 import ScreenHeader from "../components/ScreenHeader";
+import SectionContainer from "../components/SectionContainer";
 import SwitchRow from "../components/SwitchRow";
+import { languages } from "../constants/languages";
 import { Language } from "../enums/language.enum";
 import { Screen } from "../enums/screen.enum";
 import { StorageKey } from "../enums/storageKey.enum";
-import Theme from "../enums/theme.enum";
-import { useTheme } from "../providers/themeContext";
 import { text } from "../theme/text";
 import NavigationProps from "../types/navigation.type";
-import {
-  getStorageString,
-  removeAllStorage,
-  setStorageItem,
-} from "../utils/storage";
+import { getStorageString, setStorageItem } from "../utils/storage";
 
 export default function Settings(): JSX.Element {
   const navigation = useNavigation<NavigationProps>();
 
   const { t, i18n } = useTranslation();
 
-  const { theme, setTheme } = useTheme();
+  const insets = useSafeAreaInsets();
 
   const savedLanguage = getStorageString(StorageKey.LANGUAGE) || Language.EN;
 
-  const [isHapticActive, setIsHapticActive] = useState(false);
-  const [selected, setSelected] = useState(false);
+  const [isHapticActive, setIsHapticActive] = useState<boolean>(false);
+
+  const appVersion = Application.nativeApplicationVersion;
+  const buildVersion = Application.nativeBuildVersion;
 
   const goBack = (): void => {
     navigation.goBack();
   };
 
-  const changeLanguage = (selectedLanguage: Language): void => {
-    if (savedLanguage !== selectedLanguage) {
-      setStorageItem(StorageKey.LANGUAGE, selectedLanguage);
-      i18n.changeLanguage(selectedLanguage);
+  const changeLanguage = (language: Language): void => {
+    if (savedLanguage !== language) {
+      setStorageItem(StorageKey.LANGUAGE, language);
+      i18n.changeLanguage(language);
     }
-  };
-
-  const changeColorScheme = (colorScheme: Theme): void => {
-    setTheme(colorScheme);
-  };
-
-  const resetStorage = (): void => {
-    removeAllStorage();
   };
 
   const navigate = (screen: Screen): void => {
     navigation.navigate(screen);
   };
 
+  const renderLanguages = (): JSX.Element[] =>
+    languages.map((item, index): JSX.Element => {
+      const { language, label, icon: Icon } = item;
+
+      return (
+        <View key={index} style={styles.languageButtonContainer}>
+          <View>
+            <Button
+              deep={8}
+              onPress={() => changeLanguage(language)}
+              contentContainerStyle={styles.languageButton}
+            >
+              <Icon style={{ width: 50, height: 50 }} />
+            </Button>
+
+            {language === savedLanguage && (
+              <View style={styles.selectedLanguageIndicator}>
+                <Checkmark style={styles.selectedLanguageIndicatorIcon} />
+              </View>
+            )}
+          </View>
+
+          <Text style={styles.languageName}>{label}</Text>
+        </View>
+      );
+    });
+
   return (
     <View style={styles.container}>
-      <ScreenHeader label="Settings" onPressExit={goBack} />
+      <ScreenHeader label={t("settings")} onPressExit={goBack} />
 
-      <ScrollView contentContainerStyle={styles.scrollView}>
-        <View style={styles.section}>
-          <Text style={{ ...text.title2, color: "#FFFFFF" }}>Game play</Text>
+      <ScrollView
+        contentContainerStyle={{
+          ...styles.scrollView,
+          paddingBottom: insets.bottom * 2,
+        }}
+      >
+        {/* GAME PLAY */}
+        <SectionContainer title="Game play">
+          <Fragment>
+            <SwitchRow
+              label="Active feedback"
+              selected={isHapticActive}
+              onChange={() => setIsHapticActive(!isHapticActive)}
+            />
+            <SwitchRow
+              label="Active feedback"
+              selected={isHapticActive}
+              onChange={() => setIsHapticActive(!isHapticActive)}
+            />
+          </Fragment>
+        </SectionContainer>
 
-          <SwitchRow
-            label="Active feedback"
-            selected={isHapticActive}
-            onChange={() => setIsHapticActive(!isHapticActive)}
-          />
-          <SwitchRow
-            label="Active feedback"
-            selected={isHapticActive}
-            onChange={() => setIsHapticActive(!isHapticActive)}
-          />
-        </View>
+        {/* LANGUE */}
+        <SectionContainer title="Language">
+          <View style={styles.languagesContainer}>{renderLanguages()}</View>
+        </SectionContainer>
 
-        <View style={styles.section}>
-          <Text style={{ ...text.title2, color: "#FFFFFF" }}>Language</Text>
+        {/* CGU */}
+        <SectionContainer title="CGU">
+          <Fragment>
+            <NavigationLink
+              label="Terms of use"
+              onPress={() => navigate(Screen.TERMS_OF_USE)}
+            />
 
-          <View style={styles.languagesContainer}>
-            <View style={styles.languageButtonContainer}>
-              <Button
-                deep={8}
-                onPress={() => {}}
-                contentContainerStyle={styles.languageButton}
-              >
-                <FlagFr style={{ width: 50, height: 50 }} />
-              </Button>
-              <Text style={styles.languageName}>French</Text>
-            </View>
+            <NavigationLink
+              label="Privacy policy"
+              onPress={() => navigate(Screen.PRIVACY_POLICY)}
+            />
+          </Fragment>
+        </SectionContainer>
 
-            <View style={styles.languageButtonContainer}>
-              <Button
-                deep={8}
-                onPress={() => {}}
-                contentContainerStyle={styles.languageButton}
-              >
-                <FlagEn style={{ width: 50, height: 50 }} />
-              </Button>
-              <Text style={styles.languageName}>English</Text>
-            </View>
-
-            <View style={styles.languageButtonContainer}>
-              <Button
-                deep={8}
-                onPress={() => {}}
-                contentContainerStyle={styles.languageButton}
-              >
-                <FlagEs style={{ width: 50, height: 50 }} />
-              </Button>
-              <Text style={styles.languageName}>Spanish</Text>
-            </View>
-
-            <View style={styles.languageButtonContainer}>
-              <Button
-                deep={8}
-                onPress={() => {}}
-                contentContainerStyle={styles.languageButton}
-              >
-                <FlagDe style={{ width: 50, height: 50 }} />
-              </Button>
-              <Text style={styles.languageName}>German</Text>
-            </View>
-
-            <View style={styles.languageButtonContainer}>
-              <Button
-                deep={8}
-                onPress={() => {}}
-                contentContainerStyle={styles.languageButton}
-              >
-                <FlagIt style={{ width: 50, height: 50 }} />
-              </Button>
-              <Text style={styles.languageName}>Dutch</Text>
+        {/* CRÉDITS */}
+        <SectionContainer title="Credits">
+          <View style={styles.creditsContainer}>
+            <View style={styles.appIcon} />
+            <View style={styles.appInformations}>
+              <Text style={styles.appInformationsText}>
+                App version:{" "}
+                <Text style={styles.appInformationsVersion}>{appVersion}</Text>
+              </Text>
+              <Text style={styles.appInformationsText}>
+                Build version:{" "}
+                <Text style={styles.appInformationsVersion}>
+                  {buildVersion}
+                </Text>
+              </Text>
+              <Text style={styles.appInformationsText}>
+                Author:{" "}
+                <Text style={styles.appInformationsTextLight}>
+                  Guillaume Duclos
+                </Text>
+              </Text>
             </View>
           </View>
-        </View>
-
-        <View style={styles.section}>
-          <Text style={{ ...text.title2, color: "#FFFFFF" }}>Theme</Text>
-
-          <NavigationLink
-            label="Terms of use"
-            onPress={() => navigate(Screen.TERMS_OF_USE)}
-          />
-        </View>
-
-        <View style={styles.section}>
-          <Text style={{ ...text.title2, color: "#FFFFFF" }}>CGU</Text>
-
-          <NavigationLink
-            label="Terms of use"
-            onPress={() => navigate(Screen.TERMS_OF_USE)}
-          />
-
-          <NavigationLink
-            label="Privacy policy"
-            onPress={() => navigate(Screen.PRIVACY_POLICY)}
-          />
-        </View>
+        </SectionContainer>
       </ScrollView>
-
-      {/* <Button onPress={goBack} label="Go back" />
-
-      <View style={{ ...styles.section }}>
-        <Button
-          onPress={() => changeLanguage(Language.EN)}
-          label={Language.EN}
-        />
-        <Button
-          onPress={() => changeLanguage(Language.FR)}
-          label={Language.FR}
-        />
-      </View>
-
-      <View style={{ ...styles.section }}>
-        <Button
-          onPress={() => changeColorScheme(Theme.LIGHT)}
-          label={t("light")}
-        />
-        <Button
-          onPress={() => changeColorScheme(Theme.DARK)}
-          label={t("dark")}
-        />
-        <Button
-          onPress={() => changeColorScheme(Theme.SYSTEM)}
-          label={t("system")}
-        />
-      </View>
-
-      <View style={{ ...styles.section }}>
-        <Switch selected={selected} onChange={() => setSelected(!selected)} />
-      </View>
-
-      <View style={{ ...styles.section }}>
-        <Button onPress={resetStorage} label="Reset storage values" />
-      </View> */}
     </View>
   );
 }
@@ -217,9 +163,10 @@ const styles = StyleSheet.create({
     gap: 28,
   },
   languagesContainer: {
+    gap: 20,
+    flexWrap: "wrap",
     flexDirection: "row",
-    justifyContent: "space-between",
-    borderWidth: 0,
+    justifyContent: "space-around",
   },
   languageButtonContainer: {
     alignItems: "center",
@@ -235,5 +182,46 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     textAlign: "center",
     ...text.legend,
+  },
+  selectedLanguageIndicator: {
+    top: -4,
+    right: -4,
+    width: 20,
+    height: 20,
+    alignItems: "center",
+    justifyContent: "center",
+    position: "absolute",
+    borderRadius: "50%",
+    backgroundColor: "#FFFFFF",
+    boxShadow: "0 2px 0px 0 #D6DBE2",
+  },
+  selectedLanguageIndicatorIcon: {
+    width: 11,
+    height: 11,
+  },
+  creditsContainer: {
+    gap: 14,
+    flexDirection: "row",
+    borderWidth: 0,
+  },
+  appIcon: {
+    width: 70,
+    height: 70,
+    borderRadius: 80 * 0.225,
+    borderCurve: "continuous",
+    backgroundColor: "#FFFFFF",
+  },
+  appInformations: {
+    gap: 3,
+  },
+  appInformationsText: {
+    color: "#FFFFFF",
+    ...text.legend,
+  },
+  appInformationsVersion: {
+    ...text.digit,
+  },
+  appInformationsTextLight: {
+    fontWeight: 400,
   },
 });
