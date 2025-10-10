@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import * as Application from "expo-application";
-import React, { Fragment, JSX, useState } from "react";
+import React, { Fragment, JSX, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -16,7 +16,11 @@ import { Screen } from "../enums/screen.enum";
 import { StorageKey } from "../enums/storageKey.enum";
 import { text } from "../theme/text";
 import NavigationProps from "../types/navigation.type";
-import { getStorageString, setStorageItem } from "../utils/storage";
+import {
+  getStorageBoolean,
+  getStorageString,
+  setStorageItem,
+} from "../utils/storage";
 
 export default function Settings(): JSX.Element {
   const navigation = useNavigation<NavigationProps>();
@@ -26,11 +30,20 @@ export default function Settings(): JSX.Element {
   const insets = useSafeAreaInsets();
 
   const savedLanguage = getStorageString(StorageKey.LANGUAGE) || Language.EN;
+  const savedHaptic = getStorageBoolean(
+    StorageKey.ALLOW_OVER_DRAG_HAPTIC_FEEDBACK
+  );
 
   const [isHapticActive, setIsHapticActive] = useState<boolean>(false);
 
   const appVersion = Application.nativeApplicationVersion;
   const buildVersion = Application.nativeBuildVersion;
+
+  useEffect(() => {
+    if (savedHaptic) {
+      setIsHapticActive(savedHaptic);
+    }
+  }, [savedHaptic]);
 
   const goBack = (): void => {
     navigation.goBack();
@@ -41,6 +54,11 @@ export default function Settings(): JSX.Element {
       setStorageItem(StorageKey.LANGUAGE, language);
       i18n.changeLanguage(language);
     }
+  };
+
+  const changeHapticActive = (): void => {
+    setIsHapticActive(!isHapticActive);
+    setStorageItem(StorageKey.ALLOW_OVER_DRAG_HAPTIC_FEEDBACK, !isHapticActive);
   };
 
   const navigate = (screen: Screen): void => {
@@ -69,7 +87,14 @@ export default function Settings(): JSX.Element {
             )}
           </View>
 
-          <Text style={styles.languageName}>{label}</Text>
+          <Text
+            style={{
+              ...styles.languageName,
+              ...(language === savedLanguage && { fontWeight: 700 }),
+            }}
+          >
+            {label}
+          </Text>
         </View>
       );
     });
@@ -90,12 +115,7 @@ export default function Settings(): JSX.Element {
             <SwitchRow
               label="Active feedback"
               selected={isHapticActive}
-              onChange={() => setIsHapticActive(!isHapticActive)}
-            />
-            <SwitchRow
-              label="Active feedback"
-              selected={isHapticActive}
-              onChange={() => setIsHapticActive(!isHapticActive)}
+              onChange={changeHapticActive}
             />
           </Fragment>
         </SectionContainer>
@@ -103,6 +123,16 @@ export default function Settings(): JSX.Element {
         {/* LANGUE */}
         <SectionContainer title="Language">
           <View style={styles.languagesContainer}>{renderLanguages()}</View>
+        </SectionContainer>
+
+        {/* TUTORIAL */}
+        <SectionContainer title="Tutorial">
+          <Fragment>
+            <NavigationLink
+              label="See tutorial"
+              onPress={() => navigate(Screen.TUTORIAL)}
+            />
+          </Fragment>
         </SectionContainer>
 
         {/* CGU */}

@@ -1,10 +1,6 @@
-import React, { JSX } from "react";
+import React, { ComponentRef, forwardRef } from "react";
 import { StyleSheet, View, ViewStyle } from "react-native";
-import {
-  Gesture,
-  GestureDetector,
-  TapGesture,
-} from "react-native-gesture-handler";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -15,73 +11,85 @@ import { darken } from "../utils/color";
 type Props = {
   disabled?: boolean;
   onPress: () => void;
-  children?: JSX.Element;
+  children?: React.ReactNode;
   deep?: number;
   color?: string;
-  style?: ViewStyle;
-  contentContainerStyle?: ViewStyle;
+  style?: ViewStyle | ViewStyle[];
+  contentContainerStyle?: ViewStyle | ViewStyle[];
 };
 
-export default function Button({
-  disabled,
-  onPress,
-  children,
-  deep = 12,
-  color = "#F5F7FF",
-  style,
-  contentContainerStyle,
-}: Props): JSX.Element {
-  const progress = useSharedValue(0);
+type ViewRef = ComponentRef<typeof View>;
 
-  const buttonStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: progress.value }],
-  }));
+const Button = forwardRef<ViewRef, Props>(
+  (
+    {
+      disabled = false,
+      onPress,
+      children,
+      deep = 12,
+      color = "#F5F7FF",
+      style,
+      contentContainerStyle,
+    }: Props,
+    ref
+  ) => {
+    const progress = useSharedValue(0);
 
-  const tapGesture: TapGesture = Gesture.Tap()
-    .enabled(!disabled)
-    .maxDuration(Number.MAX_SAFE_INTEGER)
-    .onBegin(() => {
-      progress.value = withTiming(deep - deep / 1.5, { duration: 80 });
-    })
-    .onFinalize(() => {
-      progress.value = withTiming(0, { duration: 80 });
-    })
-    .onEnd(() => {
-      onPress();
-    })
-    .runOnJS(true);
+    const buttonStyle = useAnimatedStyle(() => ({
+      transform: [{ translateY: progress.value }],
+    }));
 
-  return (
-    <GestureDetector gesture={tapGesture}>
-      <View style={{ ...styles.container, ...style }}>
+    const tap = Gesture.Tap()
+      .enabled(!disabled)
+      .maxDuration(Number.MAX_SAFE_INTEGER)
+      .onBegin(() => {
+        progress.value = withTiming(deep - deep / 1.5, { duration: 80 });
+      })
+      .onFinalize(() => {
+        progress.value = withTiming(0, { duration: 80 });
+      })
+      .onEnd(() => {
+        onPress();
+      })
+      .runOnJS(true);
+
+    return (
+      <GestureDetector gesture={tap}>
         <View
-          style={{
-            ...styles.blockBottomBorder,
-            backgroundColor: darken(color, 0.15),
-            bottom: 16 - deep,
-            height: "50%",
-          }}
-        />
-        <Animated.View
+          ref={ref}
           style={[
-            styles.block,
-            contentContainerStyle,
-            { backgroundColor: color },
-            buttonStyle,
+            styles.container,
+            ...(Array.isArray(style) ? style : [style]),
           ]}
         >
-          <View style={{ opacity: disabled ? 0.4 : 1 }}>{children}</View>
-        </Animated.View>
-      </View>
-    </GestureDetector>
-  );
-}
+          <View
+            style={{
+              ...styles.blockBottomBorder,
+              backgroundColor: darken(color, 0.15),
+              bottom: 16 - deep,
+              height: "50%",
+            }}
+          />
+          <Animated.View
+            style={[
+              styles.block,
+              contentContainerStyle,
+              { backgroundColor: color },
+              buttonStyle,
+            ]}
+          >
+            <View style={{ opacity: disabled ? 0.4 : 1 }}>{children}</View>
+          </Animated.View>
+        </View>
+      </GestureDetector>
+    );
+  }
+);
 
 const styles = StyleSheet.create({
   container: {
     height: 64,
     borderRadius: 32,
-    borderCurve: "continuous",
   },
   block: {
     width: "100%",
@@ -95,8 +103,9 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     position: "absolute",
-    borderCurve: "continuous",
     borderBottomLeftRadius: 28,
     borderBottomRightRadius: 28,
   },
 });
+
+export default Button;

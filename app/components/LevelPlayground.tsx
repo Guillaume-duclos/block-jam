@@ -358,6 +358,7 @@ const styles = StyleSheet.create({
     fontFamily: "Rubik",
     textTransform: "uppercase",
     color: darken("#D6F5BC", 0.3),
+    marginBottom: -20,
     lineHeight: 124,
   },
   playgroundContainer: {

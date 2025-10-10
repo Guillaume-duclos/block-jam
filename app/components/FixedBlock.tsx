@@ -39,14 +39,14 @@ export default function Block({ position, color }: Props): JSX.Element {
         style={{
           ...styles.screw,
           ...styles.topLeftScrew,
-          backgroundColor: darken(color),
+          backgroundColor: darken(color, 0.25),
         }}
       />
       <View
         style={{
           ...styles.screw,
           ...styles.topRightScrew,
-          backgroundColor: darken(color),
+          backgroundColor: darken(color, 0.25),
         }}
       />
       <View

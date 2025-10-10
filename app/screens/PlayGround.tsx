@@ -21,6 +21,7 @@ import Button from "../components/Button";
 import LevelPlayground, {
   LevelPlaygroundRef,
 } from "../components/LevelPlayground";
+import Modal from "../components/Modal";
 import PressableView from "../components/PressableView";
 import data from "../data/levels.json";
 import { Screen } from "../enums/screen.enum";
@@ -48,17 +49,21 @@ export default function PlayGround(): JSX.Element {
   const mainColor: string = "#FAF7F2";
   const topColor: string = darken("#D6F5BC", 0.3) || "";
 
+  const levelsList = data[difficulty].levels;
+
   const [activeLevelIndex, setActiveLevelIndex] = useState(level);
   const [isResetDisabled, setIsResetDisabled] = useState(false);
   const [isUndoDisabled, setIsUndoDisabled] = useState(false);
+  const [isPreviousLevelDisabled, setIsPreviousLevelDisabled] = useState(
+    activeLevelIndex === 0
+  );
+  const [isNextLevelDisabled, setIsNextLevelDisabled] = useState(
+    activeLevelIndex === levelsList.length - 1
+  );
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
 
   const levelsListRef = useRef<FlashListRef<Level>>(null);
   const levelPlaygroundRef = useRef<LevelPlaygroundRef | null>(null);
-
-  const levelsList = data[difficulty].levels;
-
-  const previousLevelDisabled = activeLevelIndex === 0;
-  const nextLevelDisabled = activeLevelIndex === levelsList.length - 1;
 
   // Configuration de la liste
   const levelListConfig = useRef({
@@ -75,6 +80,8 @@ export default function PlayGround(): JSX.Element {
     );
 
     setActiveLevelIndex(index);
+    setIsPreviousLevelDisabled(index === 0);
+    setIsNextLevelDisabled(index === levelsList.length - 1);
   };
 
   // Retour au menu
@@ -99,11 +106,15 @@ export default function PlayGround(): JSX.Element {
 
   // Display previous level
   const previousLevel = (): void => {
+    setIsPreviousLevelDisabled(true);
+    setIsNextLevelDisabled(true);
     levelsListRef.current.scrollToIndex({ index: activeLevelIndex - 1 });
   };
 
   // Display next level
   const nextLevel = (): void => {
+    setIsPreviousLevelDisabled(true);
+    setIsNextLevelDisabled(true);
     levelsListRef.current.scrollToIndex({ index: activeLevelIndex + 1 });
   };
 
@@ -167,7 +178,7 @@ export default function PlayGround(): JSX.Element {
           <Button
             onPress={previousLevel}
             style={{ width: 64 - 10 }}
-            disabled={previousLevelDisabled}
+            disabled={isPreviousLevelDisabled}
           >
             <ArrowTriangleLeft
               style={{ left: -2 }}
@@ -212,7 +223,7 @@ export default function PlayGround(): JSX.Element {
           <Button
             onPress={nextLevel}
             style={{ width: 64 - 10 }}
-            disabled={nextLevelDisabled}
+            disabled={isNextLevelDisabled}
           >
             <ArrowTriangleRight
               style={{ right: -2 }}
@@ -220,6 +231,13 @@ export default function PlayGround(): JSX.Element {
             />
           </Button>
         </View>
+
+        <Modal
+          isOpen={showConfirmationModal}
+          onClose={() => setShowConfirmationModal(false)}
+          title="Confirmation"
+          description="Lorem Ipsum is simply dummy text of the printing and typesetting industry."
+        />
       </View>
     </LinearGradient>
   );

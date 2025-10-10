@@ -14,7 +14,7 @@ export const text = {
   title3: {
     fontSize: 20,
     lineHeight: 24,
-    fontWeight: 700,
+    fontWeight: 600,
     fontFamily: "Rubik",
   },
   paragraph: {
