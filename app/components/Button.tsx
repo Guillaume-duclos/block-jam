@@ -1,4 +1,4 @@
-import React, { ComponentRef, forwardRef } from "react";
+import React, { JSX, Ref } from "react";
 import { StyleSheet, View, ViewStyle } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
@@ -9,6 +9,7 @@ import Animated, {
 import { darken } from "../utils/color";
 
 type Props = {
+  ref?: Ref<View> | undefined;
   disabled?: boolean;
   onPress: () => void;
   children?: React.ReactNode;
@@ -16,75 +17,76 @@ type Props = {
   color?: string;
   style?: ViewStyle | ViewStyle[];
   contentContainerStyle?: ViewStyle | ViewStyle[];
+  shadowStyle?: ViewStyle;
 };
 
-type ViewRef = ComponentRef<typeof View>;
+export default function Modal({
+  ref,
+  disabled = false,
+  onPress,
+  children,
+  deep = 12,
+  color = "#F5F7FF",
+  style,
+  contentContainerStyle,
+  shadowStyle,
+}: Props): JSX.Element {
+  const progress = useSharedValue(0);
 
-const Button = forwardRef<ViewRef, Props>(
-  (
-    {
-      disabled = false,
-      onPress,
-      children,
-      deep = 12,
-      color = "#F5F7FF",
-      style,
-      contentContainerStyle,
-    }: Props,
-    ref
-  ) => {
-    const progress = useSharedValue(0);
+  const buttonStyle = useAnimatedStyle(() => ({
+    transform: [{ translateY: progress.value }],
+  }));
 
-    const buttonStyle = useAnimatedStyle(() => ({
-      transform: [{ translateY: progress.value }],
-    }));
+  const opacityStyle = useAnimatedStyle(
+    () => ({
+      opacity: withTiming(disabled ? 0.4 : 1, { duration: 80 }),
+    }),
+    [disabled]
+  );
 
-    const tap = Gesture.Tap()
-      .enabled(!disabled)
-      .maxDuration(Number.MAX_SAFE_INTEGER)
-      .onBegin(() => {
-        progress.value = withTiming(deep - deep / 1.5, { duration: 80 });
-      })
-      .onFinalize(() => {
-        progress.value = withTiming(0, { duration: 80 });
-      })
-      .onEnd(() => {
-        onPress();
-      })
-      .runOnJS(true);
+  const tapGesture = Gesture.Tap()
+    .enabled(!disabled)
+    .maxDuration(Number.MAX_SAFE_INTEGER)
+    .onBegin(() => {
+      progress.value = withTiming(deep - deep / 1.5, { duration: 80 });
+    })
+    .onFinalize(() => {
+      progress.value = withTiming(0, { duration: 80 });
+    })
+    .onEnd(() => {
+      onPress();
+    })
+    .runOnJS(true);
 
-    return (
-      <GestureDetector gesture={tap}>
+  return (
+    <GestureDetector gesture={tapGesture}>
+      <View
+        ref={ref}
+        style={[styles.container, ...(Array.isArray(style) ? style : [style])]}
+      >
         <View
-          ref={ref}
+          style={{
+            ...styles.blockBottomBorder,
+            backgroundColor: darken(color, 0.15),
+            bottom: 16 - deep,
+            height: "50%",
+            ...shadowStyle,
+          }}
+        />
+        <Animated.View
           style={[
-            styles.container,
-            ...(Array.isArray(style) ? style : [style]),
+            styles.block,
+            contentContainerStyle,
+            { backgroundColor: color },
+            buttonStyle,
           ]}
         >
-          <View
-            style={{
-              ...styles.blockBottomBorder,
-              backgroundColor: darken(color, 0.15),
-              bottom: 16 - deep,
-              height: "50%",
-            }}
-          />
-          <Animated.View
-            style={[
-              styles.block,
-              contentContainerStyle,
-              { backgroundColor: color },
-              buttonStyle,
-            ]}
-          >
-            <View style={{ opacity: disabled ? 0.4 : 1 }}>{children}</View>
-          </Animated.View>
-        </View>
-      </GestureDetector>
-    );
-  }
-);
+          <Animated.View style={opacityStyle}>{children}</Animated.View>
+        </Animated.View>
+      </View>
+    </GestureDetector>
+  );
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -107,5 +109,3 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 28,
   },
 });
-
-export default Button;

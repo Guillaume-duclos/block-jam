@@ -1,13 +1,13 @@
 [
   {
     "index": 0,
-    "color": "#22c55e",
+    "color": "#D6F5BC",
     "levels": [
-      { "layout": "oIooLMoIBBLMAAJKooCCJKooxEEEoxGGHHoo", "minimumMove": 30 },
-      { "layout": "IBBxooIooLDDJAALooJoKEEMFFKooMGGHHHM", "minimumMove": 30 },
-      { "layout": "BBoKMxDDDKMoIAALooIoJLEEooJFFNoGGoxN", "minimumMove": 30 },
-      { "layout": "ooBBMxDDDKMoAAJKoNooJEENIFFLooIGGLox", "minimumMove": 30 },
-      { "layout": "ooBBMxDDDKMoAAJKoNooJEENIFFLooIGGLHH", "minimumMove": 30 },
+      { "layout": "ooBBoooooDooAAoDoooooooooCCCoooooooo", "minimumMove": 30 },
+      { "layout": "oBBBoooooDooAAoDoooooxoooooooooooooo", "minimumMove": 30 },
+      { "layout": "BBBoooooDoooAADoooooxooooooooooooooo", "minimumMove": 30 },
+      { "layout": "oooooooBBBooAAoDoooooDoooooxoooooooo", "minimumMove": 30 },
+      { "layout": "ooooooBBBoooAADoooooDoooooxooooooooo", "minimumMove": 30 },
       { "layout": "oxCCMoDDDKMoAAJKooooJLEEIFFLoNIGGoxN", "minimumMove": 30 },
       { "layout": "oIooLMoIBBLMAAJKooCCJKooxEEEoxGGHHoo", "minimumMove": 30 },
       { "layout": "oIooLMoIBBLMAAJKooCCJKooxEEEoxGGHHoo", "minimumMove": 30 },

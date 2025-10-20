@@ -59,8 +59,6 @@ const styles = StyleSheet.create({
   container: {
     width: windowWidth,
     minHeight: windowHeight,
-    borderColor: "red",
-    borderWidth: 0,
   },
   list: {
     width: "100%",

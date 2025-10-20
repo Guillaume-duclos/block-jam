@@ -1,7 +1,7 @@
 import React, { JSX, memo } from "react";
 import { StyleSheet, View } from "react-native";
-import { windowHeight, windowWidth } from "../constants/dimension";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { windowHeight, windowWidth } from "../constants/dimension";
 import { Orientation } from "../enums/orientation.enum";
 
 interface Props {
@@ -23,7 +23,6 @@ const PaginationIndicator = memo(
         style={{
           ...styles.container,
           ...(orientation === Orientation.VERTICAL && styles.verticalContainer),
-          bottom: insets.bottom,
         }}
       >
         {levels.map((_: any, index: number) => (
@@ -45,7 +44,6 @@ const styles = StyleSheet.create({
     gap: 8,
     width: windowWidth,
     height: 8,
-    position: "absolute",
     flexDirection: "row",
     justifyContent: "center",
   },
@@ -54,6 +52,7 @@ const styles = StyleSheet.create({
     right: 5,
     height: windowHeight,
     flexDirection: "column",
+    position: "absolute",
   },
   dot: {
     width: 8,

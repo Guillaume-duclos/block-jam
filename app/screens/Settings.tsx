@@ -19,6 +19,8 @@ import NavigationProps from "../types/navigation.type";
 import {
   getStorageBoolean,
   getStorageString,
+  removeAllStorage,
+  removeStorageItem,
   setStorageItem,
 } from "../utils/storage";
 
@@ -99,6 +101,19 @@ export default function Settings(): JSX.Element {
       );
     });
 
+  const logScoreData = (): void => {
+    const score = getStorageString(StorageKey.LEVEL_SCORE);
+    console.log(score);
+  };
+
+  const removeScoreData = (): void => {
+    removeStorageItem(StorageKey.LEVEL_SCORE);
+  };
+
+  const removeAllData = (): void => {
+    removeAllStorage();
+  };
+
   return (
     <View style={styles.container}>
       <ScreenHeader label={t("settings")} onPressExit={goBack} />
@@ -149,6 +164,20 @@ export default function Settings(): JSX.Element {
             />
           </Fragment>
         </SectionContainer>
+
+        {/* Dev mode */}
+        {__DEV__ && (
+          <SectionContainer title="Dev mode">
+            <Fragment>
+              <NavigationLink label="Log score data" onPress={logScoreData} />
+              <NavigationLink
+                label="Remove score data"
+                onPress={removeScoreData}
+              />
+              <NavigationLink label="Remove all data" onPress={removeAllData} />
+            </Fragment>
+          </SectionContainer>
+        )}
 
         {/* CRÉDITS */}
         <SectionContainer title="Credits">

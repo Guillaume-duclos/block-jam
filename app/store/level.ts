@@ -1,15 +1,15 @@
 import { create } from "zustand";
 
 type State = {
-  isResetEnabled: boolean;
+  currentCount: number;
   isUndoEnabled: boolean;
-  setIsResetEnabled: (value: boolean) => void;
+  setCurrentCount: (value: number) => void;
   setIsUndoEnabled: (value: boolean) => void;
 };
 
 export const useLevelStore = create<State>((set) => ({
-  isResetEnabled: false,
+  currentCount: 0,
   isUndoEnabled: false,
-  setIsResetEnabled: (value) => set({ isResetEnabled: value }),
+  setCurrentCount: (value) => set({ currentCount: value }),
   setIsUndoEnabled: (value) => set({ isUndoEnabled: value }),
 }));

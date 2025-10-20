@@ -16,7 +16,6 @@ import ArrowTriangleHead2ClockwiseRotate90 from "../assets/icons/ArrowTriangleHe
 import ArrowTriangleLeft from "../assets/icons/ArrowTriangleLeft";
 import ArrowTriangleRight from "../assets/icons/ArrowTriangleRight";
 import Settings from "../assets/icons/GearShapeFill";
-import SparkleMagnifyingGlass from "../assets/icons/SparkleMagnifyingGlass";
 import Button from "../components/Button";
 import LevelPlayground, {
   LevelPlaygroundRef,
@@ -24,12 +23,16 @@ import LevelPlayground, {
 import Modal from "../components/Modal";
 import PressableView from "../components/PressableView";
 import data from "../data/levels.json";
+import LevelNavigationType from "../enums/levelNavigationType.enum";
 import { Screen } from "../enums/screen.enum";
+import { StorageKey } from "../enums/storageKey.enum";
 import { useLevelStore } from "../store/level";
 import { Level } from "../types/level.type";
+import LevelScore from "../types/levelScore";
 import NavigationProp from "../types/navigation.type";
 import RootStackParamList from "../types/rootStackParamList.type";
 import { darken } from "../utils/color";
+import { getStorageString, setStorageObject } from "../utils/storage";
 
 type playGroundRouteProp = RouteProp<RootStackParamList, Screen.PLAYGROUND>;
 
@@ -40,8 +43,9 @@ export default function PlayGround(): JSX.Element {
 
   const route = useRoute<playGroundRouteProp>();
 
-  const isResetEnabled = useLevelStore((value) => value.isResetEnabled);
+  const currentCount = useLevelStore((value) => value.currentCount);
   const isUndoEnabled = useLevelStore((value) => value.isUndoEnabled);
+  const setCurrentCount = useLevelStore((value) => value.setCurrentCount);
 
   const difficulty: number = route.params.difficultyIndex;
   const level: number = route.params.level.index;
@@ -60,7 +64,9 @@ export default function PlayGround(): JSX.Element {
   const [isNextLevelDisabled, setIsNextLevelDisabled] = useState(
     activeLevelIndex === levelsList.length - 1
   );
-  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const [showConfirmationModal, setShowConfirmationModal] = useState<
+    LevelNavigationType | undefined
+  >();
 
   const levelsListRef = useRef<FlashListRef<Level>>(null);
   const levelPlaygroundRef = useRef<LevelPlaygroundRef | null>(null);
@@ -86,7 +92,11 @@ export default function PlayGround(): JSX.Element {
 
   // Retour au menu
   const goback = (): void => {
-    navigation.goBack();
+    if (currentCount) {
+      setShowConfirmationModal(LevelNavigationType.GO_BACK);
+    } else {
+      navigation.goBack();
+    }
   };
 
   // Ouvre les paramètres
@@ -104,18 +114,83 @@ export default function PlayGround(): JSX.Element {
     levelPlaygroundRef?.current?.undo();
   };
 
-  // Display previous level
+  // Display previous level or display confirmation modal
   const previousLevel = (): void => {
-    setIsPreviousLevelDisabled(true);
-    setIsNextLevelDisabled(true);
-    levelsListRef.current.scrollToIndex({ index: activeLevelIndex - 1 });
+    if (currentCount) {
+      setShowConfirmationModal(LevelNavigationType.PREVIOUS);
+    } else {
+      navigateToSelectedLevel(LevelNavigationType.PREVIOUS);
+    }
   };
 
-  // Display next level
+  // Display next level or display confirmation modal
   const nextLevel = (): void => {
-    setIsPreviousLevelDisabled(true);
-    setIsNextLevelDisabled(true);
-    levelsListRef.current.scrollToIndex({ index: activeLevelIndex + 1 });
+    if (currentCount) {
+      setShowConfirmationModal(LevelNavigationType.NEXT);
+    } else {
+      navigateToSelectedLevel(LevelNavigationType.NEXT);
+    }
+  };
+
+  // Redirige vers le viveau sélectionné
+  const confirmLevelNavigation = (): void => {
+    navigateToSelectedLevel(showConfirmationModal as LevelNavigationType);
+  };
+
+  // Redirige vers le viveau sélectionné
+  const navigateToSelectedLevel = (level: LevelNavigationType): void => {
+    if (level === LevelNavigationType.GO_BACK) {
+      navigation.goBack();
+    } else {
+      const index =
+        level === LevelNavigationType.PREVIOUS
+          ? activeLevelIndex - 1
+          : activeLevelIndex + 1;
+
+      levelsListRef?.current?.scrollToIndex({ index });
+
+      setIsPreviousLevelDisabled(true);
+      setIsNextLevelDisabled(true);
+      setShowConfirmationModal(undefined);
+    }
+
+    setCurrentCount(0);
+  };
+
+  // Annule la redirection vers le niveau sélectionné
+  const cancelLevelNavigation = (): void => {
+    setShowConfirmationModal(undefined);
+  };
+
+  // Sauvegarde le score du niveau joué
+  const saveLevelScore = (score: number): void => {
+    const savedLevelScores = getStorageString(StorageKey.LEVEL_SCORE);
+    let levelScores: LevelScore[] = [];
+
+    try {
+      levelScores = savedLevelScores ? JSON.parse(savedLevelScores) : [];
+    } catch (_) {
+      levelScores = [];
+    }
+
+    const newLevelScore: LevelScore = {
+      difficulty,
+      level,
+      count: score,
+    };
+
+    // Vérifie si le score existe déjà (même difficulté et niveau)
+    const existingIndex = levelScores.findIndex(
+      (score) => score.difficulty === difficulty && score.level === level
+    );
+
+    if (existingIndex !== -1) {
+      levelScores[existingIndex] = newLevelScore;
+    } else {
+      levelScores.push(newLevelScore);
+    }
+
+    setStorageObject(StorageKey.LEVEL_SCORE, levelScores);
   };
 
   return (
@@ -124,7 +199,7 @@ export default function PlayGround(): JSX.Element {
       start={{ x: 0, y: 0 }}
       end={{ x: 0, y: 1 }}
       locations={[0, 0.25]}
-      style={{ flex: 1 }}
+      style={styles.gradient}
     >
       <View
         style={{
@@ -168,36 +243,33 @@ export default function PlayGround(): JSX.Element {
           showsHorizontalScrollIndicator={false}
           onMomentumScrollEnd={onMomentumScrollEnd}
           renderItem={({ item }) => (
-            <LevelPlayground ref={levelPlaygroundRef} level={item} />
+            <LevelPlayground
+              ref={levelPlaygroundRef}
+              level={item}
+              onLevelFinish={saveLevelScore}
+            />
           )}
           style={styles.levelList}
         />
 
         {/* BUTTONS CRONTROLS */}
-        <View style={styles.buttonsContainer}>
+        <View style={styles.footerButtonsContainer}>
           <Button
             onPress={previousLevel}
-            style={{ width: 64 - 10 }}
+            style={styles.footerButton}
             disabled={isPreviousLevelDisabled}
           >
             <ArrowTriangleLeft
-              style={{ left: -2 }}
+              style={styles.leftFooterButtonIcon}
               color={darken(mainColor, 0.3)}
             />
           </Button>
 
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              flex: 1,
-              gap: 6,
-            }}
-          >
+          <View style={styles.gamePlayButtonsContainer}>
             <Button
               onPress={reset}
-              style={{ flex: 1 }}
-              disabled={!isResetEnabled}
+              style={styles.gamePlayButton}
+              disabled={currentCount === 0}
             >
               <ArrowTriangleHead2ClockwiseRotate90
                 color={darken(mainColor, 0.3)}
@@ -206,7 +278,7 @@ export default function PlayGround(): JSX.Element {
 
             <Button
               onPress={undo}
-              style={{ flex: 1 }}
+              style={styles.gamePlayButton}
               disabled={!isUndoEnabled}
             >
               <ArrowShapeTurnUpLeft
@@ -214,27 +286,24 @@ export default function PlayGround(): JSX.Element {
                 color={darken(mainColor, 0.3)}
               />
             </Button>
-
-            <Button onPress={undo} style={{ flex: 1 }} disabled>
-              <SparkleMagnifyingGlass color={darken(mainColor, 0.3)} />
-            </Button>
           </View>
 
           <Button
             onPress={nextLevel}
-            style={{ width: 64 - 10 }}
+            style={styles.footerButton}
             disabled={isNextLevelDisabled}
           >
             <ArrowTriangleRight
-              style={{ right: -2 }}
+              style={styles.rightFooterButtonIcon}
               color={darken(mainColor, 0.3)}
             />
           </Button>
         </View>
 
         <Modal
-          isOpen={showConfirmationModal}
-          onClose={() => setShowConfirmationModal(false)}
+          isOpen={!!showConfirmationModal}
+          onConfirm={confirmLevelNavigation}
+          onCancel={cancelLevelNavigation}
           title="Confirmation"
           description="Lorem Ipsum is simply dummy text of the printing and typesetting industry."
         />
@@ -244,6 +313,9 @@ export default function PlayGround(): JSX.Element {
 }
 
 const styles = StyleSheet.create({
+  gradient: {
+    flex: 1,
+  },
   container: {
     flex: 1,
     alignItems: "center",
@@ -274,15 +346,33 @@ const styles = StyleSheet.create({
   levelList: {
     flex: 1,
   },
-  buttonsContainer: {
-    gap: 12,
+  footerButtonsContainer: {
+    gap: 16,
     width: "100%",
     flexDirection: "row",
     justifyContent: "space-between",
     paddingHorizontal: 16,
   },
+  footerButton: {
+    width: 64 - 10,
+  },
+  gamePlayButtonsContainer: {
+    gap: 8,
+    flex: 1,
+    alignItems: "center",
+    flexDirection: "row",
+  },
+  gamePlayButton: {
+    flex: 1,
+  },
   button: {
     padding: 10,
     backgroundColor: "#CDCDCD",
+  },
+  leftFooterButtonIcon: {
+    left: -2,
+  },
+  rightFooterButtonIcon: {
+    right: -2,
   },
 });

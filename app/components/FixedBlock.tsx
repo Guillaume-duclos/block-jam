@@ -1,30 +1,73 @@
 import { LinearGradient } from "expo-linear-gradient";
-import React, { JSX } from "react";
+import React, { JSX, useEffect } from "react";
 import { StyleSheet, View } from "react-native";
+import Animated, {
+  SharedValue,
+  useAnimatedStyle,
+  useSharedValue,
+  withDelay,
+  withSpring,
+} from "react-native-reanimated";
 import { caseSize } from "../constants/dimension";
 import { darken } from "../utils/color";
 
 type Props = {
+  index: number;
   position: number;
   color: string;
 };
 
-export default function Block({ position, color }: Props): JSX.Element {
+export default function Block({ index, position, color }: Props): JSX.Element {
   const x: number = (position - 6 * Math.floor(position / 6)) * caseSize;
   const y: number = Math.floor(position / 6) * caseSize;
 
+  const blockScale: SharedValue<number> = useSharedValue(0.9);
+  const blockOpacity: SharedValue<number> = useSharedValue(0);
+
   const secondBlockColor = darken(color, 0.08);
 
+  const blockStyle = useAnimatedStyle(() => ({
+    opacity: blockOpacity.value,
+    transform: [{ scale: blockScale.value }],
+  }));
+
+  useEffect(() => {
+    setTimeout(() => {
+      blockScale.value = withDelay(
+        index * 30,
+        withSpring(1, {
+          mass: 1,
+          damping: 15,
+          stiffness: 240,
+          overshootClamping: false,
+        })
+      );
+
+      blockOpacity.value = withDelay(
+        index * 30,
+        withSpring(1, {
+          mass: 1,
+          damping: 15,
+          stiffness: 240,
+          overshootClamping: false,
+        })
+      );
+    }, 300);
+  }, []);
+
   return (
-    <View
-      style={{
-        top: y + 2,
-        left: x + 2,
-        width: caseSize - 4,
-        height: caseSize - 4,
-        // boxShadow: `0 2px 4px 0 ${darken(color, 0.2)}`,
-        ...styles.container,
-      }}
+    <Animated.View
+      style={[
+        {
+          top: y + 2,
+          left: x + 2,
+          width: caseSize - 4,
+          height: caseSize - 4,
+          boxShadow: `0 1px 3px 0 ${darken(color, 0.3)}`,
+        },
+        styles.container,
+        blockStyle,
+      ]}
     >
       <View
         style={{
@@ -63,7 +106,7 @@ export default function Block({ position, color }: Props): JSX.Element {
           backgroundColor: darken(color),
         }}
       />
-    </View>
+    </Animated.View>
   );
 }
 

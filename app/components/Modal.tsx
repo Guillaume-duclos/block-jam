@@ -18,7 +18,8 @@ const AnimatedButton = Animated.createAnimatedComponent(Button);
 
 type Props = {
   isOpen: boolean;
-  onClose: () => void;
+  onConfirm: () => void;
+  onCancel: () => void;
   title: string;
   description: string;
   style?: ViewStyle;
@@ -26,7 +27,8 @@ type Props = {
 
 export default function Modal({
   isOpen,
-  onClose,
+  onConfirm,
+  onCancel,
   title,
   description,
   style,
@@ -83,14 +85,14 @@ export default function Modal({
     confirmButtonOpacity.value = withDelay(130, withSpring(1, animationConfig));
   };
 
-  const onCancel = (): void => {
+  const onDecline = (): void => {
     resetAnimatedValues();
-    onClose();
+    onCancel();
   };
 
   const onCanfirm = (): void => {
     resetAnimatedValues();
-    onClose();
+    onConfirm();
   };
 
   const resetAnimatedValues = (): void => {
@@ -104,7 +106,7 @@ export default function Modal({
 
   return (
     <AnimatedBlurView
-      tint="systemChromeMaterialDark"
+      tint="systemMaterial"
       animatedProps={animatedBlurProps}
       pointerEvents={isOpen ? "auto" : "none"}
       style={{ ...styles.container, ...style }}
@@ -120,8 +122,9 @@ export default function Modal({
 
         <View style={styles.submitButtonsContainer}>
           <AnimatedButton
-            onPress={onCancel}
+            onPress={onDecline}
             style={[styles.submitButton, animatedCancelButtonStyle]}
+            shadowStyle={{ boxShadow: "0 0 14px 0 #878787" }}
             color="#EE7474"
             deep={10}
           >
@@ -131,6 +134,7 @@ export default function Modal({
           <AnimatedButton
             onPress={onCanfirm}
             style={[styles.submitButton, animatedConfirmButtonStyle]}
+            shadowStyle={{ boxShadow: "0 0 14px 0 #878787" }}
             color={darken("#D6F5BC")}
             deep={10}
           >
@@ -159,7 +163,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     paddingVertical: 34,
     paddingHorizontal: 30,
-    backgroundColor: "#FAF7F2",
+    backgroundColor: darken("#D6F5BC"),
   },
   modalBottomBorder: {
     left: 0,
@@ -168,17 +172,17 @@ const styles = StyleSheet.create({
     height: "50%",
     position: "absolute",
     borderCurve: "continuous",
-    backgroundColor: darken("#FAF7F2", 0.16),
+    backgroundColor: darken("#D6F5BC", 0.35),
     borderBottomLeftRadius: 16,
     borderBottomRightRadius: 16,
-    boxShadow: "0 0 14px 0 #878787ff",
+    boxShadow: "0 0 14px 0 #878787",
   },
   title: {
-    fontSize: 24,
-    fontWeight: 500,
+    fontSize: 26,
+    fontWeight: 700,
     fontFamily: "Rubik",
     textAlign: "center",
-    color: "#494949",
+    color: "#FFFFFF",
   },
   description: {
     fontSize: 16,
@@ -186,7 +190,7 @@ const styles = StyleSheet.create({
     fontFamily: "Rubik",
     textAlign: "center",
     lineHeight: 22,
-    color: "#494949",
+    color: "#FFFFFF",
   },
   submitButtonsContainer: {
     gap: 10,

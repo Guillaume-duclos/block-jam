@@ -13,7 +13,7 @@ import { darken } from "../utils/color";
 type Props = {
   selected: boolean;
   disabled?: boolean;
-  onChange?: () => void;
+  onChange: () => void;
   style?: ViewStyle;
 };
 
@@ -28,12 +28,8 @@ export default function Switch({
   const activeColor = darken("#D6F5BC", 0.38);
 
   useEffect(() => {
-    progress.value = withTiming(selected ? 26 : 0, { duration: 180 });
+    progress.value = withTiming(selected ? 25 : 0, { duration: 180 });
   }, [selected, progress]);
-
-  useEffect(() => {
-    Haptics.selectionAsync();
-  }, [selected]);
 
   const thumbStyle = useAnimatedStyle(() => ({
     transform: [{ translateX: progress.value }],
@@ -47,22 +43,25 @@ export default function Switch({
     ),
   }));
 
+  const updateValue = (): void => {
+    onChange();
+    Haptics.impactAsync();
+  };
+
   const panGesture = Gesture.Pan()
     .minDistance(0)
     .onUpdate((event): void => {
-      if (onChange) {
-        if (
-          (event.translationX > 4 && !selected) ||
-          (event.translationX < -4 && selected)
-        ) {
-          onChange();
-        }
+      if (
+        (event.translationX > 4 && !selected) ||
+        (event.translationX < -4 && selected)
+      ) {
+        updateValue();
       }
     })
     .runOnJS(true);
 
   return (
-    <Pressable onPress={onChange} disabled={!onChange || disabled}>
+    <Pressable onPress={updateValue} disabled={!onChange || disabled}>
       <Animated.View style={[styles.container, style, containerStyle]}>
         <GestureDetector gesture={panGesture}>
           <Animated.View style={[styles.switch, thumbStyle]} />
@@ -79,15 +78,16 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     borderColor: "#F5F7FF",
     justifyContent: "center",
-    borderRadius: 6,
+    borderCurve: "continuous",
+    borderRadius: 32 / 2,
   },
   switch: {
-    top: -2,
-    left: 1,
-    width: 24,
-    height: 24 - 4,
+    top: -3,
+    left: 3,
+    width: 22,
+    height: 24 - 5,
     backgroundColor: "#F5F7FF",
     boxShadow: "0 4px 0px 0 #D6DBE2",
-    borderRadius: 4,
+    borderRadius: 24 / 2,
   },
 });

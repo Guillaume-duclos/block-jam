@@ -1,6 +1,6 @@
 import * as Haptics from "expo-haptics";
 import { LinearGradient } from "expo-linear-gradient";
-import React, { JSX, RefObject, useEffect, useRef } from "react";
+import React, { JSX, Ref, RefObject, useEffect, useRef } from "react";
 import { StyleSheet, useWindowDimensions, View } from "react-native";
 import {
   Gesture,
@@ -12,6 +12,8 @@ import Animated, {
   SharedValue,
   useAnimatedStyle,
   useSharedValue,
+  withDelay,
+  withSpring,
   withTiming,
 } from "react-native-reanimated";
 import ArrowTriangleDownFill from "../assets/icons/ArrowTriangleDownFill";
@@ -25,6 +27,8 @@ import { Orientation } from "../enums/orientation.enum";
 import { darken } from "../utils/color";
 
 type Props = {
+  ref?: Ref<View> | undefined;
+  index: number;
   grid: number[];
   label: string;
   range: number[];
@@ -39,6 +43,7 @@ type Props = {
 };
 
 export default function MovableBlock({
+  index,
   grid,
   label,
   range,
@@ -49,6 +54,8 @@ export default function MovableBlock({
 }: Props): JSX.Element {
   const x: SharedValue<number> = useSharedValue(0);
   const y: SharedValue<number> = useSharedValue(0);
+  const blockScale: SharedValue<number> = useSharedValue(0.9);
+  const blockOpacity: SharedValue<number> = useSharedValue(0);
   const localPosition: RefObject<number[]> = useRef(position);
   const vibrationEnable: RefObject<boolean> = useRef(true);
 
@@ -60,14 +67,38 @@ export default function MovableBlock({
     opacity: progress.value,
   }));
 
+  const blockStyle = useAnimatedStyle(() => ({
+    opacity: blockOpacity.value,
+    transform: [{ scale: blockScale.value }],
+  }));
+
   const mainBlockColor = label === BlockType.MAIN_BLOCK ? "#DA6C6C" : color;
   const secondBlockColor = darken(mainBlockColor, 0.08);
   const arrowColor = darken(mainBlockColor, 0.2);
 
   useEffect(() => {
-    // console.log({ position });
-    // console.log({ range });
-  }, [position, range, label]);
+    setTimeout(() => {
+      blockScale.value = withDelay(
+        index * 30,
+        withSpring(1, {
+          mass: 1,
+          damping: 15,
+          stiffness: 240,
+          overshootClamping: false,
+        })
+      );
+
+      blockOpacity.value = withDelay(
+        index * 30,
+        withSpring(1, {
+          mass: 1,
+          damping: 15,
+          stiffness: 240,
+          overshootClamping: false,
+        })
+      );
+    }, 300);
+  }, []);
 
   useEffect(() => {
     if (orientation === Orientation.HORIZONTAL) {
@@ -283,52 +314,54 @@ export default function MovableBlock({
     <GestureDetector gesture={composedGesure}>
       <Animated.View
         style={[
+          vehicleDimensions(),
           styles.blockContainer,
           { boxShadow: `0 2px 4px 0 ${darken(color, 0.3)}` },
-          vehicleDimensions(),
           vehiclePosition,
         ]}
       >
-        <View
-          style={{
-            ...styles.blockBottomBorder,
-            backgroundColor: darken(mainBlockColor, 0.12),
-          }}
-        />
+        <Animated.View style={[styles.blockSubContainer, blockStyle]}>
+          <View
+            style={{
+              ...styles.blockBottomBorder,
+              backgroundColor: darken(mainBlockColor, 0.12),
+            }}
+          />
 
-        <LinearGradient
-          colors={[secondBlockColor, mainBlockColor]}
-          style={{
-            ...styles.block,
-            ...(label === BlockType.MAIN_BLOCK && styles.mainBlock),
-          }}
-        />
+          <LinearGradient
+            colors={[secondBlockColor, mainBlockColor]}
+            style={{
+              ...styles.block,
+              ...(label === BlockType.MAIN_BLOCK && styles.mainBlock),
+            }}
+          />
 
-        {orientation === Orientation.HORIZONTAL && (
-          <Animated.View
-            style={[
-              styles.arrowContainer,
-              styles.arrowHorizontalContainer,
-              arrowStyle,
-            ]}
-          >
-            <ArrowTriangleLeftFill style={styles.arrow} color={arrowColor} />
-            <ArrowTriangleRightFill style={styles.arrow} color={arrowColor} />
-          </Animated.View>
-        )}
+          {orientation === Orientation.HORIZONTAL && (
+            <Animated.View
+              style={[
+                styles.arrowContainer,
+                styles.arrowHorizontalContainer,
+                arrowStyle,
+              ]}
+            >
+              <ArrowTriangleLeftFill style={styles.arrow} color={arrowColor} />
+              <ArrowTriangleRightFill style={styles.arrow} color={arrowColor} />
+            </Animated.View>
+          )}
 
-        {orientation === Orientation.VERTICAL && (
-          <Animated.View
-            style={[
-              styles.arrowContainer,
-              styles.arrowVerticaleContainer,
-              arrowStyle,
-            ]}
-          >
-            <ArrowTriangleUpFill style={styles.arrow} color={arrowColor} />
-            <ArrowTriangleDownFill style={styles.arrow} color={arrowColor} />
-          </Animated.View>
-        )}
+          {orientation === Orientation.VERTICAL && (
+            <Animated.View
+              style={[
+                styles.arrowContainer,
+                styles.arrowVerticaleContainer,
+                arrowStyle,
+              ]}
+            >
+              <ArrowTriangleUpFill style={styles.arrow} color={arrowColor} />
+              <ArrowTriangleDownFill style={styles.arrow} color={arrowColor} />
+            </Animated.View>
+          )}
+        </Animated.View>
       </Animated.View>
     </GestureDetector>
   );
@@ -338,9 +371,13 @@ const styles = StyleSheet.create({
   blockContainer: {
     top: 2,
     left: 2,
-    paddingBottom: 5,
-    position: "absolute",
     borderRadius: 10,
+    position: "absolute",
+  },
+  blockSubContainer: {
+    width: "100%",
+    height: "100%",
+    paddingBottom: 5,
   },
   block: {
     width: "100%",

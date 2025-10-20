@@ -1,10 +1,20 @@
 import { FlashList } from "@shopify/flash-list";
 import React, { JSX, memo, useMemo, useRef, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { windowHeight } from "../constants/dimension";
+import {
+  useSafeAreaFrame,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
+import {
+  menuFooterHeight,
+  menuHeaderHeight,
+  menuLevelHeight,
+  menuVerticalPadding,
+  windowHeight,
+} from "../constants/dimension";
 import ScrollInsetPosition from "../enums/scrollInsetPosition.enum";
 import { Level, MainLevel } from "../types/level.type";
+import { darken } from "../utils/color";
 import LevelItem from "./LevelItem";
 import PaginationIndicator from "./PaginationIndicator";
 import ScrollInset from "./ScrollInset";
@@ -17,6 +27,8 @@ const LevelItemsList = memo(({ level }: Props): JSX.Element => {
   const [activeViewIndex, setActiveViewIndex] = useState(0);
 
   const insets = useSafeAreaInsets();
+
+  const { height } = useSafeAreaFrame();
 
   // Configuration de la liste
   const levelItemsConfig = useRef({
@@ -31,14 +43,26 @@ const LevelItemsList = memo(({ level }: Props): JSX.Element => {
     }
   }).current;
 
-  // Division de la liste des niveaux en plusieurs listes pour la pagination
-  const splitLevels = (levels: Level[], split: number): Level[][] => {
-    const result: Level[][] = [];
-    const chunkSize = Math.ceil(levels.length / split);
+  // Calcule de la hauteur du menu, on enlève 40 pixels de marges verticaux
+  const menuHeight =
+    height -
+    (insets.top +
+      insets.bottom +
+      menuHeaderHeight +
+      menuFooterHeight +
+      menuVerticalPadding * 2);
 
-    for (let i = 0; i < levels.length; i += chunkSize) {
+  // Calcule du nombre de lignes possibles
+  const rowsCount = Math.floor(menuHeight / menuLevelHeight);
+
+  // Division de la liste des niveaux en plusieurs listes pour la pagination
+  const splitLevels = (levels: Level[], rows: number): Level[][] => {
+    const result: Level[][] = [];
+    const itemsPerPage = rows * 4;
+
+    for (let i = 0; i < levels.length; i += itemsPerPage) {
       const chunk = levels
-        .slice(i, i + chunkSize)
+        .slice(i, i + itemsPerPage)
         .map((level: Level, index: number) => ({
           ...level,
           index: i + index,
@@ -50,18 +74,29 @@ const LevelItemsList = memo(({ level }: Props): JSX.Element => {
     return result;
   };
 
-  const data = useMemo(() => splitLevels(level.levels, 7), [level.levels]);
+  const data = useMemo(
+    () => splitLevels(level.levels, rowsCount),
+    [level.levels]
+  );
 
   return (
     <View
       style={{
         ...styles.container,
         paddingTop: insets.top,
-        backgroundColor: level.color,
+        paddingBottom: insets.bottom,
+        backgroundColor: darken(level.color, 0.2),
       }}
     >
       {/* LEVEL DIFICULTY */}
-      <Text style={styles.title}>Dificulty {level.index + 1}</Text>
+      <View style={styles.headerContainer}>
+        <Text style={styles.headerTitle}>Dificulty {level.index + 1}</Text>
+        <View style={styles.headerProgressionContainer}>
+          <Text style={styles.headerProgression}>
+            <Text style={styles.headerProgressionCount}>2</Text>/156 completed
+          </Text>
+        </View>
+      </View>
 
       {/* LISTE HORIZONTALE DE CHAQUE GRAND NIVEAU */}
       <FlashList
@@ -76,10 +111,8 @@ const LevelItemsList = memo(({ level }: Props): JSX.Element => {
           <LevelItem levels={item} difficultyIndex={level.index} />
         )}
         keyExtractor={(_, index) => `${index}`}
-        contentContainerStyle={{
-          justifyContent: "center",
-          alignItems: "center",
-        }}
+        style={{ ...styles.levelList }}
+        contentContainerStyle={styles.contentContainerStyle}
         ListHeaderComponent={() => (
           <ScrollInset
             color={level.color}
@@ -102,14 +135,38 @@ const LevelItemsList = memo(({ level }: Props): JSX.Element => {
 
 const styles = StyleSheet.create({
   container: {
-    gap: 12,
     height: windowHeight,
   },
-  title: {
-    textAlign: "center",
-    color: "#FFFFFF",
+  headerContainer: {
+    alignItems: "center",
+  },
+  headerTitle: {
+    fontSize: 26,
     fontWeight: 700,
-    fontSize: 18,
+    fontFamily: "Rubik",
+    color: "#FFFFFF",
+  },
+  headerProgressionContainer: {
+    gap: 10,
+    alignItems: "center",
+    flexDirection: "row",
+    borderWidth: 0,
+  },
+  headerProgression: {
+    fontSize: 16,
+    fontWeight: 600,
+    fontFamily: "Rubik",
+    color: "#FFFFFF",
+  },
+  headerProgressionCount: {
+    fontSize: 20,
+  },
+  levelList: {
+    flex: 1,
+  },
+  contentContainerStyle: {
+    alignItems: "center",
+    justifyContent: "space-between",
   },
 });
 
