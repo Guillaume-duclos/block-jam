@@ -12,12 +12,9 @@ import {
   menuVerticalPadding,
   windowHeight,
 } from "../constants/dimension";
-import ScrollInsetPosition from "../enums/scrollInsetPosition.enum";
 import { Level, MainLevel } from "../types/level.type";
-import { darken } from "../utils/color";
 import LevelItem from "./LevelItem";
 import PaginationIndicator from "./PaginationIndicator";
-import ScrollInset from "./ScrollInset";
 
 type Props = {
   level: MainLevel;
@@ -85,7 +82,7 @@ const LevelItemsList = memo(({ level }: Props): JSX.Element => {
         ...styles.container,
         paddingTop: insets.top,
         paddingBottom: insets.bottom,
-        backgroundColor: darken(level.color, 0.2),
+        // backgroundColor: darken(level.color, 0.2),
       }}
     >
       {/* LEVEL DIFICULTY */}
@@ -113,18 +110,6 @@ const LevelItemsList = memo(({ level }: Props): JSX.Element => {
         keyExtractor={(_, index) => `${index}`}
         style={{ ...styles.levelList }}
         contentContainerStyle={styles.contentContainerStyle}
-        ListHeaderComponent={() => (
-          <ScrollInset
-            color={level.color}
-            position={ScrollInsetPosition.LEFT}
-          />
-        )}
-        ListFooterComponent={() => (
-          <ScrollInset
-            color={level.color}
-            position={ScrollInsetPosition.RIGHT}
-          />
-        )}
       />
 
       {/* PAGINATION */}

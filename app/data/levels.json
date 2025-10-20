@@ -1,7 +1,7 @@
 [
   {
     "index": 0,
-    "color": "#D6F5BC",
+    "color": "#ACC696",
     "levels": [
       { "layout": "ooBBoooooDooAAoDoooooooooCCCoooooooo", "minimumMove": 30 },
       { "layout": "oBBBoooooDooAAoDoooooxoooooooooooooo", "minimumMove": 30 },
