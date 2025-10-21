@@ -74,7 +74,7 @@ const LevelPlayground = memo(
     }));
 
     useEffect((): void => {
-      console.log({ count });
+      // console.log({ count });
 
       if (count === 0) {
         setIsUndoEnabled(false);
@@ -317,9 +317,56 @@ const LevelPlayground = memo(
     return (
       <View style={styles.container}>
         {/* SCORES */}
-        <View style={styles.countContainer}>
-          <Text style={styles.countTitle}>Coups</Text>
-          <Text style={styles.count}>{count}</Text>
+        <View style={styles.scoresContainer}>
+          <View style={styles.scoresSubContainer}>
+            {/* CURRENT COUNT */}
+            <View style={{ ...styles.scoreContainer }}>
+              <Text style={styles.scoreTitle}>Coups</Text>
+              <Text
+                style={styles.count}
+                adjustsFontSizeToFit
+                minimumFontScale={0.5}
+                numberOfLines={1}
+              >
+                {count}
+              </Text>
+            </View>
+
+            {/* PREVIOUS SCORES */}
+            <View
+              style={{
+                ...styles.scoreContainer,
+                ...styles.previousScoreContainer,
+              }}
+            >
+              <Text
+                adjustsFontSizeToFit
+                numberOfLines={2}
+                minimumFontScale={0.5}
+                style={styles.scoreTitle}
+              >
+                Scores précédents
+              </Text>
+              <View>
+                <Text
+                  style={styles.previousScore}
+                  minimumFontScale={0.5}
+                  adjustsFontSizeToFit
+                  numberOfLines={1}
+                >
+                  Coups : 34
+                </Text>
+                <Text
+                  style={styles.previousScore}
+                  minimumFontScale={0.5}
+                  adjustsFontSizeToFit
+                  numberOfLines={1}
+                >
+                  Temps : 2:03
+                </Text>
+              </View>
+            </View>
+          </View>
         </View>
 
         {/* PLAYGROUND */}
@@ -356,18 +403,28 @@ const styles = StyleSheet.create({
     width: windowWidth,
     alignItems: "center",
   },
-  countContainer: {
+  scoresContainer: {
     flex: 1,
-    width: "100%",
-    paddingHorizontal: 20,
     justifyContent: "center",
   },
-  countTitle: {
+  scoresSubContainer: {
+    flexDirection: "row",
+  },
+  scoreContainer: {
+    width: "50%",
+    paddingHorizontal: 20,
+    justifyContent: "center",
+    borderWidth: 0,
+  },
+  previousScoreContainer: {
+    justifyContent: "space-between",
+  },
+  scoreTitle: {
     fontSize: 30,
     fontWeight: 700,
     textTransform: "uppercase",
     fontFamily: "Rubik",
-    color: darken("#D6F5BC", 0.3),
+    color: darken("#D6F5BC", 0.25),
   },
   count: {
     fontSize: 120,
@@ -375,8 +432,16 @@ const styles = StyleSheet.create({
     fontFamily: "Rubik",
     textTransform: "uppercase",
     color: darken("#D6F5BC", 0.3),
-    marginBottom: -20,
-    lineHeight: 124,
+    marginBottom: -28,
+    borderWidth: 0,
+    // lineHeight: 124,
+  },
+  previousScore: {
+    fontSize: 30,
+    fontWeight: 800,
+    fontFamily: "Rubik",
+    textTransform: "uppercase",
+    color: darken("#D6F5BC", 0.3),
   },
   playgroundContainer: {
     width: playgroundSize,

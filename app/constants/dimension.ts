@@ -13,7 +13,7 @@ export const gridWidth: number = windowWidth * 0.75;
 export const gridHeight: number = windowWidth * 0.75;
 
 // Case sizes
-export const playgroundSize: number = Dimensions.get("window").width * 0.94;
+export const playgroundSize: number = windowWidth * 0.94;
 export const playgroundGridSize: number = playgroundSize - 40;
 export const caseSize: number = playgroundGridSize / 6;
 

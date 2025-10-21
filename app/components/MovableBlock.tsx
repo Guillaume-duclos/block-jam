@@ -1,7 +1,7 @@
 import * as Haptics from "expo-haptics";
 import { LinearGradient } from "expo-linear-gradient";
 import React, { JSX, Ref, RefObject, useEffect, useRef } from "react";
-import { StyleSheet, useWindowDimensions, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import {
   Gesture,
   GestureDetector,
@@ -21,7 +21,7 @@ import ArrowTriangleLeftFill from "../assets/icons/ArrowTriangleLeftFill";
 import ArrowTriangleRightFill from "../assets/icons/ArrowTriangleRightFill";
 import ArrowTriangleUpFill from "../assets/icons/ArrowTriangleUpFill";
 import { animationDuration, gridCount } from "../config/config";
-import { caseSize, horizontalMargin } from "../constants/dimension";
+import { caseSize } from "../constants/dimension";
 import { BlockType } from "../enums/blockType.enum";
 import { Orientation } from "../enums/orientation.enum";
 import { darken } from "../utils/color";
@@ -58,8 +58,8 @@ export default function MovableBlock({
   const blockOpacity: SharedValue<number> = useSharedValue(0);
   const localPosition: RefObject<number[]> = useRef(position);
   const vibrationEnable: RefObject<boolean> = useRef(true);
-
-  const dimensions = useWindowDimensions();
+  const startX = useRef<number>(0);
+  const startY = useRef<number>(0);
 
   const progress = useSharedValue(0);
 
@@ -134,33 +134,28 @@ export default function MovableBlock({
 
   // Calcule la tranche de la grille la plus proche en fonction de la position courante
   const getNearestPosition = (translation: number): void => {
+    const nearestUnit = Math.round(translation / caseSize);
+    const clampedUnit = Math.max(0, Math.min(gridCount - 1, nearestUnit));
+
     // On calcule la nouvelle position en pixel
-    const nearestPosition: number = grid.reduce(
-      (previous: number, current: number): number =>
-        Math.abs(current - translation) < Math.abs(previous - translation)
-          ? current
-          : previous
-    );
+    const nearestPositionInPixels = clampedUnit * caseSize;
 
     // On récupère la nouvelle position au format index (entre 0 et 5)
-    const nearestPositionInUnit: number = grid.indexOf(nearestPosition);
+    const nearestPositionInUnit = clampedUnit;
 
     // On vérifie si la position à changer
     let currentPosition: number;
 
     // On récupère la nouvelle position, on quitte la fonction si la position n'a pas changé
     if (orientation === Orientation.HORIZONTAL) {
-      const line: number = Math.floor(localPosition.current[0] / gridCount);
+      const line = Math.floor(localPosition.current[0] / gridCount);
       currentPosition = line * gridCount + nearestPositionInUnit;
 
       if (currentPosition === localPosition.current[0]) {
         return;
       }
     } else {
-      const column: number =
-        localPosition.current[0] -
-        Math.floor(localPosition.current[0] / gridCount) * 6;
-
+      const column = localPosition.current[0] % gridCount;
       currentPosition = column + gridCount * nearestPositionInUnit;
 
       if (currentPosition === localPosition.current[0]) {
@@ -172,23 +167,23 @@ export default function MovableBlock({
     const newPositions: number[] = [];
 
     if (orientation === Orientation.HORIZONTAL) {
-      for (let i: number = 0; i < position.length; i++) {
+      for (let i = 0; i < position.length; i++) {
         newPositions.push(currentPosition + i);
       }
+
+      localPosition.current = newPositions;
+      x.value = withTiming(nearestPositionInPixels, {
+        duration: animationDuration,
+      });
     } else {
-      for (let i: number = 0; i < position.length * gridCount; i += gridCount) {
-        newPositions.push(currentPosition + i);
+      for (let i = 0; i < position.length; i++) {
+        newPositions.push(currentPosition + i * gridCount);
       }
-    }
 
-    // On met à jour la position sauvegardé en locale
-    localPosition.current = newPositions;
-
-    // On met à jour la valeur de l'axe x ou y en fonction de l'orientation du véhicule
-    if (orientation === Orientation.HORIZONTAL) {
-      x.value = withTiming(nearestPosition, { duration: animationDuration });
-    } else {
-      y.value = withTiming(nearestPosition, { duration: animationDuration });
+      localPosition.current = newPositions;
+      y.value = withTiming(nearestPositionInPixels, {
+        duration: animationDuration,
+      });
     }
 
     moveFeedback();
@@ -255,48 +250,28 @@ export default function MovableBlock({
 
   // Gestion des événements lorsque l'utilisateur déplace un bloc
   const panGesture: PanGesture = Gesture.Pan()
-    .minDistance(0)
+    .onStart(() => {
+      startX.current = x.value;
+      startY.current = y.value;
+      vibrationEnable.current = true;
+    })
     .onUpdate((event): void => {
-      const isHorizontal = orientation === Orientation.HORIZONTAL;
-
-      if (isHorizontal) {
-        const touchPosition = event.absoluteX - horizontalMargin - caseSize;
+      if (orientation === Orientation.HORIZONTAL) {
         const minRange = range[0] * caseSize;
         const maxRange = range[1] * caseSize - (position.length - 1) * caseSize;
 
-        // console.log("------------------------------");
-        // console.log({ absoluteX: event.absoluteX });
-        // console.log({ caseSize });
-        // console.log({ minRange });
-        // console.log({ maxRange });
-        // console.log({ touchPosition });
-        // console.log(touchPosition >= minRange && touchPosition <= maxRange);
+        const virtualPx = startX.current + event.translationX;
+        const clampedPx = Math.max(minRange, Math.min(maxRange, virtualPx));
 
-        // Vérifie si le déplacement en X est toujours compris dans le rang
-        if (touchPosition >= minRange && touchPosition <= maxRange) {
-          getNearestPosition(touchPosition);
-        }
-
-        // On active la vibration si la valeur de touchPosition est suffisamment en dehors du rang
-        if (
-          vibrationEnable.current &&
-          ((touchPosition <= minRange &&
-            touchPosition <= minRange - caseSize) ||
-            (touchPosition >= maxRange && touchPosition >= maxRange + caseSize))
-        ) {
-          outboxFeedback();
-          vibrationEnable.current = false;
-        }
+        getNearestPosition(clampedPx);
       } else {
-        // Vérifie si le déplacement en Y est toujours compris dans le rang
-        const verticalMargin = dimensions.height - (caseSize * gridCount + 120);
-        const touchPosition = event.absoluteY - verticalMargin - caseSize;
         const minRange = range[0] * caseSize;
         const maxRange = range[1] * caseSize - (position.length - 1) * caseSize;
 
-        if (touchPosition >= minRange && touchPosition <= maxRange) {
-          getNearestPosition(touchPosition);
-        }
+        const virtualPx = startY.current + event.translationY;
+        const clampedPx = Math.max(minRange, Math.min(maxRange, virtualPx));
+
+        getNearestPosition(clampedPx);
       }
     })
     .onEnd((): void => {

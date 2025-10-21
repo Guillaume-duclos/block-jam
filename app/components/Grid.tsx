@@ -24,8 +24,8 @@ export default function Grid({ color, style }: Props): JSX.Element {
               ...styles.grid,
               width: caseSize - 5,
               height: caseSize - 5,
-              left: col * caseSize + 2,
               top: row * caseSize + 2,
+              left: col * caseSize + 2,
               borderColor: darken(color, 0.3),
               ...(index === goalCaseIndex && styles.goalCase),
             }}

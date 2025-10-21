@@ -347,7 +347,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   footerButtonsContainer: {
-    gap: 16,
+    gap: 30,
     width: "100%",
     flexDirection: "row",
     justifyContent: "space-between",
