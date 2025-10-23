@@ -41,6 +41,9 @@ export default function PressableView({
     .onFinalize(() => {
       progress.value = withTiming(1, { duration: 100 });
     })
+    .onTouchesUp(() => {
+      progress.value = withTiming(1, { duration: 100 });
+    })
     .onEnd(() => {
       onPress();
     })

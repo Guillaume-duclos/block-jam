@@ -322,14 +322,17 @@ const LevelPlayground = memo(
             {/* CURRENT COUNT */}
             <View style={{ ...styles.scoreContainer }}>
               <Text style={styles.scoreTitle}>Coups</Text>
-              <Text
-                style={styles.count}
-                adjustsFontSizeToFit
-                minimumFontScale={0.5}
-                numberOfLines={1}
-              >
-                {count}
-              </Text>
+
+              <View style={{ borderWidth: 0 }}>
+                <Text
+                  style={styles.count}
+                  // adjustsFontSizeToFit
+                  // minimumFontScale={0.5}
+                  // numberOfLines={1}
+                >
+                  {count}
+                </Text>
+              </View>
             </View>
 
             {/* PREVIOUS SCORES */}
@@ -347,20 +350,19 @@ const LevelPlayground = memo(
               >
                 Scores précédents
               </Text>
-              <View>
+
+              <View style={styles.previousScoreLabelContainer}>
                 <Text
-                  style={styles.previousScore}
-                  minimumFontScale={0.5}
-                  adjustsFontSizeToFit
                   numberOfLines={1}
+                  adjustsFontSizeToFit
+                  style={styles.previousScoreLabel}
                 >
                   Coups : 34
                 </Text>
                 <Text
-                  style={styles.previousScore}
-                  minimumFontScale={0.5}
-                  adjustsFontSizeToFit
                   numberOfLines={1}
+                  adjustsFontSizeToFit
+                  style={styles.previousScoreLabel}
                 >
                   Temps : 2:03
                 </Text>
@@ -408,15 +410,19 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   scoresSubContainer: {
+    width: "100%",
+    justifyContent: "space-between",
+    paddingHorizontal: 20,
     flexDirection: "row",
+    borderWidth: 0,
   },
   scoreContainer: {
-    width: "50%",
-    paddingHorizontal: 20,
-    justifyContent: "center",
+    width: "48%",
+    justifyContent: "space-between",
     borderWidth: 0,
   },
   previousScoreContainer: {
+    gap: 6,
     justifyContent: "space-between",
   },
   scoreTitle: {
@@ -425,23 +431,35 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
     fontFamily: "Rubik",
     color: darken("#D6F5BC", 0.25),
+    borderWidth: 0,
   },
   count: {
+    height: 110,
     fontSize: 120,
     fontWeight: 600,
     fontFamily: "Rubik",
     textTransform: "uppercase",
     color: darken("#D6F5BC", 0.3),
-    marginBottom: -28,
+    marginBottom: 1,
     borderWidth: 0,
-    // lineHeight: 124,
+    borderColor: "red",
+    lineHeight: 134,
   },
-  previousScore: {
+  previousScoreLabelContainer: {
     fontSize: 30,
     fontWeight: 800,
     fontFamily: "Rubik",
     textTransform: "uppercase",
     color: darken("#D6F5BC", 0.3),
+    borderWidth: 0,
+  },
+  previousScoreLabel: {
+    fontSize: 30,
+    fontWeight: 800,
+    fontFamily: "Rubik",
+    textTransform: "uppercase",
+    color: darken("#D6F5BC", 0.3),
+    borderWidth: 0,
   },
   playgroundContainer: {
     width: playgroundSize,

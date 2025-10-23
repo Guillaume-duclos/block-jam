@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
 import React, { JSX, memo, useMemo, useRef, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
@@ -5,6 +6,7 @@ import {
   useSafeAreaFrame,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
+import Settings from "../assets/icons/GearShapeFill";
 import {
   menuFooterHeight,
   menuHeaderHeight,
@@ -12,9 +14,12 @@ import {
   menuVerticalPadding,
   windowHeight,
 } from "../constants/dimension";
+import { Screen } from "../enums/screen.enum";
 import { Level, MainLevel } from "../types/level.type";
+import NavigationProp from "../types/navigation.type";
 import LevelItem from "./LevelItem";
 import PaginationIndicator from "./PaginationIndicator";
+import PressableView from "./PressableView";
 
 type Props = {
   level: MainLevel;
@@ -24,6 +29,8 @@ const LevelItemsList = memo(({ level }: Props): JSX.Element => {
   const [activeViewIndex, setActiveViewIndex] = useState(0);
 
   const insets = useSafeAreaInsets();
+
+  const navigation = useNavigation<NavigationProp>();
 
   const { height } = useSafeAreaFrame();
 
@@ -76,22 +83,34 @@ const LevelItemsList = memo(({ level }: Props): JSX.Element => {
     [level.levels]
   );
 
+  // Ouvre les paramètres
+  const openSettings = (): void => {
+    navigation.navigate(Screen.SETTINGS);
+  };
+
   return (
     <View
       style={{
         ...styles.container,
         paddingTop: insets.top,
         paddingBottom: insets.bottom,
-        // backgroundColor: darken(level.color, 0.2),
       }}
     >
-      {/* LEVEL DIFICULTY */}
+      {/* HEADER */}
       <View style={styles.headerContainer}>
-        <Text style={styles.headerTitle}>Dificulty {level.index + 1}</Text>
-        <View style={styles.headerProgressionContainer}>
-          <Text style={styles.headerProgression}>
-            <Text style={styles.headerProgressionCount}>2</Text>/156 completed
-          </Text>
+        <View style={styles.headerTitleContainer}>
+          <Text style={styles.headerTitle}>Dificulty {level.index + 1}</Text>
+          <View style={styles.headerProgressionContainer}>
+            <Text style={styles.headerProgression}>
+              <Text style={styles.headerProgressionCount}>2</Text>/156 completed
+            </Text>
+          </View>
+        </View>
+
+        <View style={styles.headerSettingsButtonContainer}>
+          <PressableView onPress={openSettings}>
+            <Settings color="#FFFFFF" />
+          </PressableView>
         </View>
       </View>
 
@@ -125,6 +144,9 @@ const styles = StyleSheet.create({
   headerContainer: {
     alignItems: "center",
   },
+  headerTitleContainer: {
+    borderWidth: 0,
+  },
   headerTitle: {
     fontSize: 26,
     fontWeight: 700,
@@ -135,7 +157,6 @@ const styles = StyleSheet.create({
     gap: 10,
     alignItems: "center",
     flexDirection: "row",
-    borderWidth: 0,
   },
   headerProgression: {
     fontSize: 16,
@@ -145,6 +166,28 @@ const styles = StyleSheet.create({
   },
   headerProgressionCount: {
     fontSize: 20,
+  },
+  headerDificulty: {
+    fontSize: 20,
+    fontWeight: 700,
+    fontFamily: "Rubik",
+    color: "#FFFFFF",
+  },
+  headerLevel: {
+    fontSize: 17,
+    fontWeight: 600,
+    fontFamily: "Rubik",
+    color: "#FFFFFF",
+    lineHeight: 27,
+  },
+  headerLevelNumber: {
+    fontSize: 20,
+  },
+  headerSettingsButtonContainer: {
+    right: 16,
+    height: "100%",
+    position: "absolute",
+    justifyContent: "center",
   },
   levelList: {
     flex: 1,
