@@ -19,6 +19,6 @@ export const caseSize: number = playgroundGridSize / 6;
 
 // Menu sizes
 export const menuHeaderHeight: number = 58;
-export const menuFooterHeight: number = 8;
+export const menuFooterHeight: number = 12;
 export const menuLevelHeight: number = 96 + 10;
 export const menuVerticalPadding: number = 10;

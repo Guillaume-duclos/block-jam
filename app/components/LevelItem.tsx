@@ -1,12 +1,12 @@
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import React, { JSX, memo } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 import { windowWidth } from "../constants/dimension";
 import { Screen } from "../enums/screen.enum";
 import { Level } from "../types/level.type";
 import RootStackParamList from "../types/rootStackParamList.type";
-import LevelViewer from "./LevelViewer";
+import LevelViewerTest from "./LevelViewerTest";
 
 type Props = {
   levels: Level[];
@@ -35,10 +35,10 @@ const LevelItem = memo(({ levels, difficultyIndex }: Props): JSX.Element => {
             onPress={() => navigateToPlayground(level)}
             style={{ gap: 2, alignItems: "center" }}
           >
-            <LevelViewer layout={level.layout} />
-            <Text style={{ color: "white", fontWeight: "700" }}>
+            <LevelViewerTest layout={level.layout} />
+            {/* <Text style={{ color: "white", fontWeight: "700" }}>
               {level.index + 1}
-            </Text>
+            </Text> */}
           </Pressable>
         );
       })}

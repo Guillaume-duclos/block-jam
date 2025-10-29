@@ -1,7 +1,10 @@
 import React, { JSX, memo } from "react";
 import { StyleSheet, View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { windowHeight, windowWidth } from "../constants/dimension";
+import {
+  menuFooterHeight,
+  windowHeight,
+  windowWidth,
+} from "../constants/dimension";
 import { Orientation } from "../enums/orientation.enum";
 
 interface Props {
@@ -15,50 +18,47 @@ const PaginationIndicator = memo(
     levels,
     activeViewIndex,
     orientation = Orientation.HORIZONTAL,
-  }: Props): JSX.Element => {
-    const insets = useSafeAreaInsets();
-
-    return (
-      <View
-        style={{
-          ...styles.container,
-          ...(orientation === Orientation.VERTICAL && styles.verticalContainer),
-        }}
-      >
-        {levels.map((_: any, index: number) => (
-          <View
-            key={`dot-${index}`}
-            style={{
-              ...styles.dot,
-              opacity: activeViewIndex === index ? 1 : 0.4,
-            }}
-          />
-        ))}
-      </View>
-    );
-  }
+  }: Props): JSX.Element => (
+    <View
+      style={{
+        ...styles.container,
+        ...(orientation === Orientation.VERTICAL && styles.verticalContainer),
+      }}
+    >
+      {levels.map((_: any, index: number) => (
+        <View
+          key={`dot-${index}`}
+          style={{
+            ...styles.dot,
+            opacity: activeViewIndex === index ? 1 : 0.4,
+          }}
+        />
+      ))}
+    </View>
+  )
 );
 
 const styles = StyleSheet.create({
   container: {
-    gap: 8,
+    gap: 10,
     width: windowWidth,
-    height: 8,
+    height: menuFooterHeight,
     flexDirection: "row",
     justifyContent: "center",
   },
   verticalContainer: {
     width: 8,
-    right: 5,
+    right: 10,
     height: windowHeight,
     flexDirection: "column",
     position: "absolute",
   },
   dot: {
-    width: 8,
-    height: 8,
-    borderRadius: 2.5,
+    width: 12,
+    height: 12,
+    borderRadius: 3,
     backgroundColor: "#FFFFFF",
+    borderColor: "#FFFFFF",
   },
 });
 

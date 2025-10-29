@@ -17,7 +17,11 @@ type Props = {
   color: string;
 };
 
-export default function Block({ index, position, color }: Props): JSX.Element {
+export default function FixedBlock({
+  index,
+  position,
+  color,
+}: Props): JSX.Element {
   const x: number = (position - 6 * Math.floor(position / 6)) * caseSize;
   const y: number = Math.floor(position / 6) * caseSize;
 

@@ -53,6 +53,9 @@ export default function Modal({
     .onFinalize(() => {
       progress.value = withTiming(0, { duration: 80 });
     })
+    .onTouchesUp(() => {
+      progress.value = withTiming(0, { duration: 80 });
+    })
     .onEnd(() => {
       onPress();
     })

@@ -74,9 +74,9 @@ export default function Menu() {
         onViewableItemsChanged={viewableItemsChanged}
         renderItem={({ item }) => <LevelItemsList level={item} />}
         showsVerticalScrollIndicator={false}
-        keyExtractor={(_, index) => `${index}`}
-        onScroll={onScroll}
+        keyExtractor={(_, index) => `vlist-${index}`}
         scrollEventThrottle={16}
+        onScroll={onScroll}
       />
 
       {/* PAGINATION */}

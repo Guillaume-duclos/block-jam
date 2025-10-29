@@ -1,12 +1,11 @@
 import { useNavigation } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
 import React, { JSX, memo, useMemo, useRef, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import {
   useSafeAreaFrame,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
-import Settings from "../assets/icons/GearShapeFill";
 import {
   menuFooterHeight,
   menuHeaderHeight,
@@ -18,8 +17,8 @@ import { Screen } from "../enums/screen.enum";
 import { Level, MainLevel } from "../types/level.type";
 import NavigationProp from "../types/navigation.type";
 import LevelItem from "./LevelItem";
+import MenuHeader from "./MenuHeader";
 import PaginationIndicator from "./PaginationIndicator";
-import PressableView from "./PressableView";
 
 type Props = {
   level: MainLevel;
@@ -97,22 +96,7 @@ const LevelItemsList = memo(({ level }: Props): JSX.Element => {
       }}
     >
       {/* HEADER */}
-      <View style={styles.headerContainer}>
-        <View style={styles.headerTitleContainer}>
-          <Text style={styles.headerTitle}>Dificulty {level.index + 1}</Text>
-          <View style={styles.headerProgressionContainer}>
-            <Text style={styles.headerProgression}>
-              <Text style={styles.headerProgressionCount}>2</Text>/156 completed
-            </Text>
-          </View>
-        </View>
-
-        <View style={styles.headerSettingsButtonContainer}>
-          <PressableView onPress={openSettings}>
-            <Settings color="#FFFFFF" />
-          </PressableView>
-        </View>
-      </View>
+      <MenuHeader difficulty={level.index + 1} openSettings={openSettings} />
 
       {/* LISTE HORIZONTALE DE CHAQUE GRAND NIVEAU */}
       <FlashList
@@ -126,9 +110,9 @@ const LevelItemsList = memo(({ level }: Props): JSX.Element => {
         renderItem={({ item }) => (
           <LevelItem levels={item} difficultyIndex={level.index} />
         )}
-        keyExtractor={(_, index) => `${index}`}
-        style={{ ...styles.levelList }}
+        keyExtractor={(_, index) => `hlist-${level.index}-${index}`}
         contentContainerStyle={styles.contentContainerStyle}
+        style={{ ...styles.levelList }}
       />
 
       {/* PAGINATION */}
@@ -140,54 +124,6 @@ const LevelItemsList = memo(({ level }: Props): JSX.Element => {
 const styles = StyleSheet.create({
   container: {
     height: windowHeight,
-  },
-  headerContainer: {
-    alignItems: "center",
-  },
-  headerTitleContainer: {
-    borderWidth: 0,
-  },
-  headerTitle: {
-    fontSize: 26,
-    fontWeight: 700,
-    fontFamily: "Rubik",
-    color: "#FFFFFF",
-  },
-  headerProgressionContainer: {
-    gap: 10,
-    alignItems: "center",
-    flexDirection: "row",
-  },
-  headerProgression: {
-    fontSize: 16,
-    fontWeight: 600,
-    fontFamily: "Rubik",
-    color: "#FFFFFF",
-  },
-  headerProgressionCount: {
-    fontSize: 20,
-  },
-  headerDificulty: {
-    fontSize: 20,
-    fontWeight: 700,
-    fontFamily: "Rubik",
-    color: "#FFFFFF",
-  },
-  headerLevel: {
-    fontSize: 17,
-    fontWeight: 600,
-    fontFamily: "Rubik",
-    color: "#FFFFFF",
-    lineHeight: 27,
-  },
-  headerLevelNumber: {
-    fontSize: 20,
-  },
-  headerSettingsButtonContainer: {
-    right: 16,
-    height: "100%",
-    position: "absolute",
-    justifyContent: "center",
   },
   levelList: {
     flex: 1,

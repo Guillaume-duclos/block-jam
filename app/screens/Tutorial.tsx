@@ -1,6 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { JSX } from "react";
-import { Button, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
+import LevelViewer from "../components/LevelViewer";
 import { Screen } from "../enums/screen.enum";
 import { StorageKey } from "../enums/storageKey.enum";
 import NavigationProp from "../types/navigation.type";
@@ -14,10 +15,21 @@ export default function Tutorial(): JSX.Element {
     navigation.navigate(Screen.MENU);
   };
 
+  const goToPlayground = () => {
+    navigation.navigate(Screen.PLAYGROUND, {
+      level: {
+        index: 1,
+        layout: "oIooLMoIBBLMAAJKooCCJKooxEEEoxGGHHoo",
+        minimumMove: 30,
+      },
+      difficultyIndex: 0,
+    });
+  };
+
   return (
     <View style={styles.container}>
-      <Text>Toturial screen</Text>
-      <Button onPress={markScreenAsSeen} title="Mark as seen" />
+      <LevelViewer layout={"oIooLMoIBBLMAAJKooCCJKooxEEEoxGGHHoo"} />
+      {/* <Button title="Playground" onPress={goToPlayground} /> */}
     </View>
   );
 }
@@ -27,5 +39,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    backgroundColor: "#D6F5BC",
   },
 });

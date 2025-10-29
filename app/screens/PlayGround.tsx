@@ -6,22 +6,19 @@ import {
   NativeScrollEvent,
   NativeSyntheticEvent,
   StyleSheet,
-  Text,
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import ArrowShapeLeftFill from "../assets/icons/ArrowShapeLeftFill";
 import ArrowShapeTurnUpLeft from "../assets/icons/ArrowShapeTurnUpLeft";
 import ArrowTriangleHead2ClockwiseRotate90 from "../assets/icons/ArrowTriangleHead2ClockwiseRotate90";
 import ArrowTriangleLeft from "../assets/icons/ArrowTriangleLeft";
 import ArrowTriangleRight from "../assets/icons/ArrowTriangleRight";
-import Settings from "../assets/icons/GearShapeFill";
 import Button from "../components/Button";
 import LevelPlayground, {
   LevelPlaygroundRef,
 } from "../components/LevelPlayground";
 import Modal from "../components/Modal";
-import PressableView from "../components/PressableView";
+import PlaygroundHeader from "../components/PlaygroundHeader";
 import data from "../data/levels.json";
 import LevelNavigationType from "../enums/levelNavigationType.enum";
 import { Screen } from "../enums/screen.enum";
@@ -209,27 +206,13 @@ export default function PlayGround(): JSX.Element {
         }}
       >
         {/* HEADER */}
-        <View style={styles.header}>
-          <PressableView onPress={goback}>
-            <ArrowShapeLeftFill color="#FFFFFF" />
-          </PressableView>
-
-          <View style={{ alignItems: "center" }}>
-            <Text style={styles.headerDificulty}>
-              Difficulté {difficulty + 1}
-            </Text>
-            <Text style={styles.headerLevel}>
-              Niveau{" "}
-              <Text style={styles.headerLevelNumber}>
-                {activeLevelIndex + 1}/{data[difficulty].levels.length}
-              </Text>
-            </Text>
-          </View>
-
-          <PressableView onPress={openSettings}>
-            <Settings color="#FFFFFF" />
-          </PressableView>
-        </View>
+        <PlaygroundHeader
+          difficulty={difficulty}
+          currentLevel={activeLevelIndex + 1}
+          levelCount={data[difficulty].levels.length}
+          openSettings={openSettings}
+          goback={goback}
+        />
 
         <FlashList
           ref={levelsListRef}
@@ -319,29 +302,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-  },
-  header: {
-    width: "100%",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 16,
-  },
-  headerDificulty: {
-    fontSize: 20,
-    fontWeight: 700,
-    fontFamily: "Rubik",
-    color: "#FFFFFF",
-  },
-  headerLevel: {
-    fontSize: 17,
-    fontWeight: 600,
-    fontFamily: "Rubik",
-    color: "#FFFFFF",
-    lineHeight: 27,
-  },
-  headerLevelNumber: {
-    fontSize: 20,
   },
   levelList: {
     flex: 1,
