@@ -1,5 +1,6 @@
 import React, { JSX, memo } from "react";
 import { StyleSheet, View } from "react-native";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import {
   menuFooterHeight,
   windowHeight,
@@ -18,24 +19,31 @@ const PaginationIndicator = memo(
     levels,
     activeViewIndex,
     orientation = Orientation.HORIZONTAL,
-  }: Props): JSX.Element => (
-    <View
-      style={{
-        ...styles.container,
-        ...(orientation === Orientation.VERTICAL && styles.verticalContainer),
-      }}
-    >
-      {levels.map((_: any, index: number) => (
+  }: Props): JSX.Element => {
+    const pan = Gesture.Pan();
+
+    return (
+      <GestureDetector gesture={pan}>
         <View
-          key={`dot-${index}`}
           style={{
-            ...styles.dot,
-            opacity: activeViewIndex === index ? 1 : 0.4,
+            ...styles.container,
+            ...(orientation === Orientation.VERTICAL &&
+              styles.verticalContainer),
           }}
-        />
-      ))}
-    </View>
-  )
+        >
+          {levels.map((_: any, index: number) => (
+            <View
+              key={`dot-${index}`}
+              style={{
+                ...styles.dot,
+                opacity: activeViewIndex === index ? 1 : 0.4,
+              }}
+            />
+          ))}
+        </View>
+      </GestureDetector>
+    );
+  }
 );
 
 const styles = StyleSheet.create({

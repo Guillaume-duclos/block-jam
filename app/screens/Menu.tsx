@@ -69,7 +69,7 @@ export default function Menu() {
         data={data}
         pagingEnabled
         style={styles.list}
-        maxItemsInRecyclePool={3}
+        maxItemsInRecyclePool={6}
         viewabilityConfig={levelItemsConfig}
         onViewableItemsChanged={viewableItemsChanged}
         renderItem={({ item }) => <LevelItemsList level={item} />}

@@ -6,7 +6,7 @@ import { windowWidth } from "../constants/dimension";
 import { Screen } from "../enums/screen.enum";
 import { Level } from "../types/level.type";
 import RootStackParamList from "../types/rootStackParamList.type";
-import LevelViewerTest from "./LevelViewerTest";
+import LevelViewer from "./LevelViewer";
 
 type Props = {
   levels: Level[];
@@ -20,7 +20,7 @@ const LevelItem = memo(({ levels, difficultyIndex }: Props): JSX.Element => {
 
   // Redirection vers le niveau
   const navigateToPlayground = (level: Level): void => {
-    navigation.navigate(Screen.PLAYGROUND, {
+    navigation.replace(Screen.PLAYGROUND, {
       level,
       difficultyIndex,
     });
@@ -33,12 +33,13 @@ const LevelItem = memo(({ levels, difficultyIndex }: Props): JSX.Element => {
           <Pressable
             key={index}
             onPress={() => navigateToPlayground(level)}
-            style={{ gap: 2, alignItems: "center" }}
+            style={styles.levelItem}
           >
-            <LevelViewerTest layout={level.layout} />
-            {/* <Text style={{ color: "white", fontWeight: "700" }}>
-              {level.index + 1}
-            </Text> */}
+            <LevelViewer
+              locked={difficultyIndex > 0}
+              index={String(level.index + 1)}
+              layout={level.layout}
+            />
           </Pressable>
         );
       })}
@@ -50,10 +51,15 @@ const styles = StyleSheet.create({
   levelItemsContainer: {
     gap: 10,
     width: windowWidth,
-    paddingHorizontal: 28,
+    paddingHorizontal: 30,
     justifyContent: "space-between",
     flexDirection: "row",
     flexWrap: "wrap",
+  },
+  levelItem: {
+    gap: 2,
+    alignItems: "center",
+    paddingHorizontal: 1,
   },
 });
 

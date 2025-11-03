@@ -92,7 +92,8 @@ export default function PlayGround(): JSX.Element {
     if (currentCount) {
       setShowConfirmationModal(LevelNavigationType.GO_BACK);
     } else {
-      navigation.goBack();
+      // navigation.goBack();
+      navigation.replace(Screen.MENU);
     }
   };
 
