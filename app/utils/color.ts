@@ -1,12 +1,5 @@
 // Modifie une couleur pour l'assombrir
-export function darken(
-  color: string,
-  factor: number = 0.2
-): string | undefined {
-  if (!color) {
-    return;
-  }
-
+export function darken(color: string, factor: number = 0.2): string {
   // Clamp factor entre 0 et 1
   const f = Math.min(Math.max(factor, 0), 1);
 
@@ -28,14 +21,7 @@ export function darken(
 }
 
 // Modifie une couleur pour l'éclaircir
-export function lighten(
-  color: string,
-  factor: number = 0.2
-): string | undefined {
-  if (!color) {
-    return;
-  }
-
+export function lighten(color: string, factor: number = 0.2): string {
   // Clamp factor entre 0 et 1
   const f = Math.min(Math.max(factor, 0), 1);
 

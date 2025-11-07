@@ -78,6 +78,7 @@ export default function Settings(): JSX.Element {
               deep={8}
               onPress={() => changeLanguage(language)}
               contentContainerStyle={styles.languageButton}
+              disabled={language === savedLanguage}
             >
               <Icon style={{ width: 50, height: 50 }} />
             </Button>
@@ -100,6 +101,8 @@ export default function Settings(): JSX.Element {
         </View>
       );
     });
+
+  const removeLevelsData = (): void => {};
 
   const logScoreData = (): void => {
     const score = getStorageString(StorageKey.LEVEL_SCORE);
@@ -132,6 +135,10 @@ export default function Settings(): JSX.Element {
               selected={isHapticActive}
               onChange={changeHapticActive}
             />
+
+            <Button onPress={removeLevelsData}>
+              <Text style={styles.buttonLabel}>Reset levels data</Text>
+            </Button>
           </Fragment>
         </SectionContainer>
 
@@ -220,6 +227,9 @@ const styles = StyleSheet.create({
   },
   section: {
     gap: 28,
+  },
+  buttonLabel: {
+    ...text.paragraph,
   },
   languagesContainer: {
     gap: 20,

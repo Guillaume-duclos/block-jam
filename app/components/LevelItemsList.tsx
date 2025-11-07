@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import { FlashList } from "@shopify/flash-list";
+import { FlashList, FlashListRef } from "@shopify/flash-list";
 import React, { JSX, memo, useMemo, useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import {
@@ -33,6 +33,8 @@ const LevelItemsList = memo(({ level }: Props): JSX.Element => {
 
   const { height } = useSafeAreaFrame();
 
+  const listRef = useRef<FlashListRef<any>>(null);
+
   // Configuration de la liste
   const levelItemsConfig = useRef({
     minimumViewTime: 0,
@@ -41,6 +43,8 @@ const LevelItemsList = memo(({ level }: Props): JSX.Element => {
 
   // Au swipe de la liste
   const viewableItemsChanged = useRef(({ viewableItems }: any): void => {
+    console.log(level.index, "viewableItems");
+
     if (viewableItems.length) {
       setActiveViewIndex(viewableItems[0].index);
     }
@@ -87,6 +91,10 @@ const LevelItemsList = memo(({ level }: Props): JSX.Element => {
     navigation.navigate(Screen.SETTINGS);
   };
 
+  const updateActiveIndex = (index: number): void => {
+    listRef.current?.scrollToIndex({ index, animated: false });
+  };
+
   return (
     <View
       style={{
@@ -100,6 +108,7 @@ const LevelItemsList = memo(({ level }: Props): JSX.Element => {
 
       {/* LISTE HORIZONTALE DE CHAQUE GRAND NIVEAU */}
       <FlashList
+        ref={listRef}
         horizontal
         pagingEnabled
         data={data}
@@ -108,7 +117,11 @@ const LevelItemsList = memo(({ level }: Props): JSX.Element => {
         showsHorizontalScrollIndicator={false}
         onViewableItemsChanged={viewableItemsChanged}
         renderItem={({ item }) => (
-          <LevelItem levels={item} difficultyIndex={level.index} />
+          <LevelItem
+            levels={item}
+            color={level.shadowColor}
+            difficultyIndex={level.index}
+          />
         )}
         keyExtractor={(_, index) => `hlist-${level.index}-${index}`}
         contentContainerStyle={styles.contentContainerStyle}
@@ -116,7 +129,11 @@ const LevelItemsList = memo(({ level }: Props): JSX.Element => {
       />
 
       {/* PAGINATION */}
-      <PaginationIndicator levels={data} activeViewIndex={activeViewIndex} />
+      <PaginationIndicator
+        levels={data}
+        activeViewIndex={activeViewIndex}
+        updateActiveIndex={updateActiveIndex}
+      />
     </View>
   );
 });

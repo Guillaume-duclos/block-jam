@@ -1,11 +1,12 @@
-import { FlashList } from "@shopify/flash-list";
+import { FlashList, FlashListRef } from "@shopify/flash-list";
+import { Canvas, LinearGradient, Rect, vec } from "@shopify/react-native-skia";
 import React, { useRef, useState } from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, View } from "react-native";
 import Animated, {
   interpolateColor,
   runOnJS,
   useAnimatedScrollHandler,
-  useAnimatedStyle,
+  useDerivedValue,
   useSharedValue,
 } from "react-native-reanimated";
 import LevelItemsList from "../components/LevelItemsList";
@@ -13,6 +14,7 @@ import PaginationIndicator from "../components/PaginationIndicator";
 import { windowHeight, windowWidth } from "../constants/dimension";
 import data from "../data/levels.json";
 import { Orientation } from "../enums/orientation.enum";
+import { darken } from "../utils/color";
 
 const AnimatedFlashList = Animated.createAnimatedComponent(FlashList);
 
@@ -21,10 +23,16 @@ export default function Menu() {
 
   const scroll = useSharedValue(0);
 
-  const inputRange = data.map((_, i) => i * windowHeight);
+  const listRef = useRef<FlashListRef<any>>(null);
 
-  const outputRange = data.map(
+  const scrollRange = data.map((_, i) => i * windowHeight);
+
+  const startColorRange = data.map(
     (_, i) => data[i].color ?? data[data.length - 1].color
+  );
+
+  const endColorRange = data.map(
+    (_, i) => darken(data[i].color) ?? darken(data[data.length - 1].color)
   );
 
   const setActiveIndex = (y: number) => {
@@ -52,20 +60,33 @@ export default function Menu() {
     },
   });
 
-  const animatedContainerStyle = useAnimatedStyle(() => {
-    const backgroundColor = interpolateColor(
-      scroll.value,
-      inputRange,
-      outputRange
-    );
+  const updateActiveIndex = (index: number): void => {
+    listRef.current?.scrollToIndex({ index, animated: false });
+  };
 
-    return { backgroundColor };
-  }, [inputRange, outputRange]);
+  const gradientColors = useDerivedValue(() => {
+    const start = interpolateColor(scroll.value, scrollRange, startColorRange);
+    const end = interpolateColor(scroll.value, scrollRange, endColorRange);
+
+    return [start, end];
+  });
 
   return (
-    <Animated.View style={[styles.container, animatedContainerStyle]}>
+    <View style={styles.container}>
+      {/* BACKGROUND GRADIENT */}
+      <Canvas style={styles.canvas}>
+        <Rect x={0} y={0} width={windowWidth} height={windowHeight}>
+          <LinearGradient
+            start={vec(0, 0)}
+            end={vec(windowWidth, windowHeight)}
+            colors={gradientColors}
+          />
+        </Rect>
+      </Canvas>
+
       {/* LISTE VERTICALE */}
       <AnimatedFlashList
+        ref={listRef}
         data={data}
         pagingEnabled
         style={styles.list}
@@ -84,8 +105,9 @@ export default function Menu() {
         levels={data}
         activeViewIndex={activeViewIndex}
         orientation={Orientation.VERTICAL}
+        updateActiveIndex={updateActiveIndex}
       />
-    </Animated.View>
+    </View>
   );
 }
 
@@ -96,5 +118,8 @@ const styles = StyleSheet.create({
   },
   list: {
     width: "100%",
+  },
+  canvas: {
+    ...StyleSheet.absoluteFillObject,
   },
 });

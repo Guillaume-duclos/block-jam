@@ -3,6 +3,7 @@ import { ColorValue } from "react-native";
 export type MainLevel = {
   index: number;
   color: ColorValue;
+  shadowColor: ColorValue;
   levels: [Level[]];
 };
 

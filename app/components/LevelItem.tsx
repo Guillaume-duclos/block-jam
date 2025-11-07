@@ -1,7 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import React, { JSX, memo } from "react";
-import { Pressable, StyleSheet, View } from "react-native";
+import { ColorValue, Pressable, StyleSheet, View } from "react-native";
 import { windowWidth } from "../constants/dimension";
 import { Screen } from "../enums/screen.enum";
 import { Level } from "../types/level.type";
@@ -9,43 +9,47 @@ import RootStackParamList from "../types/rootStackParamList.type";
 import LevelViewer from "./LevelViewer";
 
 type Props = {
+  color: ColorValue;
   levels: Level[];
   difficultyIndex: number;
 };
 
 type levelItemNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
-const LevelItem = memo(({ levels, difficultyIndex }: Props): JSX.Element => {
-  const navigation = useNavigation<levelItemNavigationProp>();
+const LevelItem = memo(
+  ({ color, levels, difficultyIndex }: Props): JSX.Element => {
+    const navigation = useNavigation<levelItemNavigationProp>();
 
-  // Redirection vers le niveau
-  const navigateToPlayground = (level: Level): void => {
-    navigation.replace(Screen.PLAYGROUND, {
-      level,
-      difficultyIndex,
-    });
-  };
+    // Redirection vers le niveau
+    const navigateToPlayground = (level: Level): void => {
+      navigation.push(Screen.PLAYGROUND, {
+        level,
+        difficultyIndex,
+      });
+    };
 
-  return (
-    <View style={styles.levelItemsContainer}>
-      {levels.map((level: Level, index: number) => {
-        return (
-          <Pressable
-            key={index}
-            onPress={() => navigateToPlayground(level)}
-            style={styles.levelItem}
-          >
-            <LevelViewer
-              locked={difficultyIndex > 0}
-              index={String(level.index + 1)}
-              layout={level.layout}
-            />
-          </Pressable>
-        );
-      })}
-    </View>
-  );
-});
+    return (
+      <View style={styles.levelItemsContainer}>
+        {levels.map((level: Level, index: number) => {
+          return (
+            <Pressable
+              key={index}
+              onPress={() => navigateToPlayground(level)}
+              style={styles.levelItem}
+            >
+              <LevelViewer
+                index={String(level.index + 1)}
+                locked={difficultyIndex > 0}
+                layout={level.layout}
+                color={color}
+              />
+            </Pressable>
+          );
+        })}
+      </View>
+    );
+  }
+);
 
 const styles = StyleSheet.create({
   levelItemsContainer: {
@@ -59,7 +63,7 @@ const styles = StyleSheet.create({
   levelItem: {
     gap: 2,
     alignItems: "center",
-    paddingHorizontal: 1,
+    paddingHorizontal: 2,
   },
 });
 

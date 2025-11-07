@@ -5,15 +5,20 @@ import {
   ImageSVG,
   LinearGradient,
   matchFont,
-  rect,
   RoundedRect,
-  rrect,
   Skia,
   Text,
   vec,
 } from "@shopify/react-native-skia";
-import React, { JSX, memo, useEffect, useMemo, useState } from "react";
-import { StyleSheet, ViewStyle } from "react-native";
+import React, {
+  Fragment,
+  JSX,
+  memo,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+import { ColorValue, StyleSheet } from "react-native";
 import {
   Gesture,
   GestureDetector,
@@ -33,9 +38,9 @@ import { darken } from "../utils/color";
 
 type Props = {
   index: string;
+  color: ColorValue;
   layout: string;
   locked?: boolean;
-  style?: ViewStyle;
 };
 
 type BlockData = {
@@ -45,7 +50,7 @@ type BlockData = {
 };
 
 const LevelViewer = memo(
-  ({ index, layout, locked, style }: Props): JSX.Element => {
+  ({ index, color, layout, locked }: Props): JSX.Element => {
     const [vehiclePositions, setVehiclePositions] = useState<BlockData[]>([]);
     const [yNumber, setYNumber] = useState(0);
 
@@ -112,7 +117,7 @@ const LevelViewer = memo(
     const gap = 2;
     const cellInner = caseSize - gap;
     const blockRadius = 2;
-    const mainColor: string = "#FAF7F2";
+    const mainColor = "#FAF7F2";
 
     const star = useMemo(
       () =>
@@ -150,19 +155,6 @@ const LevelViewer = memo(
           `<svg viewBox="0 0 12 17" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path
             d="M2.09375 16.1484C1.46875 16.1484 0.994792 15.9818 0.671875 15.6484C0.354167 15.3151 0.195312 14.8099 0.195312 14.1328V8.32812C0.195312 7.65625 0.354167 7.15625 0.671875 6.82812C0.994792 6.49479 1.46875 6.32812 2.09375 6.32812H9.71094C10.3359 6.32812 10.8073 6.49479 11.125 6.82812C11.4479 7.15625 11.6094 7.65625 11.6094 8.32812V14.1328C11.6094 14.8099 11.4479 15.3151 11.125 15.6484C10.8073 15.9818 10.3359 16.1484 9.71094 16.1484H2.09375ZM1.73438 7.07812V4.55469C1.73438 3.6224 1.92188 2.83073 2.29688 2.17969C2.67708 1.52344 3.18229 1.02344 3.8125 0.679688C4.44271 0.335938 5.13802 0.164062 5.89844 0.164062C6.66406 0.164062 7.36198 0.335938 7.99219 0.679688C8.6224 1.02344 9.125 1.52344 9.5 2.17969C9.88021 2.83073 10.0703 3.6224 10.0703 4.55469V7.07812H8.21875V4.45312C8.21875 3.92708 8.11458 3.47917 7.90625 3.10938C7.69792 2.73438 7.41667 2.44792 7.0625 2.25C6.71354 2.05208 6.32552 1.95312 5.89844 1.95312C5.47135 1.95312 5.08333 2.05208 4.73438 2.25C4.38542 2.44792 4.10677 2.73438 3.89844 3.10938C3.69531 3.47917 3.59375 3.92708 3.59375 4.45312V7.07812H1.73438Z"
-            fill="#90a77d"
-          />
-        </svg>`
-        ),
-      []
-    );
-
-    const lockOpenFill = useMemo(
-      () =>
-        Skia.SVG.MakeFromString(
-          `<svg viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path
-            d="M1.89062 16.1484C1.26562 16.1484 0.791667 15.9818 0.46875 15.6484C0.151042 15.3203 -0.0078125 14.8151 -0.0078125 14.1328V8.32812C-0.0078125 7.65625 0.151042 7.15625 0.46875 6.82812C0.791667 6.49479 1.26562 6.32812 1.89062 6.32812H9.50781C10.1328 6.32812 10.6042 6.49479 10.9219 6.82812C11.2448 7.15625 11.4062 7.65625 11.4062 8.32812V14.1328C11.4062 14.8151 11.2448 15.3203 10.9219 15.6484C10.6042 15.9818 10.1328 16.1484 9.50781 16.1484H1.89062ZM8.04688 7.03125V4.5C8.04688 3.57292 8.23438 2.78385 8.60938 2.13281C8.98438 1.47656 9.48698 0.976562 10.1172 0.632812C10.7526 0.289062 11.4505 0.117188 12.2109 0.117188C12.9766 0.117188 13.6745 0.289062 14.3047 0.632812C14.9349 0.976562 15.4375 1.47656 15.8125 2.13281C16.1927 2.78385 16.3828 3.57292 16.3828 4.5V6.11719C16.3828 6.41406 16.2917 6.65104 16.1094 6.82812C15.9271 7 15.7109 7.08594 15.4609 7.08594C15.2005 7.08594 14.9792 6.9974 14.7969 6.82031C14.6198 6.64323 14.5312 6.40885 14.5312 6.11719V4.40625C14.5312 3.88021 14.4245 3.43229 14.2109 3.0625C14.0026 2.6875 13.724 2.40104 13.375 2.20312C13.026 2.00521 12.638 1.90625 12.2109 1.90625C11.7839 1.90625 11.3958 2.00521 11.0469 2.20312C10.6979 2.40104 10.4193 2.6875 10.2109 3.0625C10.0026 3.43229 9.89844 3.88021 9.89844 4.40625V7.03125H8.04688Z"
             fill="#90a77d"
           />
         </svg>`
@@ -303,118 +295,124 @@ const LevelViewer = memo(
 
     const font = useMemo(() => matchFont(fontStyle), [fontStyle]);
 
-    const outer = rrect(rect(0, 0, 72, 72), 8, 8);
-    const inner = rrect(rect(4, 4, 72 - 8, 72 - 8), 4, 4);
-
     return (
-      <GestureDetector gesture={panGesture}>
-        <Canvas style={styles.playgroundContainer}>
-          <RoundedRect
-            x={0}
-            y={6}
-            r={10}
-            width={playgroundSize}
-            height={playgroundSize}
-            color={darken(mainColor, 0.16)}
-          />
-
-          <Group transform={[{ translateY: yNumber }]}>
+      <Fragment>
+        <GestureDetector gesture={panGesture}>
+          <Canvas
+            style={{
+              ...styles.playgroundContainer,
+              boxShadow: `0px 0px 10px #00000033`,
+            }}
+          >
             <RoundedRect
               x={0}
-              y={0}
+              y={7}
               r={10}
               width={playgroundSize}
               height={playgroundSize}
-              color={darken(mainColor, 0.1)}
-            >
-              <RoundedRect
-                x={4}
-                y={4}
-                r={6}
-                width={playgroundGridSize}
-                height={playgroundGridSize}
-                color={darken("#D6F5BC", 0.2)}
-              />
+              color={darken(mainColor, 0.16)}
+            />
 
-              <Group>
-                {/* GRILLES */}
-                <Group transform={[{ translateX: 4 }, { translateY: 4 }]}>
-                  {[...Array(36)].map((_, index: number) => {
-                    const col = index % 6;
-                    const row = Math.floor(index / 6);
-
-                    return (
-                      <RoundedRect
-                        key={index}
-                        x={row * caseSize + 4}
-                        y={col * caseSize + 4}
-                        r={blockRadius}
-                        width={caseSize - gap}
-                        height={caseSize - gap}
-                        style="stroke"
-                        strokeWidth={0.5}
-                        strokeJoin="round"
-                        color={darken("#D6F5BC", 0.3)}
-                      />
-                    );
-                  })}
-                </Group>
-
-                {/* BLOCS */}
-                {blocks}
-
-                {/* FILTRE BLUR */}
-                {locked && <BlurMask blur={5} />}
-              </Group>
-
-              {locked && (
-                <ImageSVG
-                  svg={lockFill}
-                  x={72 / 2 - 10}
-                  y={72 / 2 - 10}
-                  width={20}
-                  height={20}
-                />
-              )}
-            </RoundedRect>
-
-            {/* NUMÉRO DU NIVEAU */}
-            <Group transform={[{ translateX: 4 }, { translateY: 72 - 20 }]}>
-              <RoundedRect
-                x={-2}
-                y={-2}
-                r={10}
-                width={levelViewerTextSize[parseInt(index) - 1] + 4 || 0}
-                height={20}
-                color={darken("#D6F5BC", 0.25)}
-              />
-
+            <Group transform={[{ translateY: yNumber }]}>
               <RoundedRect
                 x={0}
                 y={0}
-                r={8}
-                width={levelViewerTextSize[parseInt(index) - 1] || 0}
-                height={16}
-                color="#FFFFFF"
+                r={10}
+                width={playgroundSize}
+                height={playgroundSize}
+                color={darken(mainColor, 0.1)}
               >
-                <Text
-                  x={index.length === 1 ? 4.5 : 4}
-                  y={12}
-                  text={index}
-                  font={font}
-                  color={darken("#D6F5BC", 0.45)}
+                <RoundedRect
+                  x={4}
+                  y={4}
+                  r={6}
+                  width={playgroundGridSize}
+                  height={playgroundGridSize}
+                  color={darken("#D6F5BC", 0.2)}
                 />
-              </RoundedRect>
-            </Group>
-          </Group>
 
-          <Group transform={[{ translateX: 8.5 }, { translateY: 72 + 8 }]}>
+                <Group>
+                  {/* GRILLES */}
+                  <Group transform={[{ translateX: 4 }, { translateY: 4 }]}>
+                    {[...Array(36)].map((_, index: number) => {
+                      const col = index % 6;
+                      const row = Math.floor(index / 6);
+
+                      return (
+                        <RoundedRect
+                          key={index}
+                          x={row * caseSize + 4}
+                          y={col * caseSize + 4}
+                          r={blockRadius}
+                          width={caseSize - gap}
+                          height={caseSize - gap}
+                          style="stroke"
+                          strokeWidth={0.5}
+                          strokeJoin="round"
+                          color={darken("#D6F5BC", 0.3)}
+                        />
+                      );
+                    })}
+                  </Group>
+
+                  {/* BLOCS */}
+                  {blocks}
+
+                  {/* FILTRE BLUR */}
+                  {locked && <BlurMask blur={5} />}
+                </Group>
+
+                {locked && (
+                  <ImageSVG
+                    svg={lockFill}
+                    x={72 / 2 - 11}
+                    y={72 / 2 - 11}
+                    width={22}
+                    height={22}
+                  />
+                )}
+              </RoundedRect>
+
+              {/* NUMÉRO DU NIVEAU */}
+              <Group transform={[{ translateX: 4 }, { translateY: 72 - 20 }]}>
+                <RoundedRect
+                  x={-2}
+                  y={-2}
+                  r={10}
+                  width={levelViewerTextSize[parseInt(index) - 1] + 4 || 0}
+                  height={20}
+                  color={darken("#D6F5BC", 0.25)}
+                />
+
+                <RoundedRect
+                  x={0}
+                  y={0}
+                  r={8}
+                  width={levelViewerTextSize[parseInt(index) - 1] || 0}
+                  height={16}
+                  color="#FFFFFF"
+                >
+                  <Text
+                    x={index.length === 1 ? 4.5 : 4}
+                    y={12}
+                    text={index}
+                    font={font}
+                    color={darken("#D6F5BC", 0.45)}
+                  />
+                </RoundedRect>
+              </Group>
+            </Group>
+          </Canvas>
+        </GestureDetector>
+
+        <Canvas style={styles.starsContainer}>
+          <Group transform={[{ translateX: 8.5 }, { translateY: 1 }]}>
             <ImageSVG svg={starFill} x={0} y={0} width={16} height={16} />
             <ImageSVG svg={starSemiFill} x={19} y={0} width={16} height={16} />
             <ImageSVG svg={star} x={38} y={0} width={16} height={16} />
           </Group>
         </Canvas>
-      </GestureDetector>
+      </Fragment>
     );
   }
 );
@@ -422,7 +420,12 @@ const LevelViewer = memo(
 const styles = StyleSheet.create({
   playgroundContainer: {
     width: 72,
-    height: 72 + 8 + 17,
+    height: 72 + 7,
+    borderRadius: 10,
+  },
+  starsContainer: {
+    width: 72,
+    height: 16,
   },
 });
 
