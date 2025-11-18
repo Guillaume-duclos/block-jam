@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/native";
 import { FlashList, FlashListRef } from "@shopify/flash-list";
 import { Canvas, LinearGradient, Rect, vec } from "@shopify/react-native-skia";
 import React, { useRef, useState } from "react";
@@ -20,6 +21,8 @@ const AnimatedFlashList = Animated.createAnimatedComponent(FlashList);
 
 export default function Menu() {
   const [activeViewIndex, setActiveViewIndex] = useState(0);
+
+  const navigation = useNavigation();
 
   const scroll = useSharedValue(0);
 

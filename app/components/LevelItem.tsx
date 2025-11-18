@@ -4,6 +4,7 @@ import React, { JSX, memo } from "react";
 import { ColorValue, Pressable, StyleSheet, View } from "react-native";
 import { windowWidth } from "../constants/dimension";
 import { Screen } from "../enums/screen.enum";
+import { usePreventDoublePress } from "../hooks/usePreventDoublePress";
 import { Level } from "../types/level.type";
 import RootStackParamList from "../types/rootStackParamList.type";
 import LevelViewer from "./LevelViewer";
@@ -20,12 +21,18 @@ const LevelItem = memo(
   ({ color, levels, difficultyIndex }: Props): JSX.Element => {
     const navigation = useNavigation<levelItemNavigationProp>();
 
+    const canPress = usePreventDoublePress();
+
     // Redirection vers le niveau
     const navigateToPlayground = (level: Level): void => {
-      navigation.push(Screen.PLAYGROUND, {
-        level,
-        difficultyIndex,
-      });
+      const canNavigate = canPress();
+
+      if (canNavigate) {
+        navigation.push(Screen.PLAYGROUND, {
+          level,
+          difficultyIndex,
+        });
+      }
     };
 
     return (
@@ -53,7 +60,7 @@ const LevelItem = memo(
 
 const styles = StyleSheet.create({
   levelItemsContainer: {
-    gap: 10,
+    columnGap: 10,
     width: windowWidth,
     paddingHorizontal: 30,
     justifyContent: "space-between",
