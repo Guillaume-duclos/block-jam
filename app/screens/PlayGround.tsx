@@ -11,14 +11,14 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import ArrowShapeTurnUpLeft from "../assets/icons/ArrowShapeTurnUpLeft";
 import ArrowTriangleHead2ClockwiseRotate90 from "../assets/icons/ArrowTriangleHead2ClockwiseRotate90";
-import ArrowTriangleLeft from "../assets/icons/ArrowTriangleLeft";
-import ArrowTriangleRight from "../assets/icons/ArrowTriangleRight";
 import Button from "../components/Button";
 import LevelPlayground, {
   LevelPlaygroundRef,
 } from "../components/LevelPlayground";
 import Modal from "../components/Modal";
+import NextLevelButton from "../components/NextLevelButton";
 import PlaygroundHeader from "../components/PlaygroundHeader";
+import PreviousLevelButton from "../components/PreviousLevelButton";
 import data from "../data/levels.json";
 import LevelNavigationType from "../enums/levelNavigationType.enum";
 import { Screen } from "../enums/screen.enum";
@@ -237,16 +237,11 @@ export default function PlayGround(): JSX.Element {
 
         {/* BUTTONS CRONTROLS */}
         <View style={styles.footerButtonsContainer}>
-          <Button
+          <PreviousLevelButton
             onPress={previousLevel}
-            style={styles.footerButton}
             disabled={isPreviousLevelDisabled}
-          >
-            <ArrowTriangleLeft
-              style={styles.leftFooterButtonIcon}
-              color={darken(mainColor, 0.3)}
-            />
-          </Button>
+            style={styles.footerButton}
+          />
 
           <View style={styles.gamePlayButtonsContainer}>
             <Button
@@ -271,16 +266,11 @@ export default function PlayGround(): JSX.Element {
             </Button>
           </View>
 
-          <Button
+          <NextLevelButton
             onPress={nextLevel}
-            style={styles.footerButton}
             disabled={isNextLevelDisabled}
-          >
-            <ArrowTriangleRight
-              style={styles.rightFooterButtonIcon}
-              color={darken(mainColor, 0.3)}
-            />
-          </Button>
+            style={styles.footerButton}
+          />
         </View>
 
         <Modal

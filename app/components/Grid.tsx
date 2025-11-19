@@ -1,6 +1,6 @@
 import React, { JSX } from "react";
 import { StyleSheet, View, ViewStyle } from "react-native";
-import Star from "../assets/icons/Star";
+import StarFill from "../assets/icons/StarFill";
 import { goalCaseIndex } from "../config/config";
 import { caseSize } from "../constants/dimension";
 import { darken, lighten } from "../utils/color";
@@ -30,7 +30,7 @@ export default function Grid({ color, style }: Props): JSX.Element {
               ...(index === goalCaseIndex && styles.goalCase),
             }}
           >
-            {index === goalCaseIndex && <Star color={lighten("#DA6C6C")} />}
+            {index === goalCaseIndex && <StarFill color={lighten("#DA6C6C")} />}
           </View>
         );
       })}
@@ -56,5 +56,6 @@ const styles = StyleSheet.create({
   goalCase: {
     borderWidth: 2,
     borderColor: lighten("#DA6C6C"),
+    // backgroundColor: lighten("#DA6C6C", 0.6),
   },
 });

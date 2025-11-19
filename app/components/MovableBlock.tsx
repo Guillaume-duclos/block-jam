@@ -35,6 +35,7 @@ type Props = {
   position: number[];
   orientation: Orientation;
   color: string;
+  hapticEnable?: boolean;
   updatePosition: (
     label: string,
     position: number[],
@@ -50,6 +51,7 @@ export default function MovableBlock({
   position,
   orientation,
   color,
+  hapticEnable,
   updatePosition,
 }: Props): JSX.Element {
   const x: SharedValue<number> = useSharedValue(0);
@@ -186,7 +188,10 @@ export default function MovableBlock({
       });
     }
 
-    moveFeedback();
+    if (hapticEnable) {
+      moveFeedback();
+    }
+
     vibrationEnable.current = true;
   };
 

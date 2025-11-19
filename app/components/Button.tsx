@@ -12,6 +12,8 @@ type Props = {
   ref?: Ref<View> | undefined;
   disabled?: boolean;
   onPress: () => void;
+  onPressIn?: () => void;
+  onPressOut?: () => void;
   children?: React.ReactNode;
   deep?: number;
   color?: string;
@@ -20,10 +22,12 @@ type Props = {
   shadowStyle?: ViewStyle;
 };
 
-export default function Modal({
+export default function Button({
   ref,
   disabled = false,
   onPress,
+  onPressIn,
+  onPressOut,
   children,
   deep = 12,
   color = "#F5F7FF",
@@ -48,15 +52,19 @@ export default function Modal({
     .enabled(!disabled)
     .maxDuration(Number.MAX_SAFE_INTEGER)
     .onBegin(() => {
+      onPressIn && onPressIn();
       progress.value = withTiming(deep - deep / 1.5, { duration: 80 });
     })
     .onFinalize(() => {
+      onPressOut && onPressOut();
       progress.value = withTiming(0, { duration: 80 });
     })
     .onTouchesUp(() => {
+      onPressOut && onPressOut();
       progress.value = withTiming(0, { duration: 80 });
     })
     .onEnd(() => {
+      onPressOut && onPressOut();
       onPress();
     })
     .runOnJS(true);

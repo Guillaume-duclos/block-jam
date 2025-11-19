@@ -1,7 +1,9 @@
+import { useFocusEffect } from "@react-navigation/native";
 import React, {
   JSX,
   memo,
   RefObject,
+  useCallback,
   useEffect,
   useImperativeHandle,
   useRef,
@@ -12,12 +14,14 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { playgroundSize, windowWidth } from "../constants/dimension";
 import { BlockType } from "../enums/blockType.enum";
 import { Orientation } from "../enums/orientation.enum";
+import { StorageKey } from "../enums/storageKey.enum";
 import useGrid from "../hooks/useGrid.hook";
 import { useLevelStore } from "../store/level";
 import ElementData from "../types/elementData.type";
 import { Level } from "../types/level.type";
 import { darken } from "../utils/color";
 import { firstLineCaseIndex, lastLineCaseIndex } from "../utils/line";
+import { getStorageBoolean } from "../utils/storage";
 import FixedBlock from "./FixedBlock";
 import Grid from "./Grid";
 import MovableBlock from "./MovableBlock";
@@ -37,6 +41,8 @@ const LevelPlayground = memo(
   ({ ref, level, onLevelFinish }: Props): JSX.Element => {
     const [vehiclePositions, setVehiclePositions] = useState<ElementData[]>([]);
     const [count, setCount] = useState<number>(0);
+    const [hapticEnable, setHapticEnable] = useState<boolean>(false);
+
     const history: RefObject<[]> = useRef([]);
 
     // Initialisation des tranches de déplacements possibles
@@ -72,6 +78,16 @@ const LevelPlayground = memo(
         }
       },
     }));
+
+    useFocusEffect(
+      useCallback(() => {
+        const hapticEnable = getStorageBoolean(
+          StorageKey.ALLOW_OVER_DRAG_HAPTIC_FEEDBACK
+        );
+
+        setHapticEnable(hapticEnable || false);
+      }, [])
+    );
 
     useEffect((): void => {
       // console.log({ count });
@@ -294,6 +310,7 @@ const LevelPlayground = memo(
               position={data.position}
               orientation={data.orientation}
               color="#F5F7FF"
+              hapticEnable={hapticEnable}
               updatePosition={updateBlockPosition}
             />
           );
