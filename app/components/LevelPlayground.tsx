@@ -16,6 +16,7 @@ import { BlockType } from "../enums/blockType.enum";
 import { Orientation } from "../enums/orientation.enum";
 import { StorageKey } from "../enums/storageKey.enum";
 import useGrid from "../hooks/useGrid.hook";
+import { useDificultyStore } from "../store/dificulty";
 import { useLevelStore } from "../store/level";
 import ElementData from "../types/elementData.type";
 import { Level } from "../types/level.type";
@@ -39,6 +40,9 @@ export type LevelPlaygroundRef = {
 
 const LevelPlayground = memo(
   ({ ref, level, onLevelFinish }: Props): JSX.Element => {
+    const dificultyTheme = useDificultyStore((value) => value.colors);
+    const mainColor = dificultyTheme.primary;
+
     const [vehiclePositions, setVehiclePositions] = useState<ElementData[]>([]);
     const [count, setCount] = useState<number>(0);
     const [hapticEnable, setHapticEnable] = useState<boolean>(false);
@@ -50,8 +54,6 @@ const LevelPlayground = memo(
 
     const setCurrentCount = useLevelStore((value) => value.setCurrentCount);
     const setIsUndoEnabled = useLevelStore((value) => value.setIsUndoEnabled);
-
-    const mainColor: string = "#FAF7F2";
 
     useImperativeHandle(ref, () => ({
       reset() {
@@ -309,7 +311,6 @@ const LevelPlayground = memo(
               range={data.range}
               position={data.position}
               orientation={data.orientation}
-              color="#F5F7FF"
               hapticEnable={hapticEnable}
               updatePosition={updateBlockPosition}
             />
@@ -322,7 +323,6 @@ const LevelPlayground = memo(
                   index={vehicleIndex}
                   position={position}
                   key={`${blocIndex}`}
-                  color="#939EB0"
                 />
               );
             }
@@ -338,11 +338,15 @@ const LevelPlayground = memo(
           <View style={styles.scoresSubContainer}>
             {/* CURRENT COUNT */}
             <View style={{ ...styles.scoreContainer }}>
-              <Text style={styles.scoreTitle}>Coups</Text>
+              <Text
+                style={{ ...styles.scoreTitle, color: darken(mainColor, 0.28) }}
+              >
+                Coups
+              </Text>
 
               <View style={{ borderWidth: 0 }}>
                 <Text
-                  style={styles.count}
+                  style={{ ...styles.count, color: darken(mainColor, 0.33) }}
                   // adjustsFontSizeToFit
                   // minimumFontScale={0.5}
                   // numberOfLines={1}
@@ -363,7 +367,7 @@ const LevelPlayground = memo(
                 adjustsFontSizeToFit
                 numberOfLines={2}
                 minimumFontScale={0.5}
-                style={styles.scoreTitle}
+                style={{ ...styles.scoreTitle, color: darken(mainColor, 0.28) }}
               >
                 Scores précédents
               </Text>
@@ -372,14 +376,20 @@ const LevelPlayground = memo(
                 <Text
                   numberOfLines={1}
                   adjustsFontSizeToFit
-                  style={styles.previousScoreLabel}
+                  style={{
+                    ...styles.previousScoreLabel,
+                    color: darken(mainColor, 0.33),
+                  }}
                 >
                   Coups : 34
                 </Text>
                 <Text
                   numberOfLines={1}
                   adjustsFontSizeToFit
-                  style={styles.previousScoreLabel}
+                  style={{
+                    ...styles.previousScoreLabel,
+                    color: darken(mainColor, 0.33),
+                  }}
                 >
                   Temps : 2:03
                 </Text>
@@ -447,7 +457,6 @@ const styles = StyleSheet.create({
     fontWeight: 700,
     textTransform: "uppercase",
     fontFamily: "Rubik",
-    color: darken("#D6F5BC", 0.25),
     borderWidth: 0,
   },
   count: {
@@ -456,7 +465,6 @@ const styles = StyleSheet.create({
     fontWeight: 600,
     fontFamily: "Rubik",
     textTransform: "uppercase",
-    color: darken("#D6F5BC", 0.3),
     marginBottom: 1,
     borderWidth: 0,
     borderColor: "red",
@@ -467,7 +475,6 @@ const styles = StyleSheet.create({
     fontWeight: 800,
     fontFamily: "Rubik",
     textTransform: "uppercase",
-    color: darken("#D6F5BC", 0.3),
     borderWidth: 0,
   },
   previousScoreLabel: {
@@ -475,7 +482,6 @@ const styles = StyleSheet.create({
     fontWeight: 800,
     fontFamily: "Rubik",
     textTransform: "uppercase",
-    color: darken("#D6F5BC", 0.3),
     borderWidth: 0,
   },
   playgroundContainer: {

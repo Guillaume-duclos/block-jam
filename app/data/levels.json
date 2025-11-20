@@ -3,6 +3,12 @@
     "index": 0,
     "color": "#ACC696",
     "shadowColor": "#788b69",
+    "colors": {
+      "primary": "#D6F5BC",
+      "secondary": "#F5F7FF",
+      "mainBlock": "#DA6C6C",
+      "fixedBlock": "#939EB0"
+    },
     "levels": [
       { "layout": "ooBBoooooDooAAoDoooooooooCCCoooooooo", "minimumMove": 30 },
       { "layout": "oBBBoooooDooAAoDoooooxoooooooooooooo", "minimumMove": 30 },

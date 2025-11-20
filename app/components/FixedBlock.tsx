@@ -9,26 +9,23 @@ import Animated, {
   withSpring,
 } from "react-native-reanimated";
 import { caseSize } from "../constants/dimension";
+import { useDificultyStore } from "../store/dificulty";
 import { darken } from "../utils/color";
 
 type Props = {
   index: number;
   position: number;
-  color: string;
 };
 
-export default function FixedBlock({
-  index,
-  position,
-  color,
-}: Props): JSX.Element {
+export default function FixedBlock({ index, position }: Props): JSX.Element {
   const x: number = (position - 6 * Math.floor(position / 6)) * caseSize;
   const y: number = Math.floor(position / 6) * caseSize;
 
+  const dificultyTheme = useDificultyStore((value) => value.colors);
+  const color = dificultyTheme.fixedBlock;
+
   const blockScale: SharedValue<number> = useSharedValue(0.9);
   const blockOpacity: SharedValue<number> = useSharedValue(0);
-
-  const secondBlockColor = darken(color, 0.08);
 
   const blockStyle = useAnimatedStyle(() => ({
     opacity: blockOpacity.value,
@@ -80,7 +77,10 @@ export default function FixedBlock({
         }}
       />
 
-      <LinearGradient colors={[secondBlockColor, color]} style={styles.block} />
+      <LinearGradient
+        colors={[darken(color, 0.08), color]}
+        style={styles.block}
+      />
 
       <View
         style={{

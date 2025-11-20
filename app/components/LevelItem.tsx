@@ -3,8 +3,10 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import React, { JSX, memo } from "react";
 import { ColorValue, Pressable, StyleSheet, View } from "react-native";
 import { windowWidth } from "../constants/dimension";
+import levelsData from "../data/levels.json";
 import { Screen } from "../enums/screen.enum";
 import { usePreventDoublePress } from "../hooks/usePreventDoublePress";
+import { useDificultyStore } from "../store/dificulty";
 import { Level } from "../types/level.type";
 import RootStackParamList from "../types/rootStackParamList.type";
 import LevelViewer from "./LevelViewer";
@@ -23,15 +25,16 @@ const LevelItem = memo(
 
     const canPress = usePreventDoublePress();
 
+    const setDificultyColors = useDificultyStore((value) => value.setColors);
+
     // Redirection vers le niveau
     const navigateToPlayground = (level: Level): void => {
+      setDificultyColors(levelsData[difficultyIndex].colors);
+
       const canNavigate = canPress();
 
       if (canNavigate) {
-        navigation.push(Screen.PLAYGROUND, {
-          level,
-          difficultyIndex,
-        });
+        navigation.push(Screen.PLAYGROUND, { level, difficultyIndex });
       }
     };
 

@@ -24,17 +24,16 @@ import { animationDuration, gridCount } from "../config/config";
 import { caseSize } from "../constants/dimension";
 import { BlockType } from "../enums/blockType.enum";
 import { Orientation } from "../enums/orientation.enum";
+import { useDificultyStore } from "../store/dificulty";
 import { darken } from "../utils/color";
 
 type Props = {
   ref?: Ref<View> | undefined;
   index: number;
-  grid: number[];
   label: string;
   range: number[];
   position: number[];
   orientation: Orientation;
-  color: string;
   hapticEnable?: boolean;
   updatePosition: (
     label: string,
@@ -45,15 +44,17 @@ type Props = {
 
 export default function MovableBlock({
   index,
-  grid,
   label,
   range,
   position,
   orientation,
-  color,
   hapticEnable,
   updatePosition,
 }: Props): JSX.Element {
+  const dificultyTheme = useDificultyStore((value) => value.colors);
+  const mainBlockColor = dificultyTheme.mainBlock;
+  const color = dificultyTheme.secondary;
+
   const x: SharedValue<number> = useSharedValue(0);
   const y: SharedValue<number> = useSharedValue(0);
   const blockScale: SharedValue<number> = useSharedValue(0.9);
@@ -74,9 +75,9 @@ export default function MovableBlock({
     transform: [{ scale: blockScale.value }],
   }));
 
-  const mainBlockColor = label === BlockType.MAIN_BLOCK ? "#DA6C6C" : color;
-  const secondBlockColor = darken(mainBlockColor, 0.08);
-  const arrowColor = darken(mainBlockColor, 0.2);
+  const mainBlock = label === BlockType.MAIN_BLOCK ? mainBlockColor : color;
+  const secondBlockColor = darken(mainBlock, 0.08);
+  const arrowColor = darken(mainBlock, 0.2);
 
   useEffect(() => {
     setTimeout(() => {
@@ -304,12 +305,12 @@ export default function MovableBlock({
           <View
             style={{
               ...styles.blockBottomBorder,
-              backgroundColor: darken(mainBlockColor, 0.12),
+              backgroundColor: darken(mainBlock, 0.12),
             }}
           />
 
           <LinearGradient
-            colors={[secondBlockColor, mainBlockColor]}
+            colors={[secondBlockColor, mainBlock]}
             style={{
               ...styles.block,
               ...(label === BlockType.MAIN_BLOCK && styles.mainBlock),

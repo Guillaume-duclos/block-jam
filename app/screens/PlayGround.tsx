@@ -23,6 +23,7 @@ import data from "../data/levels.json";
 import LevelNavigationType from "../enums/levelNavigationType.enum";
 import { Screen } from "../enums/screen.enum";
 import { StorageKey } from "../enums/storageKey.enum";
+import { useDificultyStore } from "../store/dificulty";
 import { useLevelStore } from "../store/level";
 import { Level } from "../types/level.type";
 import LevelScore from "../types/levelScore";
@@ -40,6 +41,7 @@ export default function PlayGround(): JSX.Element {
 
   const route = useRoute<playGroundRouteProp>();
 
+  const dificultyTheme = useDificultyStore((value) => value.colors);
   const currentCount = useLevelStore((value) => value.currentCount);
   const isUndoEnabled = useLevelStore((value) => value.isUndoEnabled);
   const setCurrentCount = useLevelStore((value) => value.setCurrentCount);
@@ -48,7 +50,6 @@ export default function PlayGround(): JSX.Element {
   const level: number = route.params.level.index;
 
   const mainColor: string = "#FAF7F2";
-  const topColor: string = darken("#D6F5BC", 0.3) || "";
 
   const levelsList = data[difficulty].levels;
 
@@ -192,7 +193,7 @@ export default function PlayGround(): JSX.Element {
 
   return (
     <LinearGradient
-      colors={[topColor, "#D6F5BC"]}
+      colors={[darken(dificultyTheme.primary, 0.4), dificultyTheme.primary]}
       start={{ x: 0, y: 0 }}
       end={{ x: 0, y: 1 }}
       locations={[0, 0.25]}
