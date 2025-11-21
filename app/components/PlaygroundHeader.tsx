@@ -2,6 +2,7 @@ import React, { JSX } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import ArrowShapeLeftFill from "../assets/icons/ArrowShapeLeftFill";
 import Settings from "../assets/icons/GearShapeFill";
+import { useDificultyStore } from "../store/dificulty";
 import PressableView from "./PressableView";
 
 type Props = {
@@ -18,26 +19,34 @@ const PlaygroundHeader = ({
   levelCount,
   goback,
   openSettings,
-}: Props): JSX.Element => (
-  <View style={styles.header}>
-    <PressableView onPress={goback}>
-      <ArrowShapeLeftFill color="#FFFFFF" />
-    </PressableView>
+}: Props): JSX.Element => {
+  const dificultyTheme = useDificultyStore((value) => value.colors);
 
-    <View style={{ alignItems: "center" }}>
-      <Text style={styles.headerDificulty}>Difficulté {difficulty + 1}</Text>
-      <Text style={styles.headerLevel}>
-        Niveau{" "}
-        <Text style={styles.headerCurrentLevelNumber}>{currentLevel}</Text>/
-        {levelCount}
-      </Text>
+  return (
+    <View style={styles.header}>
+      <PressableView onPress={goback}>
+        <ArrowShapeLeftFill color={dificultyTheme.white} />
+      </PressableView>
+
+      <View style={{ alignItems: "center" }}>
+        <Text
+          style={{ ...styles.headerDificulty, color: dificultyTheme.white }}
+        >
+          Difficulté {difficulty + 1}
+        </Text>
+        <Text style={{ ...styles.headerLevel, color: dificultyTheme.white }}>
+          Niveau{" "}
+          <Text style={styles.headerCurrentLevelNumber}>{currentLevel}</Text>/
+          {levelCount}
+        </Text>
+      </View>
+
+      <PressableView onPress={openSettings}>
+        <Settings color={dificultyTheme.white} />
+      </PressableView>
     </View>
-
-    <PressableView onPress={openSettings}>
-      <Settings color="#FFFFFF" />
-    </PressableView>
-  </View>
-);
+  );
+};
 
 const styles = StyleSheet.create({
   header: {
@@ -52,13 +61,12 @@ const styles = StyleSheet.create({
     fontWeight: 700,
     fontFamily: "Rubik",
     textAlign: "center",
-    color: "#FFFFFF",
   },
   headerLevel: {
     fontSize: 17,
     fontWeight: 600,
     fontFamily: "Rubik",
-    color: "#FFFFFF",
+
     lineHeight: 27,
   },
   headerCurrentLevelNumber: {

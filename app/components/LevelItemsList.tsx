@@ -117,11 +117,7 @@ const LevelItemsList = memo(({ level }: Props): JSX.Element => {
         showsHorizontalScrollIndicator={false}
         onViewableItemsChanged={viewableItemsChanged}
         renderItem={({ item }) => (
-          <LevelItem
-            levels={item}
-            color={level.shadowColor}
-            difficultyIndex={level.index}
-          />
+          <LevelItem levels={item} difficultyIndex={level.index} />
         )}
         keyExtractor={(_, index) => `hlist-${level.index}-${index}`}
         contentContainerStyle={styles.contentContainerStyle}

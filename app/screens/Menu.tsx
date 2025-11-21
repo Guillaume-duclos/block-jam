@@ -1,4 +1,3 @@
-import { useNavigation } from "@react-navigation/native";
 import { FlashList, FlashListRef } from "@shopify/flash-list";
 import { Canvas, LinearGradient, Rect, vec } from "@shopify/react-native-skia";
 import React, { useRef, useState } from "react";
@@ -15,14 +14,15 @@ import PaginationIndicator from "../components/PaginationIndicator";
 import { windowHeight, windowWidth } from "../constants/dimension";
 import data from "../data/levels.json";
 import { Orientation } from "../enums/orientation.enum";
+import { useDificultyStore } from "../store/dificulty";
 import { darken } from "../utils/color";
 
 const AnimatedFlashList = Animated.createAnimatedComponent(FlashList);
 
 export default function Menu() {
-  const [activeViewIndex, setActiveViewIndex] = useState(0);
+  const setDificultyColors = useDificultyStore((value) => value.setColors);
 
-  const navigation = useNavigation();
+  const [activeViewIndex, setActiveViewIndex] = useState(0);
 
   const scroll = useSharedValue(0);
 
@@ -31,11 +31,15 @@ export default function Menu() {
   const scrollRange = data.map((_, i) => i * windowHeight);
 
   const startColorRange = data.map(
-    (_, i) => data[i].color ?? data[data.length - 1].color
+    (_, i) =>
+      darken(data[i].colors.primary) ??
+      darken(data[data.length - 1].colors.primary)
   );
 
   const endColorRange = data.map(
-    (_, i) => darken(data[i].color) ?? darken(data[data.length - 1].color)
+    (_, i) =>
+      darken(data[i].colors.primary, 0.34) ??
+      darken(data[data.length - 1].colors.primary, 0.34)
   );
 
   const setActiveIndex = (y: number) => {
@@ -43,6 +47,7 @@ export default function Menu() {
     const clamped = Math.max(0, Math.min(id, data.length - 1));
 
     setActiveViewIndex(clamped);
+    setDificultyColors(data[clamped].colors);
   };
 
   const levelItemsConfig = useRef({

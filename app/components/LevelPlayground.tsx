@@ -42,6 +42,7 @@ const LevelPlayground = memo(
   ({ ref, level, onLevelFinish }: Props): JSX.Element => {
     const dificultyTheme = useDificultyStore((value) => value.colors);
     const mainColor = dificultyTheme.primary;
+    const frameColor = dificultyTheme.frame;
 
     const [vehiclePositions, setVehiclePositions] = useState<ElementData[]>([]);
     const [count, setCount] = useState<number>(0);
@@ -399,23 +400,28 @@ const LevelPlayground = memo(
         </View>
 
         {/* PLAYGROUND */}
-        <View style={styles.playgroundContainer}>
+        <View
+          style={{
+            ...styles.playgroundContainer,
+            boxShadow: `0 20px 16px 0 ${darken(mainColor, 0.3)}`,
+          }}
+        >
           <View
             style={{
               ...styles.gridBottomBorder,
-              backgroundColor: darken(mainColor, 0.16),
+              backgroundColor: darken(frameColor, 0.16),
             }}
           />
 
           <View
             style={{
               ...styles.gridContainer,
-              borderColor: mainColor,
-              backgroundColor: darken("#D6F5BC", 0.2),
-              boxShadow: `0 0 1px 0.5px ${darken("#D6F5BC", 0.35)} inset`,
+              borderColor: frameColor,
+              backgroundColor: darken(mainColor, 0.2),
+              boxShadow: `0 0 1px 0.5px ${darken(mainColor, 0.35)} inset`,
             }}
           >
-            <Grid color="#D6F5BC" />
+            <Grid color={mainColor} />
 
             <GestureHandlerRootView>
               {grid.length > 0 && vehiclePositions && renderBlocks()}
@@ -487,7 +493,6 @@ const styles = StyleSheet.create({
   playgroundContainer: {
     width: playgroundSize,
     height: playgroundSize,
-    boxShadow: "0 20px 16px 0 #00000050",
     borderRadius: 20,
     marginBottom: 50,
   },

@@ -1,7 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import React, { JSX, memo } from "react";
-import { ColorValue, Pressable, StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 import { windowWidth } from "../constants/dimension";
 import levelsData from "../data/levels.json";
 import { Screen } from "../enums/screen.enum";
@@ -12,54 +12,51 @@ import RootStackParamList from "../types/rootStackParamList.type";
 import LevelViewer from "./LevelViewer";
 
 type Props = {
-  color: ColorValue;
   levels: Level[];
   difficultyIndex: number;
 };
 
 type levelItemNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
-const LevelItem = memo(
-  ({ color, levels, difficultyIndex }: Props): JSX.Element => {
-    const navigation = useNavigation<levelItemNavigationProp>();
+const LevelItem = memo(({ levels, difficultyIndex }: Props): JSX.Element => {
+  const navigation = useNavigation<levelItemNavigationProp>();
 
-    const canPress = usePreventDoublePress();
+  const canPress = usePreventDoublePress();
 
-    const setDificultyColors = useDificultyStore((value) => value.setColors);
+  const setDificultyColors = useDificultyStore((value) => value.setColors);
 
-    // Redirection vers le niveau
-    const navigateToPlayground = (level: Level): void => {
-      setDificultyColors(levelsData[difficultyIndex].colors);
+  // Redirection vers le niveau
+  const navigateToPlayground = (level: Level): void => {
+    setDificultyColors(levelsData[difficultyIndex].colors);
 
-      const canNavigate = canPress();
+    const canNavigate = canPress();
 
-      if (canNavigate) {
-        navigation.push(Screen.PLAYGROUND, { level, difficultyIndex });
-      }
-    };
+    if (canNavigate) {
+      navigation.push(Screen.PLAYGROUND, { level, difficultyIndex });
+    }
+  };
 
-    return (
-      <View style={styles.levelItemsContainer}>
-        {levels.map((level: Level, index: number) => {
-          return (
-            <Pressable
-              key={index}
-              onPress={() => navigateToPlayground(level)}
-              style={styles.levelItem}
-            >
-              <LevelViewer
-                index={String(level.index + 1)}
-                locked={difficultyIndex > 0}
-                layout={level.layout}
-                color={color}
-              />
-            </Pressable>
-          );
-        })}
-      </View>
-    );
-  }
-);
+  return (
+    <View style={styles.levelItemsContainer}>
+      {levels.map((level: Level, index: number) => {
+        return (
+          <Pressable
+            key={index}
+            onPress={() => navigateToPlayground(level)}
+            style={styles.levelItem}
+          >
+            <LevelViewer
+              index={String(level.index + 1)}
+              locked={difficultyIndex > 0}
+              layout={level.layout}
+              color={levelsData[difficultyIndex].colors}
+            />
+          </Pressable>
+        );
+      })}
+    </View>
+  );
+});
 
 const styles = StyleSheet.create({
   levelItemsContainer: {

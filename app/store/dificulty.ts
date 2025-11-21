@@ -1,11 +1,12 @@
 import { create } from "zustand";
+import DificultyColors from "../types/dificultyColors.type";
 
 type State = {
-  colors: any;
-  setColors: (value: number) => void;
+  colors: DificultyColors | undefined;
+  setColors: (value: DificultyColors) => void;
 };
 
 export const useDificultyStore = create<State>((set) => ({
-  colors: {},
-  setColors: (value) => set({ colors: value }),
+  colors: undefined,
+  setColors: (value: DificultyColors) => set({ colors: value }),
 }));

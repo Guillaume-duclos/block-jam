@@ -8,12 +8,14 @@ import Button from "./Button";
 type Props = {
   disabled?: boolean;
   onPress: () => void;
+  color: string;
   style?: ViewStyle | ViewStyle[];
 };
 
 export default function PreviousLevelButton({
   disabled,
   onPress,
+  color,
   style,
 }: Props): JSX.Element {
   const mainColor: string = "#FAF7F2";
@@ -36,6 +38,7 @@ export default function PreviousLevelButton({
       onPressIn={toogleOnPressIn}
       onPressOut={toogleOnPressIn}
       disabled={disabled}
+      color={color}
       style={style}
     >
       {pressed ? (

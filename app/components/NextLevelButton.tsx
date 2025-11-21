@@ -8,16 +8,16 @@ import { darken } from "../utils/color";
 type Props = {
   disabled?: boolean;
   onPress: () => void;
+  color: string;
   style?: ViewStyle | ViewStyle[];
 };
 
 export default function NextLevelButton({
   disabled,
   onPress,
+  color,
   style,
 }: Props): JSX.Element {
-  const mainColor: string = "#FAF7F2";
-
   const [pressed, setPressed] = useState<boolean>(false);
 
   const toogleOnPressIn = (): void => {
@@ -36,6 +36,7 @@ export default function NextLevelButton({
       onPressIn={toogleOnPressIn}
       onPressOut={toogleOnPressIn}
       disabled={disabled}
+      color={color}
       style={style}
     >
       {pressed ? (
@@ -44,12 +45,12 @@ export default function NextLevelButton({
             ...styles.rightFooterButtonIcon,
             ...styles.rightFooterButtonIconFill,
           }}
-          color={darken(mainColor, 0.3)}
+          color={darken(color, 0.3)}
         />
       ) : (
         <ArrowTriangleRight
           style={styles.rightFooterButtonIcon}
-          color={darken(mainColor, 0.3)}
+          color={darken(color, 0.3)}
         />
       )}
     </Button>

@@ -297,7 +297,7 @@ export default function MovableBlock({
         style={[
           vehicleDimensions(),
           styles.blockContainer,
-          { boxShadow: `0 2px 4px 0 ${darken(color, 0.3)}` },
+          { boxShadow: `0 1px 3px 0 ${darken(color, 0.3)}` },
           vehiclePosition,
         ]}
       >

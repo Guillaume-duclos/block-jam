@@ -49,8 +49,6 @@ export default function PlayGround(): JSX.Element {
   const difficulty: number = route.params.difficultyIndex;
   const level: number = route.params.level.index;
 
-  const mainColor: string = "#FAF7F2";
-
   const levelsList = data[difficulty].levels;
 
   const [activeLevelIndex, setActiveLevelIndex] = useState(level);
@@ -242,6 +240,7 @@ export default function PlayGround(): JSX.Element {
             onPress={previousLevel}
             disabled={isPreviousLevelDisabled}
             style={styles.footerButton}
+            color={dificultyTheme.frame}
           />
 
           <View style={styles.gamePlayButtonsContainer}>
@@ -249,9 +248,10 @@ export default function PlayGround(): JSX.Element {
               onPress={reset}
               style={styles.gamePlayButton}
               disabled={currentCount === 0}
+              color={dificultyTheme.frame}
             >
               <ArrowTriangleHead2ClockwiseRotate90
-                color={darken(mainColor, 0.3)}
+                color={darken(dificultyTheme.frame, 0.3)}
               />
             </Button>
 
@@ -259,10 +259,11 @@ export default function PlayGround(): JSX.Element {
               onPress={undo}
               style={styles.gamePlayButton}
               disabled={!isUndoEnabled}
+              color={dificultyTheme.frame}
             >
               <ArrowShapeTurnUpLeft
                 style={{ top: -1, left: -1 }}
-                color={darken(mainColor, 0.3)}
+                color={darken(dificultyTheme.frame, 0.3)}
               />
             </Button>
           </View>
@@ -271,6 +272,7 @@ export default function PlayGround(): JSX.Element {
             onPress={nextLevel}
             disabled={isNextLevelDisabled}
             style={styles.footerButton}
+            color={dificultyTheme.frame}
           />
         </View>
 
@@ -318,7 +320,6 @@ const styles = StyleSheet.create({
   },
   button: {
     padding: 10,
-    backgroundColor: "#CDCDCD",
   },
   leftFooterButtonIcon: {
     left: -2,
