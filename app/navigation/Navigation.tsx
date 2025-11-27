@@ -1,4 +1,3 @@
-import { useNavigation } from "@react-navigation/native";
 import {
   createNativeStackNavigator,
   NativeStackNavigationOptions,
@@ -12,15 +11,12 @@ import PrivacyPolicy from "../screens/PrivacyPolicy";
 import Settings from "../screens/Settings";
 import TermsOfUse from "../screens/TermsOfUse";
 import Tutorial from "../screens/Tutorial";
-import NavigationProp from "../types/navigation.type";
 import RootStackParamList from "../types/rootStackParamList.type";
 import { darken } from "../utils/color";
 import { getStorageBoolean } from "../utils/storage";
 
 const Navigation = () => {
   const Stack = createNativeStackNavigator<RootStackParamList>();
-
-  const navigation = useNavigation<NavigationProp>();
 
   const screenOptions: NativeStackNavigationOptions = {
     headerShown: false,
@@ -64,7 +60,6 @@ const Navigation = () => {
           component={PlayGround}
           options={{
             gestureEnabled: false,
-            // header: (props) => <Header />,
           }}
         />
 
