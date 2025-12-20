@@ -4,5 +4,5 @@ export enum StorageKey {
   COLOR_SCHEME = "colorScheme",
   PLAYGROUND_DIRECTION = "playgroundDirection",
   TUTORIAL_SCREEN_VIEWED = "tutorialScreenViewed",
-  ALLOW_OVER_DRAG_HAPTIC_FEEDBACK = "allowOverDragHapticFeedback",
+  ALLOW_DRAG_HAPTIC_FEEDBACK = "allowDragHapticFeedback",
 }

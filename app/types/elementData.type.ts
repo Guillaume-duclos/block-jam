@@ -4,7 +4,7 @@ type ElementData = {
   label: string;
   range?: number[];
   position: number[];
-  orientation?: Orientation;
+  orientation: Orientation;
 };
 
 export default ElementData;

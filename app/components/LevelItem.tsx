@@ -55,7 +55,7 @@ const LevelItem = memo(({ levels, difficultyIndex }: Props): JSX.Element => {
 
 const styles = StyleSheet.create({
   levelItemsContainer: {
-    columnGap: 10,
+    columnGap: 8,
     width: windowWidth,
     paddingHorizontal: 30,
     justifyContent: "space-between",

@@ -1,11 +1,12 @@
 import { useNavigation } from "@react-navigation/native";
 import * as Application from "expo-application";
-import React, { Fragment, JSX, useEffect, useState } from "react";
+import React, { Fragment, JSX, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Checkmark from "../assets/icons/Checkmark";
 import Button from "../components/Button";
+import Modal from "../components/Modal";
 import NavigationLink from "../components/NavigationLink";
 import ScreenHeader from "../components/ScreenHeader";
 import SectionContainer from "../components/SectionContainer";
@@ -32,20 +33,13 @@ export default function Settings(): JSX.Element {
   const insets = useSafeAreaInsets();
 
   const savedLanguage = getStorageString(StorageKey.LANGUAGE) || Language.EN;
-  const savedHaptic = getStorageBoolean(
-    StorageKey.ALLOW_OVER_DRAG_HAPTIC_FEEDBACK
-  );
+  const savedHaptic = getStorageBoolean(StorageKey.ALLOW_DRAG_HAPTIC_FEEDBACK);
 
-  const [isHapticActive, setIsHapticActive] = useState<boolean>(false);
+  const [isHapticActive, setIsHapticActive] = useState<boolean>(!!savedHaptic);
+  const [showResetDataModal, setShowResetDataModal] = useState<boolean>(false);
 
   const appVersion = Application.nativeApplicationVersion;
   const buildVersion = Application.nativeBuildVersion;
-
-  useEffect(() => {
-    if (savedHaptic) {
-      setIsHapticActive(savedHaptic);
-    }
-  }, [savedHaptic]);
 
   const goBack = (): void => {
     navigation.goBack();
@@ -60,7 +54,7 @@ export default function Settings(): JSX.Element {
 
   const changeHapticActive = (): void => {
     setIsHapticActive(!isHapticActive);
-    setStorageItem(StorageKey.ALLOW_OVER_DRAG_HAPTIC_FEEDBACK, !isHapticActive);
+    setStorageItem(StorageKey.ALLOW_DRAG_HAPTIC_FEEDBACK, !isHapticActive);
   };
 
   const navigate = (screen: Screen): void => {
@@ -102,7 +96,17 @@ export default function Settings(): JSX.Element {
       );
     });
 
-  const removeLevelsData = (): void => {};
+  const displayResetDataModal = (): void => {
+    setShowResetDataModal(true);
+  };
+
+  const hiddeResetDataModal = (): void => {
+    setShowResetDataModal(false);
+  };
+
+  const removeLevelsData = (): void => {
+    hiddeResetDataModal();
+  };
 
   const logScoreData = (): void => {
     const score = getStorageString(StorageKey.LEVEL_SCORE);
@@ -136,7 +140,7 @@ export default function Settings(): JSX.Element {
               onChange={changeHapticActive}
             />
 
-            <Button onPress={removeLevelsData}>
+            <Button onPress={displayResetDataModal}>
               <Text style={styles.buttonLabel}>Reset levels data</Text>
             </Button>
           </Fragment>
@@ -172,7 +176,7 @@ export default function Settings(): JSX.Element {
           </Fragment>
         </SectionContainer>
 
-        {/* Dev mode */}
+        {/* DEV MODE */}
         {__DEV__ && (
           <SectionContainer title="Dev mode">
             <Fragment>
@@ -211,6 +215,15 @@ export default function Settings(): JSX.Element {
           </View>
         </SectionContainer>
       </ScrollView>
+
+      {/* RESET DATA MODAL */}
+      <Modal
+        isOpen={showResetDataModal}
+        onConfirm={removeLevelsData}
+        onCancel={hiddeResetDataModal}
+        title="Confirmation"
+        description="Lorem Ipsum is simply dummy text of the printing and typesetting industry."
+      />
     </View>
   );
 }

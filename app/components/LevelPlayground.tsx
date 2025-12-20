@@ -6,7 +6,6 @@ import React, {
   useCallback,
   useEffect,
   useImperativeHandle,
-  useRef,
   useState,
 } from "react";
 import { StyleSheet, Text, View } from "react-native";
@@ -19,6 +18,7 @@ import useGrid from "../hooks/useGrid.hook";
 import { useDificultyStore } from "../store/dificulty";
 import { useLevelStore } from "../store/level";
 import ElementData from "../types/elementData.type";
+import HistoryPosition from "../types/historyPosition.type";
 import { Level } from "../types/level.type";
 import { darken } from "../utils/color";
 import { firstLineCaseIndex, lastLineCaseIndex } from "../utils/line";
@@ -40,47 +40,54 @@ export type LevelPlaygroundRef = {
 
 const LevelPlayground = memo(
   ({ ref, level, onLevelFinish }: Props): JSX.Element => {
-    const dificultyTheme = useDificultyStore((value) => value.colors);
-    const mainColor = dificultyTheme.primary;
-    const frameColor = dificultyTheme.frame;
-
-    const [vehiclePositions, setVehiclePositions] = useState<ElementData[]>([]);
-    const [count, setCount] = useState<number>(0);
-    const [hapticEnable, setHapticEnable] = useState<boolean>(false);
-
-    const history: RefObject<[]> = useRef([]);
-
-    // Initialisation des tranches de déplacements possibles
     const grid: number[] = useGrid();
+    const dificultyTheme = useDificultyStore((value) => value.colors);
+    const mainColor = dificultyTheme?.primary;
+    const frameColor = dificultyTheme?.frame;
 
     const setCurrentCount = useLevelStore((value) => value.setCurrentCount);
+    const setIsResetEnabled = useLevelStore((value) => value.setIsResetEnabled);
     const setIsUndoEnabled = useLevelStore((value) => value.setIsUndoEnabled);
 
-    useImperativeHandle(ref, () => ({
-      reset() {
-        if (history.current.length) {
-          computeBlockPositions();
-        }
+    const [count, setCount] = useState<number>(0);
+    const [hapticEnable, setHapticEnable] = useState<boolean>(false);
+    const [vehiclePositions, setVehiclePositions] = useState<ElementData[]>([]);
 
-        console.log("reset");
+    const historic = React.useRef<HistoryPosition[]>([]);
 
-        setCount(0);
-      },
+    useImperativeHandle(
+      ref,
+      () => ({
+        reset() {
+          if (historic.current.length) {
+            computeBlockPositions();
+          }
 
-      undo() {
-        if (history.current.length) {
-          const lastHistory = history.current.at(-1);
+          setCount(0);
+          setCurrentCount(0);
+          setIsResetEnabled(false);
+        },
 
-          if (lastHistory) {
-            history.current.pop();
+        undo() {
+          const lastPosition = historic.current.at(-1);
+          const newHistoric = historic.current.slice(0, -1);
+
+          historic.current = newHistoric;
+
+          if (lastPosition) {
             updateBlockPosition(
-              lastHistory.previousPosition,
-              lastHistory.label
+              lastPosition.previousPosition,
+              lastPosition.label
             );
           }
-        }
-      },
-    }));
+
+          if (!newHistoric.length) {
+            setIsResetEnabled(false);
+          }
+        },
+      }),
+      [historic.current]
+    );
 
     useFocusEffect(
       useCallback(() => {
@@ -93,22 +100,22 @@ const LevelPlayground = memo(
     );
 
     useEffect((): void => {
-      // console.log({ count });
+      computeBlockPositions();
+    }, []);
 
+    useEffect((): void => {
       if (count === 0) {
         setIsUndoEnabled(false);
-        history.current = [];
+        historic.current = [];
       } else {
-        const disabledUndo = history.current.at(-1) === undefined;
+        const disabledUndo = historic.current.at(-1) === undefined;
         setIsUndoEnabled(!disabledUndo);
       }
 
-      // setCurrentCount(count);
-    }, [count]);
-
-    useEffect((): void => {
-      computeBlockPositions();
-    }, []);
+      if (count && historic.current.length) {
+        setIsResetEnabled(true);
+      }
+    }, [count, historic]);
 
     // Initialise les valeurs de vehiclePositions
     const computeBlockPositions = (): void => {
@@ -191,12 +198,12 @@ const LevelPlayground = memo(
 
       // On ajoute la nouvelle position dans l'historique si l'option est activé
       if (addToHistory) {
-        const newHistoricPositions = {
-          previousPosition: vehiclePositions[index].position,
+        const newHistoricPositions: HistoryPosition = {
+          previousPosition: [...vehiclePositions[index].position],
           label,
         };
 
-        history.current.push(newHistoricPositions);
+        historic.current = [...historic.current, newHistoricPositions];
       }
 
       // On récupère toutes les positions

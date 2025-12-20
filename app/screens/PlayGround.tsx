@@ -43,6 +43,7 @@ export default function PlayGround(): JSX.Element {
 
   const dificultyTheme = useDificultyStore((value) => value.colors);
   const currentCount = useLevelStore((value) => value.currentCount);
+  const isResetEnabled = useLevelStore((value) => value.isResetEnabled);
   const isUndoEnabled = useLevelStore((value) => value.isUndoEnabled);
   const setCurrentCount = useLevelStore((value) => value.setCurrentCount);
 
@@ -52,8 +53,6 @@ export default function PlayGround(): JSX.Element {
   const levelsList = data[difficulty].levels;
 
   const [activeLevelIndex, setActiveLevelIndex] = useState(level);
-  const [isResetDisabled, setIsResetDisabled] = useState(false);
-  const [isUndoDisabled, setIsUndoDisabled] = useState(false);
   const [isPreviousLevelDisabled, setIsPreviousLevelDisabled] = useState(
     activeLevelIndex === 0
   );
@@ -247,7 +246,7 @@ export default function PlayGround(): JSX.Element {
             <Button
               onPress={reset}
               style={styles.gamePlayButton}
-              disabled={currentCount === 0}
+              disabled={!isResetEnabled}
               color={dificultyTheme.frame}
             >
               <ArrowTriangleHead2ClockwiseRotate90
