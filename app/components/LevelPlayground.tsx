@@ -42,8 +42,8 @@ const LevelPlayground = memo(
   ({ ref, level, onLevelFinish }: Props): JSX.Element => {
     const grid: number[] = useGrid();
     const dificultyTheme = useDificultyStore((value) => value.colors);
-    const mainColor = dificultyTheme?.primary;
-    const frameColor = dificultyTheme?.frame;
+    const mainColor = dificultyTheme?.primary!;
+    const frameColor = dificultyTheme?.frame!;
 
     const setCurrentCount = useLevelStore((value) => value.setCurrentCount);
     const setIsResetEnabled = useLevelStore((value) => value.setIsResetEnabled);
@@ -55,16 +55,18 @@ const LevelPlayground = memo(
 
     const historic = React.useRef<HistoryPosition[]>([]);
 
+    console.log("LevelPlayground");
+
     useImperativeHandle(
       ref,
       () => ({
         reset() {
-          if (historic.current.length) {
-            computeBlockPositions();
-          }
+          computeBlockPositions();
+          historic.current = [];
 
           setCount(0);
           setCurrentCount(0);
+          setIsUndoEnabled(false);
           setIsResetEnabled(false);
         },
 
@@ -82,6 +84,7 @@ const LevelPlayground = memo(
           }
 
           if (!newHistoric.length) {
+            setIsUndoEnabled(false);
             setIsResetEnabled(false);
           }
         },
@@ -102,20 +105,6 @@ const LevelPlayground = memo(
     useEffect((): void => {
       computeBlockPositions();
     }, []);
-
-    useEffect((): void => {
-      if (count === 0) {
-        setIsUndoEnabled(false);
-        historic.current = [];
-      } else {
-        const disabledUndo = historic.current.at(-1) === undefined;
-        setIsUndoEnabled(!disabledUndo);
-      }
-
-      if (count && historic.current.length) {
-        setIsResetEnabled(true);
-      }
-    }, [count, historic]);
 
     // Initialise les valeurs de vehiclePositions
     const computeBlockPositions = (): void => {
@@ -233,6 +222,10 @@ const LevelPlayground = memo(
       // On met à jour la tableau des positions et le compteur de mouvement
       setVehiclePositions(newPositions);
       setCount(count + 1);
+
+      // On active le bouton de retour en arrière et de reset
+      setIsUndoEnabled(true);
+      setIsResetEnabled(true);
 
       // On vérifie si le bloc est le bloc principale et si il est sur la case gagnante
       if (label === BlockType.MAIN_BLOCK && position[1] === 17) {
