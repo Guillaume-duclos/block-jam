@@ -15,9 +15,14 @@ import { darken } from "../utils/color";
 type Props = {
   index: number;
   position: number;
+  animatabled?: boolean;
 };
 
-export default function FixedBlock({ index, position }: Props): JSX.Element {
+export default function FixedBlock({
+  index,
+  position,
+  animatabled,
+}: Props): JSX.Element {
   const x: number = (position - 6 * Math.floor(position / 6)) * caseSize;
   const y: number = Math.floor(position / 6) * caseSize;
 
@@ -33,27 +38,30 @@ export default function FixedBlock({ index, position }: Props): JSX.Element {
   }));
 
   useEffect(() => {
-    setTimeout(() => {
-      blockScale.value = withDelay(
-        index * 30,
-        withSpring(1, {
-          mass: 1,
-          damping: 15,
-          stiffness: 240,
-          overshootClamping: false,
-        })
-      );
+    if (animatabled) {
+      setTimeout(() => {
+        blockScale.value = withDelay(
+          index * 30,
+          withSpring(1, {
+            mass: 1,
+            damping: 15,
+            stiffness: 240,
+          })
+        );
 
-      blockOpacity.value = withDelay(
-        index * 30,
-        withSpring(1, {
-          mass: 1,
-          damping: 15,
-          stiffness: 240,
-          overshootClamping: false,
-        })
-      );
-    }, 300);
+        blockOpacity.value = withDelay(
+          index * 30,
+          withSpring(1, {
+            mass: 1,
+            damping: 15,
+            stiffness: 240,
+          })
+        );
+      }, 300);
+    } else {
+      blockScale.value = 1;
+      blockOpacity.value = 1;
+    }
   }, []);
 
   return (

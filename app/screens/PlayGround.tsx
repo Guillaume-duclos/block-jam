@@ -1,13 +1,7 @@
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
-import { FlashList, FlashListRef } from "@shopify/flash-list";
 import { LinearGradient } from "expo-linear-gradient";
 import React, { JSX, useRef, useState } from "react";
-import {
-  NativeScrollEvent,
-  NativeSyntheticEvent,
-  StyleSheet,
-  View,
-} from "react-native";
+import { StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import ArrowShapeTurnUpLeft from "../assets/icons/ArrowShapeTurnUpLeft";
 import ArrowTriangleHead2ClockwiseRotate90 from "../assets/icons/ArrowTriangleHead2ClockwiseRotate90";
@@ -25,7 +19,6 @@ import { Screen } from "../enums/screen.enum";
 import { StorageKey } from "../enums/storageKey.enum";
 import { useDificultyStore } from "../store/dificulty.store";
 import { useLevelStore } from "../store/level.store";
-import { Level } from "../types/level.type";
 import LevelScore from "../types/levelScore";
 import NavigationProp from "../types/navigation.type";
 import RootStackParamList from "../types/rootStackParamList.type";
@@ -36,9 +29,7 @@ type playGroundRouteProp = RouteProp<RootStackParamList, Screen.PLAYGROUND>;
 
 const PlayGround = (): JSX.Element => {
   const insets = useSafeAreaInsets();
-
   const navigation = useNavigation<NavigationProp>();
-
   const route = useRoute<playGroundRouteProp>();
 
   const dificultyTheme = useDificultyStore((value) => value.colors);
@@ -53,40 +44,15 @@ const PlayGround = (): JSX.Element => {
 
   const levelsList = data[difficulty].levels;
 
-  // console.log({ currentCount });
-
   const [activeLevelIndex, setActiveLevelIndex] = useState(levelIndex);
-  const [isPreviousLevelDisabled, setIsPreviousLevelDisabled] = useState(
-    activeLevelIndex === 0
-  );
-  const [isNextLevelDisabled, setIsNextLevelDisabled] = useState(
-    activeLevelIndex === levelsList.length - 1
-  );
   const [showConfirmationModal, setShowConfirmationModal] = useState<
     LevelNavigationType | undefined
   >();
 
-  const levelsListRef = useRef<FlashListRef<Level>>(null);
   const levelPlaygroundRef = useRef<LevelPlaygroundRef | null>(null);
 
-  // Configuration de la liste
-  const levelListConfig = useRef({
-    minimumViewTime: 0,
-    viewAreaCoveragePercentThreshold: 50,
-  }).current;
-
-  // Lorsque le scroll de la liste des niveau est terminé
-  const onMomentumScrollEnd = ({
-    nativeEvent,
-  }: NativeSyntheticEvent<NativeScrollEvent>): void => {
-    const index = Math.round(
-      nativeEvent.contentOffset.x / nativeEvent.layoutMeasurement.width
-    );
-
-    setActiveLevelIndex(index);
-    setIsPreviousLevelDisabled(index === 0);
-    setIsNextLevelDisabled(index === levelsList.length - 1);
-  };
+  const isPreviousLevelDisabled = activeLevelIndex === 0;
+  const isNextLevelDisabled = activeLevelIndex === levelsList.length - 1;
 
   // Retour au menu ou changement de niveau
   const goback = (): void => {
@@ -141,10 +107,7 @@ const PlayGround = (): JSX.Element => {
           ? activeLevelIndex - 1
           : activeLevelIndex + 1;
 
-      levelsListRef?.current?.scrollToIndex({ index });
-
-      setIsPreviousLevelDisabled(true);
-      setIsNextLevelDisabled(true);
+      setActiveLevelIndex(index);
       setShowConfirmationModal(undefined);
     }
 
@@ -217,25 +180,12 @@ const PlayGround = (): JSX.Element => {
           goback={goback}
         />
 
-        {/* LEVELS LIST */}
-        <FlashList
-          ref={levelsListRef}
-          data={levelsList}
-          horizontal={true}
-          scrollEnabled={false}
-          style={styles.levelList}
-          maxItemsInRecyclePool={1}
-          initialScrollIndex={levelIndex}
-          viewabilityConfig={levelListConfig}
-          showsHorizontalScrollIndicator={false}
-          onMomentumScrollEnd={onMomentumScrollEnd}
-          renderItem={({ item }) => (
-            <LevelPlayground
-              level={item}
-              ref={levelPlaygroundRef}
-              onLevelFinish={saveLevelScore}
-            />
-          )}
+        {/* LEVEL */}
+        <LevelPlayground
+          ref={levelPlaygroundRef}
+          level={levelsList[activeLevelIndex]}
+          onLevelFinish={saveLevelScore}
+          style={styles.level}
         />
 
         {/* BUTTONS CRONTROLS */}
@@ -301,7 +251,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
   },
-  levelList: {
+  level: {
     flex: 1,
   },
   footerButtonsContainer: {

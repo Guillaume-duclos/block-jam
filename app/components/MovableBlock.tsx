@@ -35,6 +35,7 @@ type Props = {
   position: number[];
   orientation: Orientation;
   hapticEnable?: boolean;
+  animatabled?: boolean;
   updatePosition: (
     label: string,
     position: number[],
@@ -49,6 +50,7 @@ export default function MovableBlock({
   position,
   orientation,
   hapticEnable,
+  animatabled,
   updatePosition,
 }: Props): JSX.Element {
   const dificultyTheme = useDificultyStore((value) => value.colors);
@@ -80,27 +82,30 @@ export default function MovableBlock({
   const arrowColor = darken(mainBlock, 0.2);
 
   useEffect(() => {
-    setTimeout(() => {
-      blockScale.value = withDelay(
-        index * 30,
-        withSpring(1, {
-          mass: 1,
-          damping: 15,
-          stiffness: 240,
-          overshootClamping: false,
-        })
-      );
+    if (animatabled) {
+      setTimeout(() => {
+        blockScale.value = withDelay(
+          index * 30,
+          withSpring(1, {
+            mass: 1,
+            damping: 15,
+            stiffness: 240,
+          })
+        );
 
-      blockOpacity.value = withDelay(
-        index * 30,
-        withSpring(1, {
-          mass: 1,
-          damping: 15,
-          stiffness: 240,
-          overshootClamping: false,
-        })
-      );
-    }, 300);
+        blockOpacity.value = withDelay(
+          index * 30,
+          withSpring(1, {
+            mass: 1,
+            damping: 15,
+            stiffness: 240,
+          })
+        );
+      }, 300);
+    } else {
+      blockScale.value = 1;
+      blockOpacity.value = 1;
+    }
   }, []);
 
   useEffect(() => {

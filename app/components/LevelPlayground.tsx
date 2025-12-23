@@ -9,7 +9,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, ViewStyle } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { playgroundSize, windowWidth } from "../constants/dimension";
 import { BlockType } from "../enums/blockType.enum";
@@ -32,6 +32,7 @@ type Props = {
   ref: RefObject<LevelPlaygroundRef | null>;
   level: Partial<Level>;
   onLevelFinish: (count: number) => void;
+  style?: ViewStyle;
 };
 
 export type LevelPlaygroundRef = {
@@ -40,7 +41,7 @@ export type LevelPlaygroundRef = {
 };
 
 const LevelPlayground = memo(
-  ({ ref, level, onLevelFinish }: Props): JSX.Element | undefined => {
+  ({ ref, level, onLevelFinish, style }: Props): JSX.Element | undefined => {
     const grid: number[] = useGrid();
     const dificultyTheme = useDificultyStore((value) => value.colors);
     const mainColor = dificultyTheme?.primary!;
@@ -56,6 +57,7 @@ const LevelPlayground = memo(
     const [vehiclePositions, setVehiclePositions] = useState<ElementData[]>([]);
 
     const historic = useRef<HistoryPosition[]>([]);
+    const isAnimatabled = useRef<boolean>(true);
 
     // console.log("LevelPlayground", Date.now());
 
@@ -106,7 +108,8 @@ const LevelPlayground = memo(
 
     useEffect((): void => {
       computeBlockPositions();
-    }, []);
+      setTimeout(() => (isAnimatabled.current = false), 0);
+    }, [level]);
 
     useEffect((): void => {
       setCurrentCount(count);
@@ -121,7 +124,7 @@ const LevelPlayground = memo(
     // Initialise les valeurs de vehiclePositions
     const computeBlockPositions = (): void => {
       // On récupère le niveau
-      const layout: string = level?.layout;
+      const layout: string = level?.layout!;
 
       // Initialisation du tableau de positions de tous les véhicules
       let positions: ElementData[] = [];
@@ -325,6 +328,7 @@ const LevelPlayground = memo(
               position={data.position}
               orientation={data.orientation}
               hapticEnable={hapticEnable}
+              animatabled={isAnimatabled.current}
               updatePosition={updateBlockPosition}
             />
           );
@@ -336,6 +340,7 @@ const LevelPlayground = memo(
                   index={vehicleIndex}
                   position={position}
                   key={`${blocIndex}`}
+                  animatabled={isAnimatabled.current}
                 />
               );
             }
@@ -345,7 +350,7 @@ const LevelPlayground = memo(
     };
 
     return (
-      <View style={styles.container}>
+      <View style={{ ...styles.container, ...style }}>
         {/* SCORES */}
         <View style={styles.scoresContainer}>
           <View style={styles.scoresSubContainer}>

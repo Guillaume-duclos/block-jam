@@ -22,21 +22,20 @@ export default function PreviousLevelButton({
 
   const [pressed, setPressed] = useState<boolean>(false);
 
-  const toogleOnPressIn = (): void => {
-    setPressed(!pressed);
-  };
-
   useEffect(() => {
     if (!disabled) {
       setPressed(false);
     }
   }, [disabled]);
 
+  const onPressIn = () => setPressed(true);
+  const onPressOut = () => setPressed(false);
+
   return (
     <Button
       onPress={onPress}
-      onPressIn={toogleOnPressIn}
-      onPressOut={toogleOnPressIn}
+      onPressIn={onPressIn}
+      onPressOut={onPressOut}
       disabled={disabled}
       color={color}
       style={style}
