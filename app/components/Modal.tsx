@@ -106,7 +106,7 @@ export default function Modal({
 
   return (
     <AnimatedBlurView
-      tint="systemMaterial"
+      tint="systemThinMaterialDark"
       animatedProps={animatedBlurProps}
       pointerEvents={isOpen ? "auto" : "none"}
       style={{ ...styles.container, ...style }}

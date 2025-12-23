@@ -6,6 +6,7 @@ import React, {
   useCallback,
   useEffect,
   useImperativeHandle,
+  useRef,
   useState,
 } from "react";
 import { StyleSheet, Text, View } from "react-native";
@@ -15,8 +16,8 @@ import { BlockType } from "../enums/blockType.enum";
 import { Orientation } from "../enums/orientation.enum";
 import { StorageKey } from "../enums/storageKey.enum";
 import useGrid from "../hooks/useGrid.hook";
-import { useDificultyStore } from "../store/dificulty";
-import { useLevelStore } from "../store/level";
+import { useDificultyStore } from "../store/dificulty.store";
+import { useLevelStore } from "../store/level.store";
 import ElementData from "../types/elementData.type";
 import HistoryPosition from "../types/historyPosition.type";
 import { Level } from "../types/level.type";
@@ -39,12 +40,13 @@ export type LevelPlaygroundRef = {
 };
 
 const LevelPlayground = memo(
-  ({ ref, level, onLevelFinish }: Props): JSX.Element => {
+  ({ ref, level, onLevelFinish }: Props): JSX.Element | undefined => {
     const grid: number[] = useGrid();
     const dificultyTheme = useDificultyStore((value) => value.colors);
     const mainColor = dificultyTheme?.primary!;
     const frameColor = dificultyTheme?.frame!;
 
+    const currentCount = useLevelStore((value) => value.currentCount);
     const setCurrentCount = useLevelStore((value) => value.setCurrentCount);
     const setIsResetEnabled = useLevelStore((value) => value.setIsResetEnabled);
     const setIsUndoEnabled = useLevelStore((value) => value.setIsUndoEnabled);
@@ -53,9 +55,9 @@ const LevelPlayground = memo(
     const [hapticEnable, setHapticEnable] = useState<boolean>(false);
     const [vehiclePositions, setVehiclePositions] = useState<ElementData[]>([]);
 
-    const historic = React.useRef<HistoryPosition[]>([]);
+    const historic = useRef<HistoryPosition[]>([]);
 
-    console.log("LevelPlayground");
+    // console.log("LevelPlayground", Date.now());
 
     useImperativeHandle(
       ref,
@@ -95,7 +97,7 @@ const LevelPlayground = memo(
     useFocusEffect(
       useCallback(() => {
         const hapticEnable = getStorageBoolean(
-          StorageKey.ALLOW_OVER_DRAG_HAPTIC_FEEDBACK
+          StorageKey.ALLOW_DRAG_HAPTIC_FEEDBACK
         );
 
         setHapticEnable(hapticEnable || false);
@@ -105,6 +107,16 @@ const LevelPlayground = memo(
     useEffect((): void => {
       computeBlockPositions();
     }, []);
+
+    useEffect((): void => {
+      setCurrentCount(count);
+    }, [count]);
+
+    useEffect((): void => {
+      if (count !== currentCount) {
+        setCount(currentCount);
+      }
+    }, [currentCount]);
 
     // Initialise les valeurs de vehiclePositions
     const computeBlockPositions = (): void => {

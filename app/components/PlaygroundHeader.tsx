@@ -2,7 +2,7 @@ import React, { JSX } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import ArrowShapeLeftFill from "../assets/icons/ArrowShapeLeftFill";
 import Settings from "../assets/icons/GearShapeFill";
-import { useDificultyStore } from "../store/dificulty";
+import { useDificultyStore } from "../store/dificulty.store";
 import PressableView from "./PressableView";
 
 type Props = {

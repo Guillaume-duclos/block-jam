@@ -43,7 +43,7 @@ const LevelItemsList = memo(({ level }: Props): JSX.Element => {
 
   // Au swipe de la liste
   const viewableItemsChanged = useRef(({ viewableItems }: any): void => {
-    console.log(level.index, "viewableItems");
+    // console.log(level.index, "viewableItems");
 
     if (viewableItems.length) {
       setActiveViewIndex(viewableItems[0].index);

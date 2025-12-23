@@ -23,8 +23,8 @@ import data from "../data/levels.json";
 import LevelNavigationType from "../enums/levelNavigationType.enum";
 import { Screen } from "../enums/screen.enum";
 import { StorageKey } from "../enums/storageKey.enum";
-import { useDificultyStore } from "../store/dificulty";
-import { useLevelStore } from "../store/level";
+import { useDificultyStore } from "../store/dificulty.store";
+import { useLevelStore } from "../store/level.store";
 import { Level } from "../types/level.type";
 import LevelScore from "../types/levelScore";
 import NavigationProp from "../types/navigation.type";
@@ -34,7 +34,7 @@ import { getStorageString, setStorageObject } from "../utils/storage";
 
 type playGroundRouteProp = RouteProp<RootStackParamList, Screen.PLAYGROUND>;
 
-export default function PlayGround(): JSX.Element {
+const PlayGround = (): JSX.Element => {
   const insets = useSafeAreaInsets();
 
   const navigation = useNavigation<NavigationProp>();
@@ -46,13 +46,16 @@ export default function PlayGround(): JSX.Element {
   const isResetEnabled = useLevelStore((value) => value.isResetEnabled);
   const isUndoEnabled = useLevelStore((value) => value.isUndoEnabled);
   const setCurrentCount = useLevelStore((value) => value.setCurrentCount);
+  const resetLevelData = useLevelStore((value) => value.resetLevelData);
 
   const difficulty: number = route.params.difficultyIndex;
-  const level: number = route.params.level.index;
+  const levelIndex: number = route.params.level.index;
 
   const levelsList = data[difficulty].levels;
 
-  const [activeLevelIndex, setActiveLevelIndex] = useState(level);
+  // console.log({ currentCount });
+
+  const [activeLevelIndex, setActiveLevelIndex] = useState(levelIndex);
   const [isPreviousLevelDisabled, setIsPreviousLevelDisabled] = useState(
     activeLevelIndex === 0
   );
@@ -85,12 +88,13 @@ export default function PlayGround(): JSX.Element {
     setIsNextLevelDisabled(index === levelsList.length - 1);
   };
 
-  // Retour au menu
+  // Retour au menu ou changement de niveau
   const goback = (): void => {
     if (currentCount) {
       setShowConfirmationModal(LevelNavigationType.GO_BACK);
     } else {
       navigation.goBack();
+      resetLevelData();
     }
   };
 
@@ -127,12 +131,7 @@ export default function PlayGround(): JSX.Element {
     }
   };
 
-  // Redirige vers le viveau sélectionné
-  const confirmLevelNavigation = (): void => {
-    navigateToSelectedLevel(showConfirmationModal as LevelNavigationType);
-  };
-
-  // Redirige vers le viveau sélectionné
+  // Redirige vers le viveau sélectionné ou retourne au menu
   const navigateToSelectedLevel = (level: LevelNavigationType): void => {
     if (level === LevelNavigationType.GO_BACK) {
       navigation.goBack();
@@ -150,6 +149,12 @@ export default function PlayGround(): JSX.Element {
     }
 
     setCurrentCount(0);
+    resetLevelData();
+  };
+
+  // Redirige vers le viveau sélectionné
+  const confirmLevelNavigation = (): void => {
+    navigateToSelectedLevel(showConfirmationModal as LevelNavigationType);
   };
 
   // Annule la redirection vers le niveau sélectionné
@@ -212,25 +217,25 @@ export default function PlayGround(): JSX.Element {
           goback={goback}
         />
 
+        {/* LEVELS LIST */}
         <FlashList
           ref={levelsListRef}
           data={levelsList}
           horizontal={true}
-          pagingEnabled={true}
           scrollEnabled={false}
-          maxItemsInRecyclePool={3}
-          initialScrollIndex={level}
+          style={styles.levelList}
+          maxItemsInRecyclePool={1}
+          initialScrollIndex={levelIndex}
           viewabilityConfig={levelListConfig}
           showsHorizontalScrollIndicator={false}
           onMomentumScrollEnd={onMomentumScrollEnd}
           renderItem={({ item }) => (
             <LevelPlayground
-              ref={levelPlaygroundRef}
               level={item}
+              ref={levelPlaygroundRef}
               onLevelFinish={saveLevelScore}
             />
           )}
-          style={styles.levelList}
         />
 
         {/* BUTTONS CRONTROLS */}
@@ -275,6 +280,7 @@ export default function PlayGround(): JSX.Element {
           />
         </View>
 
+        {/* MODAL */}
         <Modal
           isOpen={!!showConfirmationModal}
           onConfirm={confirmLevelNavigation}
@@ -285,7 +291,7 @@ export default function PlayGround(): JSX.Element {
       </View>
     </LinearGradient>
   );
-}
+};
 
 const styles = StyleSheet.create({
   gradient: {
@@ -327,3 +333,5 @@ const styles = StyleSheet.create({
     right: -2,
   },
 });
+
+export default PlayGround;

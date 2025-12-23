@@ -24,7 +24,7 @@ import { animationDuration, gridCount } from "../config/config";
 import { caseSize } from "../constants/dimension";
 import { BlockType } from "../enums/blockType.enum";
 import { Orientation } from "../enums/orientation.enum";
-import { useDificultyStore } from "../store/dificulty";
+import { useDificultyStore } from "../store/dificulty.store";
 import { darken } from "../utils/color";
 
 type Props = {

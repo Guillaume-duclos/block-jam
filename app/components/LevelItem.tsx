@@ -6,7 +6,7 @@ import { windowWidth } from "../constants/dimension";
 import levelsData from "../data/levels.json";
 import { Screen } from "../enums/screen.enum";
 import { usePreventDoublePress } from "../hooks/usePreventDoublePress";
-import { useDificultyStore } from "../store/dificulty";
+import { useDificultyStore } from "../store/dificulty.store";
 import { Level } from "../types/level.type";
 import RootStackParamList from "../types/rootStackParamList.type";
 import LevelViewer from "./LevelViewer";

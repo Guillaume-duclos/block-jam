@@ -14,7 +14,7 @@ import PaginationIndicator from "../components/PaginationIndicator";
 import { windowHeight, windowWidth } from "../constants/dimension";
 import data from "../data/levels.json";
 import { Orientation } from "../enums/orientation.enum";
-import { useDificultyStore } from "../store/dificulty";
+import { useDificultyStore } from "../store/dificulty.store";
 import { darken } from "../utils/color";
 
 const AnimatedFlashList = Animated.createAnimatedComponent(FlashList);
