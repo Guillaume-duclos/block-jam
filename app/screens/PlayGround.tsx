@@ -1,4 +1,4 @@
-import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
+import { RouteProp, useRoute } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import React, { JSX, useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
@@ -14,8 +14,6 @@ import LevelNavigationType from "../enums/levelNavigationType.enum";
 import { Screen } from "../enums/screen.enum";
 import { StorageKey } from "../enums/storageKey.enum";
 import { useDificultyStore } from "../store/dificulty.store";
-import { useLevelStore } from "../store/level.store";
-import NavigationProp from "../types/navigation.type";
 import RootStackParamList from "../types/rootStackParamList.type";
 import { darken } from "../utils/color";
 import { getStorageString, setStorageObject } from "../utils/storage";
@@ -26,11 +24,9 @@ const PlayGround = (): JSX.Element => {
   console.log("PlayGround");
 
   const insets = useSafeAreaInsets();
-  const navigation = useNavigation<NavigationProp>();
   const route = useRoute<playGroundRouteProp>();
 
   const dificultyTheme = useDificultyStore((value) => value.colors);
-  const setCurrentCount = useLevelStore((value) => value.setCurrentCount);
 
   const difficulty: number = route.params.difficultyIndex;
   const levelIndex: number = route.params.level.index;
@@ -43,20 +39,12 @@ const PlayGround = (): JSX.Element => {
 
   // Redirige vers le viveau sélectionné ou retourne au menu
   const navigateToSelectedLevel = (level: LevelNavigationType): void => {
-    if (level === LevelNavigationType.GO_BACK) {
-      navigation.goBack();
-    } else {
-      const index =
-        level === LevelNavigationType.PREVIOUS
-          ? activeLevelIndex - 1
-          : activeLevelIndex + 1;
+    const index =
+      level === LevelNavigationType.PREVIOUS
+        ? activeLevelIndex - 1
+        : activeLevelIndex + 1;
 
-      setActiveLevelIndex(index);
-      setShowConfirmationModal(undefined);
-    }
-
-    setCurrentCount(0);
-    resetLevelData();
+    setActiveLevelIndex(index);
   };
 
   // Sauvegarde le score du niveau joué
@@ -122,14 +110,13 @@ const PlayGround = (): JSX.Element => {
             ref={levelPlaygroundRef}
             level={levelsList[activeLevelIndex]}
             onLevelFinish={saveLevelScore}
-            style={styles.level}
           />
         </View>
 
         {/* BUTTONS CONTROLS */}
         <LevelControls
-          levelIndex={levelIndex}
           difficulty={difficulty}
+          activeLevelIndex={activeLevelIndex}
           levelPlaygroundRef={levelPlaygroundRef}
           navigateToSelectedLevel={navigateToSelectedLevel}
         />
@@ -150,9 +137,6 @@ const styles = StyleSheet.create({
   playgroundContainer: {
     flex: 1,
     justifyContent: "space-between",
-  },
-  level: {
-    flex: 1,
   },
 });
 

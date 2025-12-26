@@ -15,7 +15,7 @@ import PreviousLevelButton from "./PreviousLevelButton";
 
 type Props = {
   levelPlaygroundRef: RefObject<LevelPlaygroundRef | null>;
-  levelIndex: number;
+  activeLevelIndex: number;
   difficulty: number;
   navigateToSelectedLevel: (levelNavigationType: LevelNavigationType) => void;
 };
@@ -23,10 +23,12 @@ type Props = {
 const LevelControls = memo(
   ({
     levelPlaygroundRef,
-    levelIndex,
+    activeLevelIndex,
     difficulty,
     navigateToSelectedLevel,
   }: Props): JSX.Element | undefined => {
+    console.log("LevelControls", Date.now());
+
     const levelsList = data[difficulty].levels;
 
     const dificultyTheme = useDificultyStore((value) => value.colors);
@@ -37,8 +39,8 @@ const LevelControls = memo(
       LevelNavigationType | undefined
     >();
 
-    const isPreviousLevelDisabled = levelIndex === 0;
-    const isNextLevelDisabled = levelIndex === levelsList.length - 1;
+    const isPreviousLevelDisabled = activeLevelIndex === 0;
+    const isNextLevelDisabled = activeLevelIndex === levelsList.length - 1;
 
     // Réinitialise le niveau
     const reset = (): void => {

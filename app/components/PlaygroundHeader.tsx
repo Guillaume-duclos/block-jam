@@ -21,6 +21,8 @@ const PlaygroundHeader = ({
   currentLevel,
   levelCount,
 }: Props): JSX.Element => {
+  console.log("PlaygroundHeader", Date.now());
+
   const navigation = useNavigation<NavigationProp>();
 
   const dificultyTheme = useDificultyStore((value) => value.colors);

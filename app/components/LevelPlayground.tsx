@@ -42,6 +42,8 @@ export type LevelPlaygroundRef = {
 
 const LevelPlayground = memo(
   ({ ref, level, onLevelFinish, style }: Props): JSX.Element | undefined => {
+    console.log("LevelPlayground", Date.now());
+
     const grid: number[] = useGrid();
     const dificultyTheme = useDificultyStore((value) => value.colors);
     const mainColor = dificultyTheme?.primary!;
@@ -89,7 +91,6 @@ const LevelPlayground = memo(
 
           if (!newHistoric.length) {
             setIsUndoEnabled(false);
-            setIsResetEnabled(false);
           }
         },
       }),

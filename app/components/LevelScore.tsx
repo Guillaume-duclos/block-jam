@@ -7,6 +7,8 @@ import { darken } from "../utils/color";
 type Props = {};
 
 const LevelScore = memo(({}: Props): JSX.Element | undefined => {
+  console.log("LevelScore", Date.now());
+
   const dificultyTheme = useDificultyStore((value) => value.colors);
   const mainColor = dificultyTheme?.primary!;
 
