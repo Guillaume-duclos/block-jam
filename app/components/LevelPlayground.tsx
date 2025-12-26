@@ -9,9 +9,9 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { StyleSheet, Text, View, ViewStyle } from "react-native";
+import { StyleSheet, View, ViewStyle } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { playgroundSize, windowWidth } from "../constants/dimension";
+import { playgroundSize } from "../constants/dimension";
 import { BlockType } from "../enums/blockType.enum";
 import { Orientation } from "../enums/orientation.enum";
 import { StorageKey } from "../enums/storageKey.enum";
@@ -106,9 +106,20 @@ const LevelPlayground = memo(
       }, [])
     );
 
-    useEffect((): void => {
+    // console.log("========================");
+    // console.log("vehiclePositions : ", JSON.stringify(vehiclePositions));
+    // console.log("Level layout : ", level.layout);
+
+    useEffect((): (() => void) => {
       computeBlockPositions();
-      setTimeout(() => (isAnimatabled.current = false), 0);
+
+      let timeOut: NodeJS.Timeout;
+
+      if (isAnimatabled.current) {
+        timeOut = setTimeout(() => (isAnimatabled.current = false), 0);
+      }
+
+      return () => clearTimeout(timeOut);
     }, [level]);
 
     useEffect((): void => {
@@ -320,7 +331,7 @@ const LevelPlayground = memo(
         if (data.label !== BlockType.EMPTY && data.label !== BlockType.WALL) {
           return (
             <MovableBlock
-              key={`${vehicleIndex}`}
+              key={data.label}
               index={vehicleIndex}
               grid={grid}
               label={data.label}
@@ -337,9 +348,9 @@ const LevelPlayground = memo(
             (position: number, blocIndex: number): JSX.Element => {
               return (
                 <FixedBlock
+                  key={`${data.label}-${blocIndex}`}
                   index={vehicleIndex}
                   position={position}
-                  key={`${blocIndex}`}
                   animatabled={isAnimatabled.current}
                 />
               );
@@ -351,72 +362,6 @@ const LevelPlayground = memo(
 
     return (
       <View style={{ ...styles.container, ...style }}>
-        {/* SCORES */}
-        <View style={styles.scoresContainer}>
-          <View style={styles.scoresSubContainer}>
-            {/* CURRENT COUNT */}
-            <View style={{ ...styles.scoreContainer }}>
-              <Text
-                style={{ ...styles.scoreTitle, color: darken(mainColor, 0.28) }}
-              >
-                Coups
-              </Text>
-
-              <View style={{ borderWidth: 0 }}>
-                <Text
-                  style={{ ...styles.count, color: darken(mainColor, 0.33) }}
-                  // adjustsFontSizeToFit
-                  // minimumFontScale={0.5}
-                  // numberOfLines={1}
-                >
-                  {count}
-                </Text>
-              </View>
-            </View>
-
-            {/* PREVIOUS SCORES */}
-            <View
-              style={{
-                ...styles.scoreContainer,
-                ...styles.previousScoreContainer,
-              }}
-            >
-              <Text
-                adjustsFontSizeToFit
-                numberOfLines={2}
-                minimumFontScale={0.5}
-                style={{ ...styles.scoreTitle, color: darken(mainColor, 0.28) }}
-              >
-                Scores précédents
-              </Text>
-
-              <View style={styles.previousScoreLabelContainer}>
-                <Text
-                  numberOfLines={1}
-                  adjustsFontSizeToFit
-                  style={{
-                    ...styles.previousScoreLabel,
-                    color: darken(mainColor, 0.33),
-                  }}
-                >
-                  Coups : 34
-                </Text>
-                <Text
-                  numberOfLines={1}
-                  adjustsFontSizeToFit
-                  style={{
-                    ...styles.previousScoreLabel,
-                    color: darken(mainColor, 0.33),
-                  }}
-                >
-                  Temps : 2:03
-                </Text>
-              </View>
-            </View>
-          </View>
-        </View>
-
-        {/* PLAYGROUND */}
         <View
           style={{
             ...styles.playgroundContainer,
@@ -452,66 +397,14 @@ const LevelPlayground = memo(
 
 const styles = StyleSheet.create({
   container: {
-    width: windowWidth,
     alignItems: "center",
-  },
-  scoresContainer: {
-    flex: 1,
-    justifyContent: "center",
-  },
-  scoresSubContainer: {
-    width: "100%",
-    justifyContent: "space-between",
-    paddingHorizontal: 20,
-    flexDirection: "row",
-    borderWidth: 0,
-  },
-  scoreContainer: {
-    width: "48%",
-    justifyContent: "space-between",
-    borderWidth: 0,
-  },
-  previousScoreContainer: {
-    gap: 6,
-    justifyContent: "space-between",
-  },
-  scoreTitle: {
-    fontSize: 30,
-    fontWeight: 700,
-    textTransform: "uppercase",
-    fontFamily: "Rubik",
-    borderWidth: 0,
-  },
-  count: {
-    height: 110,
-    fontSize: 120,
-    fontWeight: 600,
-    fontFamily: "Rubik",
-    textTransform: "uppercase",
-    marginBottom: 1,
-    borderWidth: 0,
-    borderColor: "red",
-    lineHeight: 134,
-  },
-  previousScoreLabelContainer: {
-    fontSize: 30,
-    fontWeight: 800,
-    fontFamily: "Rubik",
-    textTransform: "uppercase",
-    borderWidth: 0,
-  },
-  previousScoreLabel: {
-    fontSize: 30,
-    fontWeight: 800,
-    fontFamily: "Rubik",
-    textTransform: "uppercase",
-    borderWidth: 0,
+    justifyContent: "flex-end",
   },
   playgroundContainer: {
     width: playgroundSize,
     height: playgroundSize,
     borderRadius: 20,
-    marginBottom: 50,
+    marginBottom: 12,
   },
   gridContainer: {
     width: playgroundSize,

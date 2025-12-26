@@ -3,23 +3,18 @@ import { LinearGradient } from "expo-linear-gradient";
 import React, { JSX, useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import ArrowShapeTurnUpLeft from "../assets/icons/ArrowShapeTurnUpLeft";
-import ArrowTriangleHead2ClockwiseRotate90 from "../assets/icons/ArrowTriangleHead2ClockwiseRotate90";
-import Button from "../components/Button";
+import LevelControls from "../components/LevelControls";
 import LevelPlayground, {
   LevelPlaygroundRef,
 } from "../components/LevelPlayground";
-import Modal from "../components/Modal";
-import NextLevelButton from "../components/NextLevelButton";
+import LevelScore from "../components/LevelScore";
 import PlaygroundHeader from "../components/PlaygroundHeader";
-import PreviousLevelButton from "../components/PreviousLevelButton";
 import data from "../data/levels.json";
 import LevelNavigationType from "../enums/levelNavigationType.enum";
 import { Screen } from "../enums/screen.enum";
 import { StorageKey } from "../enums/storageKey.enum";
 import { useDificultyStore } from "../store/dificulty.store";
 import { useLevelStore } from "../store/level.store";
-import LevelScore from "../types/levelScore";
 import NavigationProp from "../types/navigation.type";
 import RootStackParamList from "../types/rootStackParamList.type";
 import { darken } from "../utils/color";
@@ -28,16 +23,14 @@ import { getStorageString, setStorageObject } from "../utils/storage";
 type playGroundRouteProp = RouteProp<RootStackParamList, Screen.PLAYGROUND>;
 
 const PlayGround = (): JSX.Element => {
+  console.log("PlayGround");
+
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<NavigationProp>();
   const route = useRoute<playGroundRouteProp>();
 
   const dificultyTheme = useDificultyStore((value) => value.colors);
-  const currentCount = useLevelStore((value) => value.currentCount);
-  const isResetEnabled = useLevelStore((value) => value.isResetEnabled);
-  const isUndoEnabled = useLevelStore((value) => value.isUndoEnabled);
   const setCurrentCount = useLevelStore((value) => value.setCurrentCount);
-  const resetLevelData = useLevelStore((value) => value.resetLevelData);
 
   const difficulty: number = route.params.difficultyIndex;
   const levelIndex: number = route.params.level.index;
@@ -45,57 +38,8 @@ const PlayGround = (): JSX.Element => {
   const levelsList = data[difficulty].levels;
 
   const [activeLevelIndex, setActiveLevelIndex] = useState(levelIndex);
-  const [showConfirmationModal, setShowConfirmationModal] = useState<
-    LevelNavigationType | undefined
-  >();
 
   const levelPlaygroundRef = useRef<LevelPlaygroundRef | null>(null);
-
-  const isPreviousLevelDisabled = activeLevelIndex === 0;
-  const isNextLevelDisabled = activeLevelIndex === levelsList.length - 1;
-
-  // Retour au menu ou changement de niveau
-  const goback = (): void => {
-    if (currentCount) {
-      setShowConfirmationModal(LevelNavigationType.GO_BACK);
-    } else {
-      navigation.goBack();
-      resetLevelData();
-    }
-  };
-
-  // Ouvre les paramètres
-  const openSettings = (): void => {
-    navigation.navigate(Screen.SETTINGS);
-  };
-
-  // Réinitialise le niveau
-  const reset = (): void => {
-    levelPlaygroundRef?.current?.reset();
-  };
-
-  // Annule le dernier mouvement
-  const undo = (): void => {
-    levelPlaygroundRef?.current?.undo();
-  };
-
-  // Display previous level or display confirmation modal
-  const previousLevel = (): void => {
-    if (currentCount) {
-      setShowConfirmationModal(LevelNavigationType.PREVIOUS);
-    } else {
-      navigateToSelectedLevel(LevelNavigationType.PREVIOUS);
-    }
-  };
-
-  // Display next level or display confirmation modal
-  const nextLevel = (): void => {
-    if (currentCount) {
-      setShowConfirmationModal(LevelNavigationType.NEXT);
-    } else {
-      navigateToSelectedLevel(LevelNavigationType.NEXT);
-    }
-  };
 
   // Redirige vers le viveau sélectionné ou retourne au menu
   const navigateToSelectedLevel = (level: LevelNavigationType): void => {
@@ -115,16 +59,6 @@ const PlayGround = (): JSX.Element => {
     resetLevelData();
   };
 
-  // Redirige vers le viveau sélectionné
-  const confirmLevelNavigation = (): void => {
-    navigateToSelectedLevel(showConfirmationModal as LevelNavigationType);
-  };
-
-  // Annule la redirection vers le niveau sélectionné
-  const cancelLevelNavigation = (): void => {
-    setShowConfirmationModal(undefined);
-  };
-
   // Sauvegarde le score du niveau joué
   const saveLevelScore = (score: number): void => {
     const savedLevelScores = getStorageString(StorageKey.LEVEL_SCORE);
@@ -138,13 +72,14 @@ const PlayGround = (): JSX.Element => {
 
     const newLevelScore: LevelScore = {
       difficulty,
-      level,
+      level: activeLevelIndex,
       count: score,
     };
 
     // Vérifie si le score existe déjà (même difficulté et niveau)
     const existingIndex = levelScores.findIndex(
-      (score) => score.difficulty === difficulty && score.level === level
+      (score) =>
+        score.difficulty === difficulty && score.level === activeLevelIndex
     );
 
     if (existingIndex !== -1) {
@@ -176,67 +111,27 @@ const PlayGround = (): JSX.Element => {
           difficulty={difficulty}
           currentLevel={activeLevelIndex + 1}
           levelCount={data[difficulty].levels.length}
-          openSettings={openSettings}
-          goback={goback}
         />
 
-        {/* LEVEL */}
-        <LevelPlayground
-          ref={levelPlaygroundRef}
-          level={levelsList[activeLevelIndex]}
-          onLevelFinish={saveLevelScore}
-          style={styles.level}
-        />
+        <View style={styles.playgroundContainer}>
+          {/* LEVEL SCORES */}
+          <LevelScore />
 
-        {/* BUTTONS CRONTROLS */}
-        <View style={styles.footerButtonsContainer}>
-          <PreviousLevelButton
-            onPress={previousLevel}
-            disabled={isPreviousLevelDisabled}
-            style={styles.footerButton}
-            color={dificultyTheme.frame}
-          />
-
-          <View style={styles.gamePlayButtonsContainer}>
-            <Button
-              onPress={reset}
-              style={styles.gamePlayButton}
-              disabled={!isResetEnabled}
-              color={dificultyTheme.frame}
-            >
-              <ArrowTriangleHead2ClockwiseRotate90
-                color={darken(dificultyTheme.frame, 0.3)}
-              />
-            </Button>
-
-            <Button
-              onPress={undo}
-              style={styles.gamePlayButton}
-              disabled={!isUndoEnabled}
-              color={dificultyTheme.frame}
-            >
-              <ArrowShapeTurnUpLeft
-                style={{ top: -1, left: -1 }}
-                color={darken(dificultyTheme.frame, 0.3)}
-              />
-            </Button>
-          </View>
-
-          <NextLevelButton
-            onPress={nextLevel}
-            disabled={isNextLevelDisabled}
-            style={styles.footerButton}
-            color={dificultyTheme.frame}
+          {/* LEVEL PLAYGROUND */}
+          <LevelPlayground
+            ref={levelPlaygroundRef}
+            level={levelsList[activeLevelIndex]}
+            onLevelFinish={saveLevelScore}
+            style={styles.level}
           />
         </View>
 
-        {/* MODAL */}
-        <Modal
-          isOpen={!!showConfirmationModal}
-          onConfirm={confirmLevelNavigation}
-          onCancel={cancelLevelNavigation}
-          title="Confirmation"
-          description="Lorem Ipsum is simply dummy text of the printing and typesetting industry."
+        {/* BUTTONS CONTROLS */}
+        <LevelControls
+          levelIndex={levelIndex}
+          difficulty={difficulty}
+          levelPlaygroundRef={levelPlaygroundRef}
+          navigateToSelectedLevel={navigateToSelectedLevel}
         />
       </View>
     </LinearGradient>
@@ -248,39 +143,16 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   container: {
+    gap: 38,
     flex: 1,
     alignItems: "center",
+  },
+  playgroundContainer: {
+    flex: 1,
+    justifyContent: "space-between",
   },
   level: {
     flex: 1,
-  },
-  footerButtonsContainer: {
-    gap: 30,
-    width: "100%",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingHorizontal: 16,
-  },
-  footerButton: {
-    width: 64 - 10,
-  },
-  gamePlayButtonsContainer: {
-    gap: 8,
-    flex: 1,
-    alignItems: "center",
-    flexDirection: "row",
-  },
-  gamePlayButton: {
-    flex: 1,
-  },
-  button: {
-    padding: 10,
-  },
-  leftFooterButtonIcon: {
-    left: -2,
-  },
-  rightFooterButtonIcon: {
-    right: -2,
   },
 });
 
