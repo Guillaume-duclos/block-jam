@@ -26,7 +26,6 @@ const PlaygroundHeader = ({
   const navigation = useNavigation<NavigationProp>();
 
   const dificultyTheme = useDificultyStore((value) => value.colors);
-  const currentCount = useLevelStore((value) => value.currentCount);
   const resetLevelData = useLevelStore((value) => value.resetLevelData);
 
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
@@ -38,7 +37,9 @@ const PlaygroundHeader = ({
 
   // Vérifie si l'utilisateur peut revenur au menu
   const confirmGoBack = (): void => {
-    if (currentCount) {
+    const count = useLevelStore.getState().count;
+
+    if (count) {
       setShowConfirmationModal(true);
     } else {
       goBack();

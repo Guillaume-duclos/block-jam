@@ -49,19 +49,16 @@ const LevelPlayground = memo(
     const mainColor = dificultyTheme?.primary!;
     const frameColor = dificultyTheme?.frame!;
 
-    const currentCount = useLevelStore((value) => value.currentCount);
-    const setCurrentCount = useLevelStore((value) => value.setCurrentCount);
+    const incrementCount = useLevelStore((value) => value.incrementCount);
+    const resetLevelData = useLevelStore((value) => value.resetLevelData);
     const setIsResetEnabled = useLevelStore((value) => value.setIsResetEnabled);
     const setIsUndoEnabled = useLevelStore((value) => value.setIsUndoEnabled);
 
-    const [count, setCount] = useState<number>(0);
     const [hapticEnable, setHapticEnable] = useState<boolean>(false);
     const [vehiclePositions, setVehiclePositions] = useState<ElementData[]>([]);
 
     const historic = useRef<HistoryPosition[]>([]);
     const isAnimatabled = useRef<boolean>(true);
-
-    // console.log("LevelPlayground", Date.now());
 
     useImperativeHandle(
       ref,
@@ -69,11 +66,7 @@ const LevelPlayground = memo(
         reset() {
           computeBlockPositions();
           historic.current = [];
-
-          setCount(0);
-          setCurrentCount(0);
-          setIsUndoEnabled(false);
-          setIsResetEnabled(false);
+          resetLevelData();
         },
 
         undo() {
@@ -107,10 +100,6 @@ const LevelPlayground = memo(
       }, [])
     );
 
-    // console.log("========================");
-    // console.log("vehiclePositions : ", JSON.stringify(vehiclePositions));
-    // console.log("Level layout : ", level.layout);
-
     useEffect((): (() => void) => {
       computeBlockPositions();
 
@@ -122,16 +111,6 @@ const LevelPlayground = memo(
 
       return () => clearTimeout(timeOut);
     }, [level]);
-
-    useEffect((): void => {
-      setCurrentCount(count);
-    }, [count]);
-
-    useEffect((): void => {
-      if (count !== currentCount) {
-        setCount(currentCount);
-      }
-    }, [currentCount]);
 
     // Initialise les valeurs de vehiclePositions
     const computeBlockPositions = (): void => {
@@ -248,7 +227,7 @@ const LevelPlayground = memo(
 
       // On met à jour la tableau des positions et le compteur de mouvement
       setVehiclePositions(newPositions);
-      setCount(count + 1);
+      incrementCount();
 
       // On active le bouton de retour en arrière et de reset
       setIsUndoEnabled(true);
@@ -256,7 +235,7 @@ const LevelPlayground = memo(
 
       // On vérifie si le bloc est le bloc principale et si il est sur la case gagnante
       if (label === BlockType.MAIN_BLOCK && position[1] === 17) {
-        onLevelFinish(count + 1);
+        // onLevelFinish(count + 1);
       }
     };
 

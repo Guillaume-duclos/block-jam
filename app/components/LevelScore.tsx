@@ -12,7 +12,7 @@ const LevelScore = memo(({}: Props): JSX.Element | undefined => {
   const dificultyTheme = useDificultyStore((value) => value.colors);
   const mainColor = dificultyTheme?.primary!;
 
-  const currentCount = useLevelStore((value) => value.currentCount);
+  const count = useLevelStore((value) => value.count);
 
   return (
     <View style={styles.container}>
@@ -32,7 +32,7 @@ const LevelScore = memo(({}: Props): JSX.Element | undefined => {
               // minimumFontScale={0.5}
               // numberOfLines={1}
             >
-              {currentCount}
+              {count}
             </Text>
           </View>
         </View>
