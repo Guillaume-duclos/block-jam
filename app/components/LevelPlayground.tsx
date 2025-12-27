@@ -1,5 +1,6 @@
 import { useFocusEffect } from "@react-navigation/native";
 import React, {
+  Fragment,
   JSX,
   memo,
   RefObject,
@@ -21,17 +22,24 @@ import { useLevelStore } from "../store/level.store";
 import ElementData from "../types/elementData.type";
 import HistoryPosition from "../types/historyPosition.type";
 import { Level } from "../types/level.type";
+import Score from "../types/score.type";
 import { darken } from "../utils/color";
 import { firstLineCaseIndex, lastLineCaseIndex } from "../utils/line";
-import { getStorageBoolean } from "../utils/storage";
+import {
+  getStorageBoolean,
+  getStorageString,
+  setStorageObject,
+} from "../utils/storage";
 import FixedBlock from "./FixedBlock";
 import Grid from "./Grid";
+import Modal from "./Modal";
 import MovableBlock from "./MovableBlock";
 
 type Props = {
   ref: RefObject<LevelPlaygroundRef | null>;
   level: Partial<Level>;
-  onLevelFinish: (count: number) => void;
+  levelIndex: number;
+  difficulty: number;
   style?: ViewStyle;
 };
 
@@ -41,7 +49,13 @@ export type LevelPlaygroundRef = {
 };
 
 const LevelPlayground = memo(
-  ({ ref, level, onLevelFinish, style }: Props): JSX.Element | undefined => {
+  ({
+    ref,
+    level,
+    levelIndex,
+    difficulty,
+    style,
+  }: Props): JSX.Element | undefined => {
     console.log("LevelPlayground", Date.now());
 
     const grid: number[] = useGrid();
@@ -55,6 +69,7 @@ const LevelPlayground = memo(
     const setIsUndoEnabled = useLevelStore((value) => value.setIsUndoEnabled);
 
     const [hapticEnable, setHapticEnable] = useState<boolean>(false);
+    const [showResultModal, setShowResultModal] = useState<boolean>(false);
     const [vehiclePositions, setVehiclePositions] = useState<ElementData[]>([]);
 
     const historic = useRef<HistoryPosition[]>([]);
@@ -235,7 +250,7 @@ const LevelPlayground = memo(
 
       // On vérifie si le bloc est le bloc principale et si il est sur la case gagnante
       if (label === BlockType.MAIN_BLOCK && position[1] === 17) {
-        // onLevelFinish(count + 1);
+        saveLevelScore();
       }
     };
 
@@ -305,6 +320,45 @@ const LevelPlayground = memo(
       return [min, max];
     };
 
+    // Sauvegarde le score du niveau joué
+    const saveLevelScore = (): void => {
+      const score = useLevelStore.getState().count;
+      const savedLevelScores = getStorageString(StorageKey.LEVEL_SCORE);
+
+      let levelScores: Score[] = [];
+
+      try {
+        levelScores = savedLevelScores ? JSON.parse(savedLevelScores) : [];
+      } catch (_) {
+        levelScores = [];
+      }
+
+      const newLevelScore: Score = {
+        difficulty,
+        level: levelIndex,
+        count: score,
+      };
+
+      // Vérifie si le score existe déjà (même difficulté et niveau)
+      const existingIndex = levelScores.findIndex(
+        (score) =>
+          score.difficulty === difficulty && score.level === level.index
+      );
+
+      if (existingIndex !== -1) {
+        levelScores[existingIndex] = newLevelScore;
+      } else {
+        levelScores.push(newLevelScore);
+      }
+
+      setStorageObject(StorageKey.LEVEL_SCORE, levelScores);
+      setShowResultModal(true);
+    };
+
+    const hideResultModal = (): void => {
+      setShowResultModal(false);
+    };
+
     // Rend les blocs
     const renderBlocks = (): JSX.Element[] => {
       return vehiclePositions.map((data: any, vehicleIndex: number) => {
@@ -341,36 +395,49 @@ const LevelPlayground = memo(
     };
 
     return (
-      <View style={{ ...styles.container, ...style }}>
-        <View
-          style={{
-            ...styles.playgroundContainer,
-            boxShadow: `0 20px 16px 0 ${darken(mainColor, 0.3)}`,
-          }}
-        >
+      <Fragment>
+        {/* PLAYGROUND */}
+        <View style={{ ...styles.container, ...style }}>
           <View
             style={{
-              ...styles.gridBottomBorder,
-              backgroundColor: darken(frameColor, 0.16),
-            }}
-          />
-
-          <View
-            style={{
-              ...styles.gridContainer,
-              borderColor: frameColor,
-              backgroundColor: darken(mainColor, 0.2),
-              boxShadow: `0 0 1px 0.5px ${darken(mainColor, 0.35)} inset`,
+              ...styles.playgroundContainer,
+              boxShadow: `0 20px 16px 0 ${darken(mainColor, 0.3)}`,
             }}
           >
-            <Grid color={mainColor} />
+            <View
+              style={{
+                ...styles.gridBottomBorder,
+                backgroundColor: darken(frameColor, 0.16),
+              }}
+            />
 
-            <GestureHandlerRootView>
-              {grid.length > 0 && vehiclePositions && renderBlocks()}
-            </GestureHandlerRootView>
+            <View
+              style={{
+                ...styles.gridContainer,
+                borderColor: frameColor,
+                backgroundColor: darken(mainColor, 0.2),
+                boxShadow: `0 0 1px 0.5px ${darken(mainColor, 0.35)} inset`,
+              }}
+            >
+              <Grid color={mainColor} />
+
+              <GestureHandlerRootView>
+                {grid.length > 0 && vehiclePositions && renderBlocks()}
+              </GestureHandlerRootView>
+            </View>
           </View>
         </View>
-      </View>
+
+        {/* MODAL */}
+        <Modal
+          style={styles.modal}
+          isOpen={showResultModal}
+          onConfirm={hideResultModal}
+          onCancel={hideResultModal}
+          title="Confirmation"
+          description="Lorem Ipsum is simply dummy text of the printing and typesetting industry."
+        />
+      </Fragment>
     );
   }
 );
@@ -402,6 +469,9 @@ const styles = StyleSheet.create({
     height: 30,
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
+  },
+  modal: {
+    zIndex: 1,
   },
 });
 

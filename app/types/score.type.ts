@@ -1,7 +1,7 @@
-type LevelScore = {
+type Score = {
   difficulty: number;
   level: number;
   count: number;
 };
 
-export default LevelScore;
+export default Score;

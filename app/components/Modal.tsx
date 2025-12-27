@@ -1,5 +1,5 @@
 import { BlurView } from "expo-blur";
-import React, { JSX, useEffect } from "react";
+import React, { Fragment, JSX, useEffect } from "react";
 import { StyleSheet, Text, View, ViewStyle } from "react-native";
 import Animated, {
   useAnimatedProps,
@@ -10,6 +10,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { SpringConfig } from "react-native-reanimated/lib/typescript/animation/spring";
+import { runOnJS } from "react-native-worklets";
 import { darken } from "../utils/color";
 import Button from "./Button";
 
@@ -87,7 +88,6 @@ export default function Modal({
 
   const onDecline = (): void => {
     resetAnimatedValues();
-    onCancel();
   };
 
   const onCanfirm = (): void => {
@@ -101,48 +101,54 @@ export default function Modal({
     cancelButtonScale.value = withTiming(0.95, { duration: 200 });
     confirmButtonScale.value = withTiming(0.95, { duration: 200 });
     cancelButtonOpacity.value = withTiming(0, { duration: 200 });
-    confirmButtonOpacity.value = withTiming(0, { duration: 200 });
+    confirmButtonOpacity.value = withTiming(0, { duration: 200 }, () => {
+      runOnJS(onCancel)();
+    });
   };
 
   return (
-    <AnimatedBlurView
-      tint="systemThinMaterialDark"
-      animatedProps={animatedBlurProps}
-      pointerEvents={isOpen ? "auto" : "none"}
-      style={{ ...styles.container, ...style }}
-    >
-      <View style={styles.contentContainer}>
-        <Animated.View style={animatedModalStyle}>
-          <View style={styles.modalBottomBorder} />
-          <View style={styles.modal}>
-            <Text style={styles.title}>{title}</Text>
-            <Text style={styles.description}>{description}</Text>
+    <Fragment>
+      {isOpen && (
+        <AnimatedBlurView
+          tint="systemThinMaterialDark"
+          animatedProps={animatedBlurProps}
+          pointerEvents={isOpen ? "auto" : "none"}
+          style={{ ...styles.container, ...style }}
+        >
+          <View style={styles.contentContainer}>
+            <Animated.View style={animatedModalStyle}>
+              <View style={styles.modalBottomBorder} />
+              <View style={styles.modal}>
+                <Text style={styles.title}>{title}</Text>
+                <Text style={styles.description}>{description}</Text>
+              </View>
+            </Animated.View>
+
+            <View style={styles.submitButtonsContainer}>
+              <AnimatedButton
+                onPress={onDecline}
+                style={[styles.submitButton, animatedCancelButtonStyle]}
+                shadowStyle={{ boxShadow: "0 0 14px 0 #878787" }}
+                color="#EE7474"
+                deep={10}
+              >
+                <Text style={styles.submitButtonLabel}>Annuler</Text>
+              </AnimatedButton>
+
+              <AnimatedButton
+                onPress={onCanfirm}
+                style={[styles.submitButton, animatedConfirmButtonStyle]}
+                shadowStyle={{ boxShadow: "0 0 14px 0 #878787" }}
+                color={darken("#D6F5BC")}
+                deep={10}
+              >
+                <Text style={styles.submitButtonLabel}>Confirmer</Text>
+              </AnimatedButton>
+            </View>
           </View>
-        </Animated.View>
-
-        <View style={styles.submitButtonsContainer}>
-          <AnimatedButton
-            onPress={onDecline}
-            style={[styles.submitButton, animatedCancelButtonStyle]}
-            shadowStyle={{ boxShadow: "0 0 14px 0 #878787" }}
-            color="#EE7474"
-            deep={10}
-          >
-            <Text style={styles.submitButtonLabel}>Annuler</Text>
-          </AnimatedButton>
-
-          <AnimatedButton
-            onPress={onCanfirm}
-            style={[styles.submitButton, animatedConfirmButtonStyle]}
-            shadowStyle={{ boxShadow: "0 0 14px 0 #878787" }}
-            color={darken("#D6F5BC")}
-            deep={10}
-          >
-            <Text style={styles.submitButtonLabel}>Confirmer</Text>
-          </AnimatedButton>
-        </View>
-      </View>
-    </AnimatedBlurView>
+        </AnimatedBlurView>
+      )}
+    </Fragment>
   );
 }
 
