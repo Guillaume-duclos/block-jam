@@ -5,12 +5,12 @@ import { useTranslation } from "react-i18next";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Checkmark from "../assets/icons/Checkmark";
-import Button from "../components/Button";
-import Modal from "../components/Modal";
-import NavigationLink from "../components/NavigationLink";
-import ScreenHeader from "../components/ScreenHeader";
+import Button from "../components/button/Button";
+import NavigationLink from "../components/button/NavigationLink";
+import ScreenHeader from "../components/header/ScreenHeader";
+import ModalValidation from "../components/modal/ModalValidation";
 import SectionContainer from "../components/SectionContainer";
-import SwitchRow from "../components/SwitchRow";
+import SwitchRow from "../components/switch/SwitchRow";
 import { languages } from "../constants/languages";
 import { Language } from "../enums/language.enum";
 import { Screen } from "../enums/screen.enum";
@@ -218,7 +218,7 @@ export default function Settings(): JSX.Element {
       </ScrollView>
 
       {/* RESET DATA MODAL */}
-      <Modal
+      <ModalValidation
         isOpen={showResetDataModal}
         onConfirm={removeLevelsData}
         onCancel={hiddeResetDataModal}

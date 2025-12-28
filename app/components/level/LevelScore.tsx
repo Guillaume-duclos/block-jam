@@ -1,8 +1,8 @@
 import React, { JSX, memo } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { useDificultyStore } from "../store/dificulty.store";
-import { useLevelStore } from "../store/level.store";
-import { darken } from "../utils/color";
+import { useDificultyStore } from "../../store/dificulty.store";
+import { useLevelStore } from "../../store/level.store";
+import { darken } from "../../utils/color";
 
 type Props = {};
 

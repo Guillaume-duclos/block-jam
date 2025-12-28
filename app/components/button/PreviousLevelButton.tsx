@@ -1,9 +1,9 @@
 import React, { JSX, useEffect, useState } from "react";
 import { StyleSheet, ViewStyle } from "react-native";
-import ArrowTriangleRight from "../assets/icons/ArrowTriangleRight";
-import ArrowTriangleRightFill from "../assets/icons/ArrowTriangleRightFill";
-import Button from "../components/Button";
-import { darken } from "../utils/color";
+import ArrowTriangleLeft from "../../assets/icons/ArrowTriangleLeft";
+import ArrowTriangleLeftFill from "../../assets/icons/ArrowTriangleLeftFill";
+import { darken } from "../../utils/color";
+import Button from "../button/Button";
 
 type Props = {
   disabled?: boolean;
@@ -12,12 +12,14 @@ type Props = {
   style?: ViewStyle | ViewStyle[];
 };
 
-export default function NextLevelButton({
+export default function PreviousLevelButton({
   disabled,
   onPress,
   color,
   style,
 }: Props): JSX.Element {
+  const mainColor: string = "#FAF7F2";
+
   const [pressed, setPressed] = useState<boolean>(false);
 
   useEffect(() => {
@@ -39,17 +41,17 @@ export default function NextLevelButton({
       style={style}
     >
       {pressed ? (
-        <ArrowTriangleRightFill
+        <ArrowTriangleLeftFill
           style={{
             ...styles.rightFooterButtonIcon,
             ...styles.rightFooterButtonIconFill,
           }}
-          color={darken(color, 0.3)}
+          color={darken(mainColor, 0.3)}
         />
       ) : (
-        <ArrowTriangleRight
+        <ArrowTriangleLeft
           style={styles.rightFooterButtonIcon}
-          color={darken(color, 0.3)}
+          color={darken(mainColor, 0.3)}
         />
       )}
     </Button>
@@ -61,7 +63,7 @@ const styles = StyleSheet.create({
     width: 64 - 10,
   },
   rightFooterButtonIcon: {
-    right: -2,
+    left: -2,
   },
   rightFooterButtonIconFill: {
     width: 20,

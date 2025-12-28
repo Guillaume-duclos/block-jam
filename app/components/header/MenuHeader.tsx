@@ -1,8 +1,8 @@
 import React, { JSX } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import Settings from "../assets/icons/GearShapeFill";
-import { menuHeaderHeight } from "../constants/dimension";
-import PressableView from "./PressableView";
+import Settings from "../../assets/icons/GearShapeFill";
+import { menuHeaderHeight } from "../../constants/dimension";
+import PressableView from "../button/PressableView";
 
 type Props = {
   difficulty: number;

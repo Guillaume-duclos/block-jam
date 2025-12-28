@@ -8,7 +8,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import { darken } from "../utils/color";
+import { darken } from "../../utils/color";
 
 type Props = {
   selected: boolean;

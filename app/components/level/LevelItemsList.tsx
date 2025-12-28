@@ -12,13 +12,13 @@ import {
   menuLevelHeight,
   menuVerticalPadding,
   windowHeight,
-} from "../constants/dimension";
-import { Screen } from "../enums/screen.enum";
-import { Level, MainLevel } from "../types/level.type";
-import NavigationProp from "../types/navigation.type";
+} from "../../constants/dimension";
+import { Screen } from "../../enums/screen.enum";
+import { Level, MainLevel } from "../../types/level.type";
+import NavigationProp from "../../types/navigation.type";
+import MenuHeader from "../header/MenuHeader";
+import PaginationIndicator from "../PaginationIndicator";
 import LevelItem from "./LevelItem";
-import MenuHeader from "./MenuHeader";
-import PaginationIndicator from "./PaginationIndicator";
 
 type Props = {
   level: MainLevel;

@@ -8,9 +8,9 @@ import Animated, {
   withDelay,
   withSpring,
 } from "react-native-reanimated";
-import { caseSize } from "../constants/dimension";
-import { useDificultyStore } from "../store/dificulty.store";
-import { darken } from "../utils/color";
+import { caseSize } from "../../constants/dimension";
+import { useDificultyStore } from "../../store/dificulty.store";
+import { darken } from "../../utils/color";
 
 type Props = {
   index: number;

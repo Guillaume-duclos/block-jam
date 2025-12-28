@@ -2,7 +2,7 @@ import { useNavigation } from "@react-navigation/native";
 import React, { JSX } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import ScreenHeader from "../components/ScreenHeader";
+import ScreenHeader from "../components/header/ScreenHeader";
 import { text } from "../theme/text";
 import NavigationProp from "../types/navigation.type";
 

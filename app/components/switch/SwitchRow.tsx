@@ -1,6 +1,6 @@
 import React, { JSX } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { text } from "../theme/text";
+import { text } from "../../theme/text";
 import Switch from "./Switch";
 
 type Props = {

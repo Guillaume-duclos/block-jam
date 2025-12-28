@@ -3,12 +3,12 @@ import { LinearGradient } from "expo-linear-gradient";
 import React, { JSX, useEffect, useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import LevelControls from "../components/LevelControls";
+import PlaygroundHeader from "../components/header/PlaygroundHeader";
+import LevelControls from "../components/level/LevelControls";
 import LevelPlayground, {
   LevelPlaygroundRef,
-} from "../components/LevelPlayground";
-import LevelScore from "../components/LevelScore";
-import PlaygroundHeader from "../components/PlaygroundHeader";
+} from "../components/level/LevelPlayground";
+import LevelScore from "../components/level/LevelScore";
 import data from "../data/levels.json";
 import LevelNavigationType from "../enums/levelNavigationType.enum";
 import { Screen } from "../enums/screen.enum";
@@ -39,12 +39,6 @@ const PlayGround = (): JSX.Element => {
 
   useEffect(() => {
     const savedLevelScores = getStorageString(StorageKey.LEVEL_SCORE);
-
-    if (savedLevelScores) {
-      console.log("==> ", JSON.parse(savedLevelScores));
-    } else {
-      console.log("NO LEVEL SCORE DATA SAVED");
-    }
   }, []);
 
   // Redirige vers le viveau sélectionné ou retourne au menu

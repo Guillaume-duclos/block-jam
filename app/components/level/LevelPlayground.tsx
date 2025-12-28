@@ -12,28 +12,28 @@ import React, {
 } from "react";
 import { StyleSheet, View, ViewStyle } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { playgroundSize } from "../constants/dimension";
-import { BlockType } from "../enums/blockType.enum";
-import { Orientation } from "../enums/orientation.enum";
-import { StorageKey } from "../enums/storageKey.enum";
-import useGrid from "../hooks/useGrid.hook";
-import { useDificultyStore } from "../store/dificulty.store";
-import { useLevelStore } from "../store/level.store";
-import ElementData from "../types/elementData.type";
-import HistoryPosition from "../types/historyPosition.type";
-import { Level } from "../types/level.type";
-import Score from "../types/score.type";
-import { darken } from "../utils/color";
-import { firstLineCaseIndex, lastLineCaseIndex } from "../utils/line";
+import { playgroundSize } from "../../constants/dimension";
+import { BlockType } from "../../enums/blockType.enum";
+import { Orientation } from "../../enums/orientation.enum";
+import { StorageKey } from "../../enums/storageKey.enum";
+import useGrid from "../../hooks/useGrid.hook";
+import { useDificultyStore } from "../../store/dificulty.store";
+import { useLevelStore } from "../../store/level.store";
+import ElementData from "../../types/elementData.type";
+import HistoryPosition from "../../types/historyPosition.type";
+import { Level } from "../../types/level.type";
+import Score from "../../types/score.type";
+import { darken } from "../../utils/color";
+import { firstLineCaseIndex, lastLineCaseIndex } from "../../utils/line";
 import {
   getStorageBoolean,
   getStorageString,
   setStorageObject,
-} from "../utils/storage";
-import FixedBlock from "./FixedBlock";
-import Grid from "./Grid";
-import Modal from "./Modal";
-import MovableBlock from "./MovableBlock";
+} from "../../utils/storage";
+import FixedBlock from "../block/FixedBlock";
+import MovableBlock from "../block/MovableBlock";
+import Grid from "../Grid";
+import ModalResult from "../modal/ModalResult";
 
 type Props = {
   ref: RefObject<LevelPlaygroundRef | null>;
@@ -429,13 +429,10 @@ const LevelPlayground = memo(
         </View>
 
         {/* MODAL */}
-        <Modal
-          style={styles.modal}
+        <ModalResult
           isOpen={showResultModal}
-          onConfirm={hideResultModal}
           onCancel={hideResultModal}
-          title="Confirmation"
-          description="Lorem Ipsum is simply dummy text of the printing and typesetting industry."
+          onConfirm={hideResultModal}
         />
       </Fragment>
     );

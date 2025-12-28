@@ -2,13 +2,13 @@ import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import React, { JSX, memo } from "react";
 import { StyleSheet, View } from "react-native";
-import { windowWidth } from "../constants/dimension";
-import levelsData from "../data/levels.json";
-import { Screen } from "../enums/screen.enum";
-import { usePreventDoublePress } from "../hooks/usePreventDoublePress";
-import { useDificultyStore } from "../store/dificulty.store";
-import { Level } from "../types/level.type";
-import RootStackParamList from "../types/rootStackParamList.type";
+import { windowWidth } from "../../constants/dimension";
+import levelsData from "../../data/levels.json";
+import { Screen } from "../../enums/screen.enum";
+import { usePreventDoublePress } from "../../hooks/usePreventDoublePress";
+import { useDificultyStore } from "../../store/dificulty.store";
+import { Level } from "../../types/level.type";
+import RootStackParamList from "../../types/rootStackParamList.type";
 import LevelViewer from "./LevelViewer";
 
 type Props = {

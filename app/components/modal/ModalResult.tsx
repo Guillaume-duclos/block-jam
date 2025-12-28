@@ -11,8 +11,10 @@ import Animated, {
 } from "react-native-reanimated";
 import { SpringConfig } from "react-native-reanimated/lib/typescript/animation/spring";
 import { runOnJS } from "react-native-worklets";
-import { darken } from "../utils/color";
-import Button from "./Button";
+import Star from "../../assets/icons/Star";
+import { darken } from "../../utils/color";
+import { formatScore } from "../../utils/format";
+import Button from "../button/Button";
 
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
 const AnimatedButton = Animated.createAnimatedComponent(Button);
@@ -21,17 +23,13 @@ type Props = {
   isOpen: boolean;
   onConfirm: () => void;
   onCancel: () => void;
-  title: string;
-  description: string;
   style?: ViewStyle;
 };
 
-export default function Modal({
+export default function ModalResult({
   isOpen,
   onConfirm,
   onCancel,
-  title,
-  description,
   style,
 }: Props): JSX.Element {
   const blur = useSharedValue(0);
@@ -119,8 +117,13 @@ export default function Modal({
             <Animated.View style={animatedModalStyle}>
               <View style={styles.modalBottomBorder} />
               <View style={styles.modal}>
-                <Text style={styles.title}>{title}</Text>
-                <Text style={styles.description}>{description}</Text>
+                <Text style={styles.title}>Level completed</Text>
+                <View style={styles.starsContainer}>
+                  <Star color="#e5be74" style={styles.star} />
+                  <Star color="#e5be74" style={styles.star} />
+                  <Star color="#e5be74" style={styles.star} />
+                </View>
+                <Text style={styles.score}>Score : {formatScore(1300)}</Text>
               </View>
             </Animated.View>
 
@@ -129,20 +132,20 @@ export default function Modal({
                 onPress={onDecline}
                 style={[styles.submitButton, animatedCancelButtonStyle]}
                 shadowStyle={{ boxShadow: "0 0 14px 0 #878787" }}
-                color="#EE7474"
+                color="#ECECEC"
                 deep={10}
               >
-                <Text style={styles.submitButtonLabel}>Annuler</Text>
+                <Text style={styles.submitButtonLabel}>Rejouer</Text>
               </AnimatedButton>
 
               <AnimatedButton
                 onPress={onCanfirm}
                 style={[styles.submitButton, animatedConfirmButtonStyle]}
                 shadowStyle={{ boxShadow: "0 0 14px 0 #878787" }}
-                color={darken("#D6F5BC")}
+                color="#ECECEC"
                 deep={10}
               >
-                <Text style={styles.submitButtonLabel}>Confirmer</Text>
+                <Text style={styles.submitButtonLabel}>Suivant</Text>
               </AnimatedButton>
             </View>
           </View>
@@ -156,6 +159,7 @@ const styles = StyleSheet.create({
   container: {
     gap: 20,
     flex: 1,
+    zIndex: 1,
     alignItems: "center",
     justifyContent: "center",
     ...StyleSheet.absoluteFillObject,
@@ -167,9 +171,9 @@ const styles = StyleSheet.create({
   modal: {
     gap: 22,
     borderRadius: 16,
-    paddingVertical: 34,
+    paddingVertical: 24,
     paddingHorizontal: 30,
-    backgroundColor: darken("#D6F5BC"),
+    backgroundColor: "#ECECEC",
   },
   modalBottomBorder: {
     left: 0,
@@ -178,25 +182,33 @@ const styles = StyleSheet.create({
     height: "50%",
     position: "absolute",
     borderCurve: "continuous",
-    backgroundColor: darken("#D6F5BC", 0.35),
+    backgroundColor: darken("#ECECEC", 0.15),
     borderBottomLeftRadius: 16,
     borderBottomRightRadius: 16,
     boxShadow: "0 0 14px 0 #878787",
   },
   title: {
-    fontSize: 26,
+    fontSize: 32,
     fontWeight: 700,
     fontFamily: "Rubik",
     textAlign: "center",
-    color: "#FFFFFF",
+    color: darken("#D6F5BC", 0.3),
   },
-  description: {
-    fontSize: 16,
-    fontWeight: 500,
+  starsContainer: {
+    gap: 20,
+    justifyContent: "center",
+    flexDirection: "row",
+  },
+  star: {
+    width: 46,
+    height: 46,
+  },
+  score: {
+    fontSize: 24,
+    fontWeight: 700,
     fontFamily: "Rubik",
     textAlign: "center",
-    lineHeight: 22,
-    color: "#FFFFFF",
+    color: darken("#D6F5BC", 0.3),
   },
   submitButtonsContainer: {
     gap: 10,
@@ -211,6 +223,7 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
     fontWeight: 600,
     fontFamily: "Rubik",
-    color: "#FFFFFF",
+    color: darken("#D6F5BC", 0.3),
+    textAlign: "center",
   },
 });

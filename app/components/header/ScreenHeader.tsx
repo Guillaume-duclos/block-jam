@@ -1,9 +1,9 @@
 import React, { JSX } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import ArrowShapeLeftFill from "../assets/icons/ArrowShapeLeftFill";
-import XMark from "../assets/icons/XMark";
-import { text } from "../theme/text";
-import PressableView from "./PressableView";
+import ArrowShapeLeftFill from "../../assets/icons/ArrowShapeLeftFill";
+import XMark from "../../assets/icons/XMark";
+import { text } from "../../theme/text";
+import PressableView from "../button/PressableView";
 
 type Props = {
   label: string;

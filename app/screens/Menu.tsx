@@ -9,7 +9,7 @@ import Animated, {
   useDerivedValue,
   useSharedValue,
 } from "react-native-reanimated";
-import LevelItemsList from "../components/LevelItemsList";
+import LevelItemsList from "../components/level/LevelItemsList";
 import PaginationIndicator from "../components/PaginationIndicator";
 import { windowHeight, windowWidth } from "../constants/dimension";
 import data from "../data/levels.json";

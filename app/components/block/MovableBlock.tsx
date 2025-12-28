@@ -16,16 +16,16 @@ import Animated, {
   withSpring,
   withTiming,
 } from "react-native-reanimated";
-import ArrowTriangleDownFill from "../assets/icons/ArrowTriangleDownFill";
-import ArrowTriangleLeftFill from "../assets/icons/ArrowTriangleLeftFill";
-import ArrowTriangleRightFill from "../assets/icons/ArrowTriangleRightFill";
-import ArrowTriangleUpFill from "../assets/icons/ArrowTriangleUpFill";
-import { animationDuration, gridCount } from "../config/config";
-import { caseSize } from "../constants/dimension";
-import { BlockType } from "../enums/blockType.enum";
-import { Orientation } from "../enums/orientation.enum";
-import { useDificultyStore } from "../store/dificulty.store";
-import { darken } from "../utils/color";
+import ArrowTriangleDownFill from "../../assets/icons/ArrowTriangleDownFill";
+import ArrowTriangleLeftFill from "../../assets/icons/ArrowTriangleLeftFill";
+import ArrowTriangleRightFill from "../../assets/icons/ArrowTriangleRightFill";
+import ArrowTriangleUpFill from "../../assets/icons/ArrowTriangleUpFill";
+import { animationDuration, gridCount } from "../../config/config";
+import { caseSize } from "../../constants/dimension";
+import { BlockType } from "../../enums/blockType.enum";
+import { Orientation } from "../../enums/orientation.enum";
+import { useDificultyStore } from "../../store/dificulty.store";
+import { darken } from "../../utils/color";
 
 type Props = {
   ref?: Ref<View> | undefined;

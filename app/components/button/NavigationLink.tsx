@@ -1,8 +1,8 @@
 import React, { Fragment, JSX } from "react";
 import { StyleSheet, Text } from "react-native";
-import ArrowTriangleRightFill from "../assets/icons/ArrowTriangleRightFill";
-import { text } from "../theme/text";
-import PressableView from "./PressableView";
+import ArrowTriangleRightFill from "../../assets/icons/ArrowTriangleRightFill";
+import { text } from "../../theme/text";
+import PressableView from "../button/PressableView";
 
 type Props = {
   label: string;

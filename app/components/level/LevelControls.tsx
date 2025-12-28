@@ -1,17 +1,17 @@
 import React, { Fragment, JSX, memo, RefObject, useState } from "react";
 import { StyleSheet, View } from "react-native";
-import ArrowShapeTurnUpLeft from "../assets/icons/ArrowShapeTurnUpLeft";
-import ArrowTriangleHead2ClockwiseRotate90 from "../assets/icons/ArrowTriangleHead2ClockwiseRotate90";
-import data from "../data/levels.json";
-import LevelNavigationType from "../enums/levelNavigationType.enum";
-import { useDificultyStore } from "../store/dificulty.store";
-import { useLevelStore } from "../store/level.store";
-import { darken } from "../utils/color";
-import Button from "./Button";
+import ArrowShapeTurnUpLeft from "../../assets/icons/ArrowShapeTurnUpLeft";
+import ArrowTriangleHead2ClockwiseRotate90 from "../../assets/icons/ArrowTriangleHead2ClockwiseRotate90";
+import data from "../../data/levels.json";
+import LevelNavigationType from "../../enums/levelNavigationType.enum";
+import { useDificultyStore } from "../../store/dificulty.store";
+import { useLevelStore } from "../../store/level.store";
+import { darken } from "../../utils/color";
+import Button from "../button/Button";
+import NextLevelButton from "../button/NextLevelButton";
+import PreviousLevelButton from "../button/PreviousLevelButton";
+import ModalValidation from "../modal/ModalValidation";
 import { LevelPlaygroundRef } from "./LevelPlayground";
-import Modal from "./Modal";
-import NextLevelButton from "./NextLevelButton";
-import PreviousLevelButton from "./PreviousLevelButton";
 
 type Props = {
   levelPlaygroundRef: RefObject<LevelPlaygroundRef | null>;
@@ -125,7 +125,7 @@ const LevelControls = memo(
         </View>
 
         {/* MODAL */}
-        <Modal
+        <ModalValidation
           isOpen={!!showConfirmationModal}
           onConfirm={confirmLevelNavigation}
           onCancel={cancelLevelNavigation}

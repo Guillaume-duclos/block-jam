@@ -1,14 +1,14 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { Fragment, JSX, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import ArrowShapeLeftFill from "../assets/icons/ArrowShapeLeftFill";
-import Settings from "../assets/icons/GearShapeFill";
-import { Screen } from "../enums/screen.enum";
-import { useDificultyStore } from "../store/dificulty.store";
-import { useLevelStore } from "../store/level.store";
-import NavigationProp from "../types/navigation.type";
-import Modal from "./Modal";
-import PressableView from "./PressableView";
+import ArrowShapeLeftFill from "../../assets/icons/ArrowShapeLeftFill";
+import Settings from "../../assets/icons/GearShapeFill";
+import { Screen } from "../../enums/screen.enum";
+import { useDificultyStore } from "../../store/dificulty.store";
+import { useLevelStore } from "../../store/level.store";
+import NavigationProp from "../../types/navigation.type";
+import PressableView from "../button/PressableView";
+import ModalValidation from "../modal/ModalValidation";
 
 type Props = {
   difficulty: number;
@@ -84,7 +84,7 @@ const PlaygroundHeader = ({
       </View>
 
       {/* MODAL */}
-      <Modal
+      <ModalValidation
         isOpen={showConfirmationModal}
         onConfirm={goBack}
         onCancel={cancelGoBack}

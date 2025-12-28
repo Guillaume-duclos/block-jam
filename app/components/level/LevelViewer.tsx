@@ -24,12 +24,12 @@ import {
 } from "react-native-reanimated";
 
 import { runOnJS } from "react-native-worklets";
-import { gridCount } from "../config/config";
-import { levelViewerTextSize } from "../constants/dimension";
-import { BlockType } from "../enums/blockType.enum";
-import { Orientation } from "../enums/orientation.enum";
-import DificultyColors from "../types/dificultyColors.type";
-import { darken } from "../utils/color";
+import { gridCount } from "../../config/config";
+import { levelViewerTextSize } from "../../constants/dimension";
+import { BlockType } from "../../enums/blockType.enum";
+import { Orientation } from "../../enums/orientation.enum";
+import DificultyColors from "../../types/dificultyColors.type";
+import { darken } from "../../utils/color";
 
 type Props = {
   index: string;
