@@ -322,7 +322,7 @@ const LevelPlayground = memo(
 
     // Sauvegarde le score du niveau joué
     const saveLevelScore = (): void => {
-      const score = useLevelStore.getState().count;
+      const count = useLevelStore.getState().count;
       const savedLevelScores = getStorageString(StorageKey.LEVEL_SCORE);
 
       let levelScores: Score[] = [];
@@ -333,20 +333,29 @@ const LevelPlayground = memo(
         levelScores = [];
       }
 
+      const ratio = level.minimumMove! / count;
+
       const newLevelScore: Score = {
         difficulty,
         level: levelIndex,
-        count: score,
+        count: count,
+        score: ratio,
       };
 
       // Vérifie si le score existe déjà (même difficulté et niveau)
       const existingIndex = levelScores.findIndex(
-        (score) =>
-          score.difficulty === difficulty && score.level === level.index
+        (score) => score.difficulty === difficulty && score.level === levelIndex
       );
 
       if (existingIndex !== -1) {
-        levelScores[existingIndex] = newLevelScore;
+        const previousScore = levelScores[existingIndex].score;
+
+        if (previousScore < ratio) {
+          levelScores[existingIndex] = newLevelScore;
+        } else {
+          setShowResultModal(true);
+          return;
+        }
       } else {
         levelScores.push(newLevelScore);
       }
@@ -355,6 +364,7 @@ const LevelPlayground = memo(
       setShowResultModal(true);
     };
 
+    // Cache la modale du score
     const hideResultModal = (): void => {
       setShowResultModal(false);
     };

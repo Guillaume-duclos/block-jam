@@ -1,6 +1,6 @@
 import { RouteProp, useRoute } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
-import React, { JSX, useEffect, useRef, useState } from "react";
+import React, { JSX, useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import PlaygroundHeader from "../components/header/PlaygroundHeader";
@@ -12,11 +12,9 @@ import LevelScore from "../components/level/LevelScore";
 import data from "../data/levels.json";
 import LevelNavigationType from "../enums/levelNavigationType.enum";
 import { Screen } from "../enums/screen.enum";
-import { StorageKey } from "../enums/storageKey.enum";
 import { useDificultyStore } from "../store/dificulty.store";
 import RootStackParamList from "../types/rootStackParamList.type";
 import { darken } from "../utils/color";
-import { getStorageString } from "../utils/storage";
 
 type playGroundRouteProp = RouteProp<RootStackParamList, Screen.PLAYGROUND>;
 
@@ -36,10 +34,6 @@ const PlayGround = (): JSX.Element => {
   const [activeLevelIndex, setActiveLevelIndex] = useState(levelIndex);
 
   const levelPlaygroundRef = useRef<LevelPlaygroundRef | null>(null);
-
-  useEffect(() => {
-    const savedLevelScores = getStorageString(StorageKey.LEVEL_SCORE);
-  }, []);
 
   // Redirige vers le viveau sélectionné ou retourne au menu
   const navigateToSelectedLevel = (level: LevelNavigationType): void => {
@@ -103,7 +97,7 @@ const styles = StyleSheet.create({
   container: {
     gap: 38,
     flex: 1,
-    alignItems: "center",
+    justifyContent: "space-between",
   },
 });
 

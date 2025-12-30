@@ -11,7 +11,7 @@ type Props = {
 
 const MenuHeader = ({ difficulty, openSettings }: Props): JSX.Element => (
   <View style={styles.container}>
-    <View>
+    <View style={styles.contentContainer}>
       <Text style={styles.headerTitle}>Dificulty {difficulty}</Text>
       <Text style={styles.headerProgression}>
         <Text style={styles.headerProgressionCount}>2</Text>/156 completed
@@ -30,6 +30,10 @@ const styles = StyleSheet.create({
   container: {
     height: menuHeaderHeight,
     alignItems: "center",
+  },
+  contentContainer: {
+    flex: 1,
+    paddingHorizontal: 20,
   },
   headerTitle: {
     fontSize: 26,

@@ -12,11 +12,11 @@
       "white": "#FFFFFF"
     },
     "levels": [
-      { "layout": "ooBBoooooDooAAoDoooooooooCCCoooooooo", "minimumMove": 30 },
-      { "layout": "oBBBoooooDooAAoDoooooxoooooooooooooo", "minimumMove": 30 },
-      { "layout": "BBBoooooDoooAADoooooxooooooooooooooo", "minimumMove": 30 },
-      { "layout": "oooooooBBBooAAoDoooooDoooooxoooooooo", "minimumMove": 30 },
-      { "layout": "ooooooBBBoooAADoooooDoooooxooooooooo", "minimumMove": 30 },
+      { "layout": "ooBBoooooDooAAoDoooooooooCCCoooooooo", "minimumMove": 3 },
+      { "layout": "oBBBoooooDooAAoDoooooxoooooooooooooo", "minimumMove": 3 },
+      { "layout": "BBBoooooDoooAADoooooxooooooooooooooo", "minimumMove": 3 },
+      { "layout": "oooooooBBBooAAoDoooooDoooooxoooooooo", "minimumMove": 3 },
+      { "layout": "ooooooBBBoooAADoooooDoooooxooooooooo", "minimumMove": 3 },
       { "layout": "oxCCMoDDDKMoAAJKooooJLEEIFFLoNIGGoxN", "minimumMove": 30 },
       { "layout": "oIooLMoIBBLMAAJKooCCJKooxEEEoxGGHHoo", "minimumMove": 30 },
       { "layout": "oIooLMoIBBLMAAJKooCCJKooxEEEoxGGHHoo", "minimumMove": 30 },

@@ -14,12 +14,16 @@ import PaginationIndicator from "../components/PaginationIndicator";
 import { windowHeight, windowWidth } from "../constants/dimension";
 import data from "../data/levels.json";
 import { Orientation } from "../enums/orientation.enum";
+import { StorageKey } from "../enums/storageKey.enum";
 import { useDificultyStore } from "../store/dificulty.store";
+import { useLevelStore } from "../store/level.store";
 import { darken } from "../utils/color";
+import { getStorageString } from "../utils/storage";
 
 const AnimatedFlashList = Animated.createAnimatedComponent(FlashList);
 
 export default function Menu() {
+  const setScores = useLevelStore((value) => value.setScores);
   const setDificultyColors = useDificultyStore((value) => value.setColors);
 
   const [activeViewIndex, setActiveViewIndex] = useState(0);
@@ -29,6 +33,12 @@ export default function Menu() {
   const listRef = useRef<FlashListRef<any>>(null);
 
   const scrollRange = data.map((_, i) => i * windowHeight);
+
+  const savedLevelScores = getStorageString(StorageKey.LEVEL_SCORE);
+
+  if (savedLevelScores) {
+    setScores(JSON.parse(savedLevelScores));
+  }
 
   const startColorRange = data.map(
     (_, i) =>
@@ -41,6 +51,14 @@ export default function Menu() {
       darken(data[i].colors.primary, 0.34) ??
       darken(data[data.length - 1].colors.primary, 0.34)
   );
+
+  // const refresh = useLevelStore((state) => state.refresh);
+
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     refresh();
+  //   }, [refresh])
+  // );
 
   const setActiveIndex = (y: number) => {
     const id = Math.round(y / windowHeight);

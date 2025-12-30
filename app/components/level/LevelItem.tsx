@@ -41,7 +41,8 @@ const LevelItem = memo(({ levels, difficultyIndex }: Props): JSX.Element => {
       {levels.map((level: Level, index: number) => (
         <LevelViewer
           key={index}
-          index={String(level.index + 1)}
+          level={level.index}
+          difficulty={difficultyIndex}
           locked={difficultyIndex > 0}
           layout={level.layout}
           colors={levelsData[difficultyIndex].colors}
