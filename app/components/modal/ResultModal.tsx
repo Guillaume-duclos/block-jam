@@ -229,7 +229,7 @@ const styles = StyleSheet.create({
   },
   score: {
     fontSize: 24,
-    fontWeight: 700,
+    fontWeight: 800,
     fontFamily: "Rubik",
     textAlign: "center",
     color: darken("#D6F5BC", 0.3),
@@ -245,7 +245,7 @@ const styles = StyleSheet.create({
   submitButtonLabel: {
     fontSize: 18,
     textTransform: "uppercase",
-    fontWeight: 600,
+    fontWeight: 800,
     fontFamily: "Rubik",
     color: darken("#D6F5BC", 0.3),
     textAlign: "center",

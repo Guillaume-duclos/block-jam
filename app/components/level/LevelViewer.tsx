@@ -11,7 +11,7 @@ import {
   Text,
   vec,
 } from "@shopify/react-native-skia";
-import React, { JSX, memo, useEffect, useMemo, useState } from "react";
+import React, { JSX, memo, useEffect, useMemo, useRef, useState } from "react";
 import { StyleSheet, View, ViewStyle } from "react-native";
 import {
   Gesture,
@@ -65,7 +65,9 @@ const LevelViewer = memo(
     );
 
     const [vehiclePositions, setVehiclePositions] = useState<BlockData[]>([]);
-    const [yNumber, setYNumber] = useState(0);
+    const [yNumber, setYNumber] = useState<number>(0);
+
+    const isFirstRender = useRef<boolean>(true);
 
     useEffect((): void => {
       computeBlockPositions();
@@ -199,27 +201,6 @@ const LevelViewer = memo(
       return result;
     }, [score]);
 
-    const panGesture: TapGesture = Gesture.Tap()
-      .maxDuration(Number.MAX_SAFE_INTEGER)
-      .onBegin(() => {
-        translateY.value = withTiming(3, { duration: 80 });
-      })
-      .onEnd(() => {
-        translateY.value = withTiming(0, { duration: 80 });
-        onPress();
-      })
-      .onTouchesCancelled(() => {
-        translateY.value = withTiming(0, { duration: 80 });
-      })
-      .runOnJS(true);
-
-    useAnimatedReaction(
-      () => translateY.value,
-      (val) => {
-        runOnJS(setYNumber)(val);
-      }
-    );
-
     // Rend les véhicules et les blocs
     const blocks = useMemo(() => {
       return vehiclePositions.flatMap(
@@ -326,6 +307,27 @@ const LevelViewer = memo(
         }
       );
     }, [vehiclePositions]);
+
+    const panGesture: TapGesture = Gesture.Tap()
+      .maxDuration(Number.MAX_SAFE_INTEGER)
+      .onBegin(() => {
+        translateY.value = withTiming(3, { duration: 80 });
+      })
+      .onEnd(() => {
+        translateY.value = withTiming(0, { duration: 80 });
+        onPress();
+      })
+      .onTouchesCancelled(() => {
+        translateY.value = withTiming(0, { duration: 80 });
+      })
+      .runOnJS(true);
+
+    useAnimatedReaction(
+      () => translateY.value,
+      (value) => {
+        runOnJS(setYNumber)(value);
+      }
+    );
 
     const fontStyle = {
       fontSize: 12,
