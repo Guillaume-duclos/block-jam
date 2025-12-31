@@ -75,7 +75,8 @@ const PlayGround = (): JSX.Element => {
           ref={levelPlaygroundRef}
           level={levelsList[activeLevelIndex]}
           levelIndex={activeLevelIndex}
-          difficulty={difficulty}
+          difficultyIndex={difficulty}
+          navigateToNextLevel={navigateToSelectedLevel}
         />
 
         {/* BUTTONS CONTROLS */}

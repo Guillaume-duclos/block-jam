@@ -10,7 +10,7 @@ import { darken } from "../../utils/color";
 import Button from "../button/Button";
 import NextLevelButton from "../button/NextLevelButton";
 import PreviousLevelButton from "../button/PreviousLevelButton";
-import ModalValidation from "../modal/ModalValidation";
+import ModalValidation from "../modal/ValidationModal";
 import { LevelPlaygroundRef } from "./LevelPlayground";
 
 type Props = {

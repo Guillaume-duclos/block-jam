@@ -52,14 +52,6 @@ export default function Menu() {
       darken(data[data.length - 1].colors.primary, 0.34)
   );
 
-  // const refresh = useLevelStore((state) => state.refresh);
-
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     refresh();
-  //   }, [refresh])
-  // );
-
   const setActiveIndex = (y: number) => {
     const id = Math.round(y / windowHeight);
     const clamped = Math.max(0, Math.min(id, data.length - 1));

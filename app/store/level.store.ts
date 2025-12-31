@@ -11,7 +11,8 @@ type State = {
   incrementCount: () => void;
   setIsUndoEnabled: (value: boolean) => void;
   setIsResetEnabled: (value: boolean) => void;
-  setScores: (value: Score) => void;
+  setScores: (value: Score[]) => void;
+  resetScores: () => void;
   refresh: () => void;
   resetLevelData: () => void;
 };
@@ -40,6 +41,8 @@ export const useLevelStore = create<State>((set, get) => ({
   setIsResetEnabled: (value) => set({ isResetEnabled: value }),
 
   setScores: (value) => set({ scores: value }),
+
+  resetScores: () => set({ scores: [] }),
 
   refresh: () => set((state) => ({ scores: [...state.scores] })),
 

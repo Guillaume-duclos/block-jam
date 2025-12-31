@@ -8,13 +8,14 @@ import Checkmark from "../assets/icons/Checkmark";
 import Button from "../components/button/Button";
 import NavigationLink from "../components/button/NavigationLink";
 import ScreenHeader from "../components/header/ScreenHeader";
-import ModalValidation from "../components/modal/ModalValidation";
+import ModalValidation from "../components/modal/ValidationModal";
 import SectionContainer from "../components/SectionContainer";
 import SwitchRow from "../components/switch/SwitchRow";
 import { languages } from "../constants/languages";
 import { Language } from "../enums/language.enum";
 import { Screen } from "../enums/screen.enum";
 import { StorageKey } from "../enums/storageKey.enum";
+import { useLevelStore } from "../store/level.store";
 import { text } from "../theme/text";
 import NavigationProps from "../types/navigation.type";
 import {
@@ -31,6 +32,8 @@ export default function Settings(): JSX.Element {
   const { t, i18n } = useTranslation();
 
   const insets = useSafeAreaInsets();
+
+  const resetScores = useLevelStore((value) => value.resetScores);
 
   const savedLanguage = getStorageString(StorageKey.LANGUAGE) || Language.EN;
   const savedHaptic = getStorageBoolean(StorageKey.ALLOW_DRAG_HAPTIC_FEEDBACK);
@@ -116,6 +119,7 @@ export default function Settings(): JSX.Element {
 
   const removeScoreData = (): void => {
     removeStorageItem(StorageKey.LEVEL_SCORE);
+    resetScores();
   };
 
   const removeAllData = (): void => {

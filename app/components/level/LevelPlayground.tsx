@@ -14,6 +14,7 @@ import { StyleSheet, View, ViewStyle } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { playgroundSize } from "../../constants/dimension";
 import { BlockType } from "../../enums/blockType.enum";
+import LevelNavigationType from "../../enums/levelNavigationType.enum";
 import { Orientation } from "../../enums/orientation.enum";
 import { StorageKey } from "../../enums/storageKey.enum";
 import useGrid from "../../hooks/useGrid.hook";
@@ -33,13 +34,14 @@ import {
 import FixedBlock from "../block/FixedBlock";
 import MovableBlock from "../block/MovableBlock";
 import Grid from "../Grid";
-import ModalResult from "../modal/ModalResult";
+import ModalResult from "../modal/ResultModal";
 
 type Props = {
   ref: RefObject<LevelPlaygroundRef | null>;
   level: Partial<Level>;
   levelIndex: number;
-  difficulty: number;
+  difficultyIndex: number;
+  navigateToNextLevel: (levelNavigationType: LevelNavigationType) => void;
   style?: ViewStyle;
 };
 
@@ -53,7 +55,8 @@ const LevelPlayground = memo(
     ref,
     level,
     levelIndex,
-    difficulty,
+    difficultyIndex,
+    navigateToNextLevel,
     style,
   }: Props): JSX.Element | undefined => {
     console.log("LevelPlayground", Date.now());
@@ -63,13 +66,14 @@ const LevelPlayground = memo(
     const mainColor = dificultyTheme?.primary!;
     const frameColor = dificultyTheme?.frame!;
 
+    const setScores = useLevelStore((value) => value.setScores);
     const incrementCount = useLevelStore((value) => value.incrementCount);
     const resetLevelData = useLevelStore((value) => value.resetLevelData);
     const setIsResetEnabled = useLevelStore((value) => value.setIsResetEnabled);
     const setIsUndoEnabled = useLevelStore((value) => value.setIsUndoEnabled);
 
     const [hapticEnable, setHapticEnable] = useState<boolean>(false);
-    const [showResultModal, setShowResultModal] = useState<boolean>(false);
+    const [resultModal, setResultModal] = useState<number | undefined>();
     const [vehiclePositions, setVehiclePositions] = useState<ElementData[]>([]);
 
     const historic = useRef<HistoryPosition[]>([]);
@@ -336,16 +340,18 @@ const LevelPlayground = memo(
       const ratio = level.minimumMove! / count;
 
       const newLevelScore: Score = {
-        difficulty,
+        difficulty: difficultyIndex,
         level: levelIndex,
         count: count,
         score: ratio,
       };
 
       // Vérifie si le score existe déjà (même difficulté et niveau)
-      const existingIndex = levelScores.findIndex(
-        (score) => score.difficulty === difficulty && score.level === levelIndex
-      );
+      const existingIndex = levelScores.findIndex((score) => {
+        return (
+          score.difficulty === difficultyIndex && score.level === levelIndex
+        );
+      });
 
       if (existingIndex !== -1) {
         const previousScore = levelScores[existingIndex].score;
@@ -353,20 +359,29 @@ const LevelPlayground = memo(
         if (previousScore < ratio) {
           levelScores[existingIndex] = newLevelScore;
         } else {
-          setShowResultModal(true);
+          setResultModal(newLevelScore.score);
           return;
         }
       } else {
         levelScores.push(newLevelScore);
       }
 
+      setScores(levelScores);
       setStorageObject(StorageKey.LEVEL_SCORE, levelScores);
-      setShowResultModal(true);
+      setResultModal(newLevelScore.score);
     };
 
-    // Cache la modale du score
-    const hideResultModal = (): void => {
-      setShowResultModal(false);
+    // Rejoue le niveau
+    const replay = (): void => {
+      ref.current?.reset();
+      setResultModal(undefined);
+    };
+
+    // Affiche le niveau suivant
+    const nextLevel = (): void => {
+      ref.current?.reset();
+      setResultModal(undefined);
+      navigateToNextLevel(LevelNavigationType.NEXT);
     };
 
     // Rend les blocs
@@ -440,9 +455,9 @@ const LevelPlayground = memo(
 
         {/* MODAL */}
         <ModalResult
-          isOpen={showResultModal}
-          onCancel={hideResultModal}
-          onConfirm={hideResultModal}
+          score={resultModal}
+          replay={replay}
+          nextLevel={nextLevel}
         />
       </Fragment>
     );

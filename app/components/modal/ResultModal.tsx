@@ -1,5 +1,5 @@
 import { BlurView } from "expo-blur";
-import React, { Fragment, JSX, useEffect } from "react";
+import React, { Fragment, JSX, useEffect, useMemo } from "react";
 import { StyleSheet, Text, View, ViewStyle } from "react-native";
 import Animated, {
   useAnimatedProps,
@@ -11,27 +11,28 @@ import Animated, {
 } from "react-native-reanimated";
 import { SpringConfig } from "react-native-reanimated/lib/typescript/animation/spring";
 import { runOnJS } from "react-native-worklets";
+import Star from "../../assets/icons/Star";
+import StarFill from "../../assets/icons/StarFill";
+import StarSemiFill from "../../assets/icons/StarSemiFill";
+import { ResultModalAction } from "../../enums/resultModalAction.enum";
 import { darken } from "../../utils/color";
+import { formatScore } from "../../utils/format";
 import Button from "../button/Button";
 
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
 const AnimatedButton = Animated.createAnimatedComponent(Button);
 
 type Props = {
-  isOpen: boolean;
-  title: string;
-  description: string;
-  onCancel: () => void;
-  onConfirm: () => void;
+  score: number | undefined;
+  replay: () => void;
+  nextLevel: () => void;
   style?: ViewStyle;
 };
 
-export default function ModalValidation({
-  isOpen,
-  title,
-  description,
-  onConfirm,
-  onCancel,
+export default function ResultModal({
+  score,
+  replay,
+  nextLevel,
   style,
 }: Props): JSX.Element {
   const blur = useSharedValue(0);
@@ -49,11 +50,11 @@ export default function ModalValidation({
   };
 
   useEffect(() => {
-    if (isOpen) {
+    if (score) {
       animateBlur();
       animateScale();
     }
-  }, [isOpen]);
+  }, [score]);
 
   const animatedBlurProps = useAnimatedProps(() => ({
     intensity: Math.round(blur.value),
@@ -86,63 +87,89 @@ export default function ModalValidation({
     confirmButtonOpacity.value = withDelay(130, withSpring(1, animationConfig));
   };
 
-  const onDecline = (): void => {
-    resetAnimatedValues();
+  const onReplay = (): void => {
+    resetAnimatedValues(ResultModalAction.REPLAY);
   };
 
-  const onCanfirm = (): void => {
-    resetAnimatedValues();
-    onConfirm();
+  const onNextLevel = (): void => {
+    resetAnimatedValues(ResultModalAction.NEXT_LEVEL);
   };
 
-  const resetAnimatedValues = (): void => {
+  const resetAnimatedValues = (action: ResultModalAction): void => {
     blur.value = withTiming(0, { duration: 200 });
     modalScale.value = withTiming(0.95, { duration: 200 });
     cancelButtonScale.value = withTiming(0.95, { duration: 200 });
     confirmButtonScale.value = withTiming(0.95, { duration: 200 });
     cancelButtonOpacity.value = withTiming(0, { duration: 200 });
     confirmButtonOpacity.value = withTiming(0, { duration: 200 }, () => {
-      runOnJS(onCancel)();
+      runOnJS(action === ResultModalAction.REPLAY ? replay : nextLevel)();
     });
   };
 
+  const stars = useMemo(() => {
+    const clamped = Math.max(0, Math.min(1, score ?? 0));
+
+    let units = Math.round(clamped * 6);
+
+    const result = [];
+
+    for (let i = 0; i < 3; i++) {
+      if (units >= 2) {
+        result.push(<StarFill key={i} color="#e5be74" style={styles.star} />);
+        units -= 2;
+      } else if (units === 1) {
+        result.push(
+          <StarSemiFill key={i} color="#e5be74" style={styles.star} />
+        );
+        units -= 1;
+      } else {
+        result.push(<Star key={i} color="#474746ff" style={styles.star} />);
+      }
+    }
+
+    return result;
+  }, [score]);
+
   return (
     <Fragment>
-      {isOpen && (
+      {score && (
         <AnimatedBlurView
           tint="systemThinMaterialDark"
           animatedProps={animatedBlurProps}
-          pointerEvents={isOpen ? "auto" : "none"}
+          pointerEvents={score ? "auto" : "none"}
           style={{ ...styles.container, ...style }}
         >
           <View style={styles.contentContainer}>
             <Animated.View style={animatedModalStyle}>
               <View style={styles.modalBottomBorder} />
               <View style={styles.modal}>
-                <Text style={styles.title}>{title}</Text>
-                <Text style={styles.description}>{description}</Text>
+                <Text style={styles.title}>Level completed</Text>
+                <View style={styles.starsContainer}>{stars}</View>
+                <Text style={styles.score}>
+                  Score : {formatScore((score * 1000).toFixed(0))}
+                </Text>
               </View>
             </Animated.View>
 
             <View style={styles.submitButtonsContainer}>
               <AnimatedButton
-                onPress={onDecline}
+                onPress={onReplay}
                 style={[styles.submitButton, animatedCancelButtonStyle]}
                 shadowStyle={{ boxShadow: "0 0 14px 0 #878787" }}
-                color="#EE7474"
+                color="#ECECEC"
                 deep={10}
               >
-                <Text style={styles.submitButtonLabel}>Annuler</Text>
+                <Text style={styles.submitButtonLabel}>Rejouer</Text>
               </AnimatedButton>
 
               <AnimatedButton
-                onPress={onCanfirm}
+                onPress={onNextLevel}
                 style={[styles.submitButton, animatedConfirmButtonStyle]}
                 shadowStyle={{ boxShadow: "0 0 14px 0 #878787" }}
-                color={darken("#D6F5BC")}
+                color="#ECECEC"
                 deep={10}
               >
-                <Text style={styles.submitButtonLabel}>Confirmer</Text>
+                <Text style={styles.submitButtonLabel}>Suivant</Text>
               </AnimatedButton>
             </View>
           </View>
@@ -168,9 +195,9 @@ const styles = StyleSheet.create({
   modal: {
     gap: 22,
     borderRadius: 16,
-    paddingVertical: 34,
+    paddingVertical: 24,
     paddingHorizontal: 30,
-    backgroundColor: darken("#D6F5BC"),
+    backgroundColor: "#ECECEC",
   },
   modalBottomBorder: {
     left: 0,
@@ -179,25 +206,33 @@ const styles = StyleSheet.create({
     height: "50%",
     position: "absolute",
     borderCurve: "continuous",
-    backgroundColor: darken("#D6F5BC", 0.35),
+    backgroundColor: darken("#ECECEC", 0.15),
     borderBottomLeftRadius: 16,
     borderBottomRightRadius: 16,
     boxShadow: "0 0 14px 0 #878787",
   },
   title: {
-    fontSize: 26,
+    fontSize: 34,
+    fontWeight: 800,
+    fontFamily: "Rubik",
+    textAlign: "center",
+    color: darken("#D6F5BC", 0.3),
+  },
+  starsContainer: {
+    gap: 20,
+    justifyContent: "center",
+    flexDirection: "row",
+  },
+  star: {
+    width: 46,
+    height: 46,
+  },
+  score: {
+    fontSize: 24,
     fontWeight: 700,
     fontFamily: "Rubik",
     textAlign: "center",
-    color: "#FFFFFF",
-  },
-  description: {
-    fontSize: 16,
-    fontWeight: 500,
-    fontFamily: "Rubik",
-    textAlign: "center",
-    lineHeight: 22,
-    color: "#FFFFFF",
+    color: darken("#D6F5BC", 0.3),
   },
   submitButtonsContainer: {
     gap: 10,
@@ -212,6 +247,7 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
     fontWeight: 600,
     fontFamily: "Rubik",
-    color: "#FFFFFF",
+    color: darken("#D6F5BC", 0.3),
+    textAlign: "center",
   },
 });

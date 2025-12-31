@@ -8,7 +8,7 @@ import { useDificultyStore } from "../../store/dificulty.store";
 import { useLevelStore } from "../../store/level.store";
 import NavigationProp from "../../types/navigation.type";
 import PressableView from "../button/PressableView";
-import ModalValidation from "../modal/ModalValidation";
+import ModalValidation from "../modal/ValidationModal";
 
 type Props = {
   difficulty: number;
