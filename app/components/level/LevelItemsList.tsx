@@ -112,8 +112,9 @@ const LevelItemsList = memo(({ level }: Props): JSX.Element => {
         horizontal
         pagingEnabled
         data={data}
-        maxItemsInRecyclePool={3}
+        maxItemsInRecyclePool={8}
         viewabilityConfig={levelItemsConfig}
+        initialScrollIndex={activeViewIndex}
         showsHorizontalScrollIndicator={false}
         onViewableItemsChanged={viewableItemsChanged}
         renderItem={({ item }) => (

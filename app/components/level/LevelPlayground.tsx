@@ -59,7 +59,7 @@ const LevelPlayground = memo(
     navigateToNextLevel,
     style,
   }: Props): JSX.Element | undefined => {
-    console.log("LevelPlayground", Date.now());
+    // console.log("LevelPlayground", Date.now());
 
     const grid: number[] = useGrid();
     const dificultyTheme = useDificultyStore((value) => value.colors);

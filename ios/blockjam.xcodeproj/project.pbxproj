@@ -7,26 +7,34 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0EB66F0155524000FE6D51A6 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = E13805074B4E7D9D4D6001C0 /* ExpoModulesProvider.swift */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
+		184E35E6B75A41A2AD8D9469 /* GoogleSansCodeVariable.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C9121E84FC614A94B7E24203 /* GoogleSansCodeVariable.ttf */; };
+		1FBAE6BCBD24138151AD1E1D /* libPods-blockjam.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CFAD9474A3E0660FB5493D8 /* libPods-blockjam.a */; };
 		3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */; };
+		502EC573CCC75BFC375601D8 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4E0914DC0D330F092C7037C /* ExpoModulesProvider.swift */; };
+		97340DC92B724AE0872D6B20 /* RubikItalicVariable.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1C66EECA28F04CF9AD3EEDD3 /* RubikItalicVariable.ttf */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
-		C21E9B8B6838A7D6AE661EB3 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = E0B16E3954F4C16840CF757F /* PrivacyInfo.xcprivacy */; };
-		E6D4616485565536D374CDE5 /* libPods-blockjam.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C2B646C8F924F6821865CB37 /* libPods-blockjam.a */; };
+		C8B7E7D056A4877787654631 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 1DC9E2A4FBB29E89B7B86EFD /* PrivacyInfo.xcprivacy */; };
+		F015037DE5E54FBBB05911CA /* GoogleSansCodeItalicVariable.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 60A4C3AE700D4D9F8CFFBBD1 /* GoogleSansCodeItalicVariable.ttf */; };
 		F11748422D0307B40044C1D9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F11748412D0307B40044C1D9 /* AppDelegate.swift */; };
+		F88BD41C11494AFCB230E1B1 /* RubikVariable.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 73757568BCAE4C9491744947 /* RubikVariable.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0BFCF19B135FAEB5F81A746B /* Pods-blockjam.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-blockjam.debug.xcconfig"; path = "Target Support Files/Pods-blockjam/Pods-blockjam.debug.xcconfig"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* blockjam.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = blockjam.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = blockjam/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = blockjam/Info.plist; sourceTree = "<group>"; };
-		7FB859975A1158D172B8C5D9 /* Pods-blockjam.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-blockjam.release.xcconfig"; path = "Target Support Files/Pods-blockjam/Pods-blockjam.release.xcconfig"; sourceTree = "<group>"; };
+		1C66EECA28F04CF9AD3EEDD3 /* RubikItalicVariable.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = RubikItalicVariable.ttf; path = ../app/assets/fonts/Rubik/RubikItalicVariable.ttf; sourceTree = "<group>"; };
+		1DC9E2A4FBB29E89B7B86EFD /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = blockjam/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		4CFAD9474A3E0660FB5493D8 /* libPods-blockjam.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-blockjam.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		60A4C3AE700D4D9F8CFFBBD1 /* GoogleSansCodeItalicVariable.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = GoogleSansCodeItalicVariable.ttf; path = ../app/assets/fonts/GoogleSansCode/GoogleSansCodeItalicVariable.ttf; sourceTree = "<group>"; };
+		73757568BCAE4C9491744947 /* RubikVariable.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = RubikVariable.ttf; path = ../app/assets/fonts/Rubik/RubikVariable.ttf; sourceTree = "<group>"; };
+		9094EE62866FAF68A825BF36 /* Pods-blockjam.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-blockjam.release.xcconfig"; path = "Target Support Files/Pods-blockjam/Pods-blockjam.release.xcconfig"; sourceTree = "<group>"; };
 		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = blockjam/SplashScreen.storyboard; sourceTree = "<group>"; };
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
-		C2B646C8F924F6821865CB37 /* libPods-blockjam.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-blockjam.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		E0B16E3954F4C16840CF757F /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = blockjam/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
-		E13805074B4E7D9D4D6001C0 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-blockjam/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
-		E810E1BF97C8513F78DEEF3D /* Pods-blockjam.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-blockjam.debug.xcconfig"; path = "Target Support Files/Pods-blockjam/Pods-blockjam.debug.xcconfig"; sourceTree = "<group>"; };
+		C4E0914DC0D330F092C7037C /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-blockjam/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
+		C9121E84FC614A94B7E24203 /* GoogleSansCodeVariable.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = GoogleSansCodeVariable.ttf; path = ../app/assets/fonts/GoogleSansCode/GoogleSansCodeVariable.ttf; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		F11748412D0307B40044C1D9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = blockjam/AppDelegate.swift; sourceTree = "<group>"; };
 		F11748442D0722820044C1D9 /* blockjam-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "blockjam-Bridging-Header.h"; path = "blockjam/blockjam-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -37,7 +45,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E6D4616485565536D374CDE5 /* libPods-blockjam.a in Frameworks */,
+				1FBAE6BCBD24138151AD1E1D /* libPods-blockjam.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -53,27 +61,35 @@
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */,
-				E0B16E3954F4C16840CF757F /* PrivacyInfo.xcprivacy */,
+				1DC9E2A4FBB29E89B7B86EFD /* PrivacyInfo.xcprivacy */,
 			);
 			name = blockjam;
+			sourceTree = "<group>";
+		};
+		2B41839E04079EE408EE747E /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				0BFCF19B135FAEB5F81A746B /* Pods-blockjam.debug.xcconfig */,
+				9094EE62866FAF68A825BF36 /* Pods-blockjam.release.xcconfig */,
+			);
+			path = Pods;
 			sourceTree = "<group>";
 		};
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				C2B646C8F924F6821865CB37 /* libPods-blockjam.a */,
+				4CFAD9474A3E0660FB5493D8 /* libPods-blockjam.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		64227D50CEF0523D53352969 /* Pods */ = {
+		3EFA405E0BAC45DC90C98032 /* ExpoModulesProviders */ = {
 			isa = PBXGroup;
 			children = (
-				E810E1BF97C8513F78DEEF3D /* Pods-blockjam.debug.xcconfig */,
-				7FB859975A1158D172B8C5D9 /* Pods-blockjam.release.xcconfig */,
+				D29BF42655E4039EF6B868BA /* blockjam */,
 			);
-			path = Pods;
+			name = ExpoModulesProviders;
 			sourceTree = "<group>";
 		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
@@ -83,14 +99,6 @@
 			name = Libraries;
 			sourceTree = "<group>";
 		};
-		83801FA5E547BCFC2ED04A5F /* blockjam */ = {
-			isa = PBXGroup;
-			children = (
-				E13805074B4E7D9D4D6001C0 /* ExpoModulesProvider.swift */,
-			);
-			name = blockjam;
-			sourceTree = "<group>";
-		};
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
@@ -98,8 +106,9 @@
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
-				64227D50CEF0523D53352969 /* Pods */,
-				A5F951CFB883C5DBAC8E1B87 /* ExpoModulesProviders */,
+				8C5BD0D6AB8F4AF6B5CE03C1 /* Resources */,
+				2B41839E04079EE408EE747E /* Pods */,
+				3EFA405E0BAC45DC90C98032 /* ExpoModulesProviders */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -114,12 +123,15 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		A5F951CFB883C5DBAC8E1B87 /* ExpoModulesProviders */ = {
+		8C5BD0D6AB8F4AF6B5CE03C1 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				83801FA5E547BCFC2ED04A5F /* blockjam */,
+				1C66EECA28F04CF9AD3EEDD3 /* RubikItalicVariable.ttf */,
+				73757568BCAE4C9491744947 /* RubikVariable.ttf */,
+				C9121E84FC614A94B7E24203 /* GoogleSansCodeVariable.ttf */,
+				60A4C3AE700D4D9F8CFFBBD1 /* GoogleSansCodeItalicVariable.ttf */,
 			);
-			name = ExpoModulesProviders;
+			name = Resources;
 			sourceTree = "<group>";
 		};
 		BB2F792B24A3F905000567C9 /* Supporting */ = {
@@ -131,6 +143,14 @@
 			path = blockjam/Supporting;
 			sourceTree = "<group>";
 		};
+		D29BF42655E4039EF6B868BA /* blockjam */ = {
+			isa = PBXGroup;
+			children = (
+				C4E0914DC0D330F092C7037C /* ExpoModulesProvider.swift */,
+			);
+			name = blockjam;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -139,13 +159,13 @@
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "blockjam" */;
 			buildPhases = (
 				08A4A3CD28434E44B6B9DE2E /* [CP] Check Pods Manifest.lock */,
-				69B087A8935EC87BBEC06ED8 /* [Expo] Configure project */,
+				CCD3C90862F9EFC1FE9B702A /* [Expo] Configure project */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				800E24972A6A228C8D4807E9 /* [CP] Copy Pods Resources */,
-				171CAA0727E37BEB9158B5D3 /* [CP] Embed Pods Frameworks */,
+				C9C852948C58255A6364DAC6 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -195,7 +215,11 @@
 				BB2F792D24A3F905000567C9 /* Expo.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */,
-				C21E9B8B6838A7D6AE661EB3 /* PrivacyInfo.xcprivacy in Resources */,
+				97340DC92B724AE0872D6B20 /* RubikItalicVariable.ttf in Resources */,
+				F88BD41C11494AFCB230E1B1 /* RubikVariable.ttf in Resources */,
+				184E35E6B75A41A2AD8D9469 /* GoogleSansCodeVariable.ttf in Resources */,
+				F015037DE5E54FBBB05911CA /* GoogleSansCodeItalicVariable.ttf in Resources */,
+				C8B7E7D056A4877787654631 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -239,43 +263,6 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		171CAA0727E37BEB9158B5D3 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-blockjam/Pods-blockjam-frameworks.sh",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/hermes-engine/Pre-built/hermes.framework/hermes",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/hermes.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-blockjam/Pods-blockjam-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		69B087A8935EC87BBEC06ED8 /* [Expo] Configure project */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "[Expo] Configure project";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# This script configures Expo modules and generates the modules provider file.\nbash -l -c \"./Pods/Target\\ Support\\ Files/Pods-blockjam/expo-configure-project.sh\"\n";
-		};
 		800E24972A6A228C8D4807E9 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -314,6 +301,43 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-blockjam/Pods-blockjam-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		C9C852948C58255A6364DAC6 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-blockjam/Pods-blockjam-frameworks.sh",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/hermes-engine/Pre-built/hermes.framework/hermes",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/hermes.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-blockjam/Pods-blockjam-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		CCD3C90862F9EFC1FE9B702A /* [Expo] Configure project */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "[Expo] Configure project";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# This script configures Expo modules and generates the modules provider file.\nbash -l -c \"./Pods/Target\\ Support\\ Files/Pods-blockjam/expo-configure-project.sh\"\n";
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -322,7 +346,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F11748422D0307B40044C1D9 /* AppDelegate.swift in Sources */,
-				0EB66F0155524000FE6D51A6 /* ExpoModulesProvider.swift in Sources */,
+				502EC573CCC75BFC375601D8 /* ExpoModulesProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -331,7 +355,7 @@
 /* Begin XCBuildConfiguration section */
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E810E1BF97C8513F78DEEF3D /* Pods-blockjam.debug.xcconfig */;
+			baseConfigurationReference = 0BFCF19B135FAEB5F81A746B /* Pods-blockjam.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -368,7 +392,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7FB859975A1158D172B8C5D9 /* Pods-blockjam.release.xcconfig */;
+			baseConfigurationReference = 9094EE62866FAF68A825BF36 /* Pods-blockjam.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -452,10 +476,7 @@
 				LIBRARY_SEARCH_PATHS = "$(SDKROOT)/usr/lib/swift\"$(inherited)\"";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEBUG";
@@ -510,10 +531,7 @@
 				);
 				LIBRARY_SEARCH_PATHS = "$(SDKROOT)/usr/lib/swift\"$(inherited)\"";
 				MTL_ENABLE_DEBUG_INFO = NO;
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;

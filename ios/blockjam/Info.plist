@@ -44,6 +44,13 @@
       <key>NSAllowsLocalNetworking</key>
       <true/>
     </dict>
+    <key>UIAppFonts</key>
+    <array>
+      <string>RubikItalicVariable.ttf</string>
+      <string>RubikVariable.ttf</string>
+      <string>GoogleSansCodeVariable.ttf</string>
+      <string>GoogleSansCodeItalicVariable.ttf</string>
+    </array>
     <key>UILaunchStoryboardName</key>
     <string>SplashScreen</string>
     <key>UIRequiredDeviceCapabilities</key>

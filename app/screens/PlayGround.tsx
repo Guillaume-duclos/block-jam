@@ -19,7 +19,7 @@ import { darken } from "../utils/color";
 type playGroundRouteProp = RouteProp<RootStackParamList, Screen.PLAYGROUND>;
 
 const PlayGround = (): JSX.Element => {
-  console.log("PlayGround");
+  // console.log("PlayGround");
 
   const insets = useSafeAreaInsets();
   const route = useRoute<playGroundRouteProp>();
