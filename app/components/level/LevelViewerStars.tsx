@@ -1,4 +1,3 @@
-import { useIsFocused } from "@react-navigation/native";
 import {
   Canvas,
   Group,
@@ -9,13 +8,12 @@ import {
 import React, { JSX, memo, useEffect, useMemo, useRef } from "react";
 import { StyleSheet } from "react-native";
 import { useSharedValue, withDelay, withSpring } from "react-native-reanimated";
-import { useLevelStore } from "../../store/level.store";
 import DificultyColors from "../../types/dificultyColors.type";
 import LevelViewerAnimatedStar from "./LevelViewerAnimatedStar";
 
 type Props = {
-  level: number;
-  difficulty: number;
+  score: number | undefined;
+  isFocused: boolean;
   colors: DificultyColors;
 };
 
@@ -26,18 +24,12 @@ const SPRING_CONFIG = {
 };
 
 const LevelViewerStars = memo(
-  ({ level, difficulty, colors }: Props): JSX.Element => {
-    const isFocused = useIsFocused();
-
+  ({ score, isFocused, colors }: Props): JSX.Element => {
     const progressValues = [
       useSharedValue(1),
       useSharedValue(1),
       useSharedValue(1),
     ];
-
-    const score = useLevelStore(
-      (state) => state.getScore(difficulty, level)?.score
-    );
 
     const prevScoreRef = useRef(score);
 

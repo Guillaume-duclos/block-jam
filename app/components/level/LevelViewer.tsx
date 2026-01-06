@@ -1,3 +1,4 @@
+import { useIsFocused } from "@react-navigation/native";
 import {
   BlurMask,
   Canvas,
@@ -24,6 +25,7 @@ import { runOnJS } from "react-native-worklets";
 import { gridCount } from "../../config/config";
 import { BlockType } from "../../enums/blockType.enum";
 import { Orientation } from "../../enums/orientation.enum";
+import { useLevelStore } from "../../store/level.store";
 import DificultyColors from "../../types/dificultyColors.type";
 import { darken } from "../../utils/color";
 import LevelViewerIndicator from "./LevelViewerIndicator";
@@ -55,7 +57,13 @@ const LevelViewer = memo(
     onPress,
     style,
   }: Props): JSX.Element => {
+    const isFocused = useIsFocused();
+
     const translateY = useSharedValue(0);
+
+    const score = useLevelStore(
+      (state) => state.getScore(difficulty, level)?.score
+    );
 
     const [vehiclePositions, setVehiclePositions] = useState<BlockData[]>([]);
     const [yNumber, setYNumber] = useState<number>(0);
@@ -339,17 +347,18 @@ const LevelViewer = memo(
               </RoundedRect>
 
               {/* NUMÉRO DU NIVEAU */}
-              <LevelViewerIndicator level={level} colors={colors} />
+              <LevelViewerIndicator
+                level={level}
+                score={score}
+                isFocused={isFocused}
+                colors={colors}
+              />
             </Group>
           </Canvas>
         </GestureDetector>
 
         {/* SCORE DU NIVEAU */}
-        <LevelViewerStars
-          level={level}
-          difficulty={difficulty}
-          colors={colors}
-        />
+        <LevelViewerStars score={score} isFocused={isFocused} colors={colors} />
       </View>
     );
   }
