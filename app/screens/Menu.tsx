@@ -108,7 +108,8 @@ export default function Menu() {
         data={data}
         pagingEnabled
         style={styles.list}
-        maxItemsInRecyclePool={6}
+        maxItemsInRecyclePool={3}
+        drawDistance={windowHeight * 2}
         viewabilityConfig={levelItemsConfig}
         onViewableItemsChanged={viewableItemsChanged}
         renderItem={({ item }) => <LevelItemsList level={item} />}

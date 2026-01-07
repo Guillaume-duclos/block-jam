@@ -108,8 +108,8 @@ export default function Settings(): JSX.Element {
   };
 
   const removeLevelsData = (): void => {
-    hiddeResetDataModal();
     removeScoreData();
+    hiddeResetDataModal();
   };
 
   const logScoreData = (): void => {

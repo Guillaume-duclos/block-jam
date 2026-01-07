@@ -253,8 +253,9 @@ const LevelViewer = memo(
         translateY.value = withTiming(3, { duration: 80 });
       })
       .onEnd(() => {
-        translateY.value = withTiming(0, { duration: 80 });
-        onPress();
+        translateY.value = withTiming(0, { duration: 80 }, () => {
+          runOnJS(onPress)();
+        });
       })
       .onTouchesCancelled(() => {
         translateY.value = withTiming(0, { duration: 80 });

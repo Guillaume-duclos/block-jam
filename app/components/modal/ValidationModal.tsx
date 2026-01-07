@@ -86,23 +86,26 @@ export default function ValidationModal({
     confirmButtonOpacity.value = withDelay(130, withSpring(1, animationConfig));
   };
 
-  const onDecline = (): void => {
+  const decline = (): void => {
     resetAnimatedValues();
   };
 
-  const onCanfirm = (): void => {
-    resetAnimatedValues();
-    onConfirm();
+  const confirm = (): void => {
+    resetAnimatedValues(true);
   };
 
-  const resetAnimatedValues = (): void => {
+  const resetAnimatedValues = (confirm?: boolean): void => {
     blur.value = withTiming(0, { duration: 200 });
     modalScale.value = withTiming(0.95, { duration: 200 });
     cancelButtonScale.value = withTiming(0.95, { duration: 200 });
     confirmButtonScale.value = withTiming(0.95, { duration: 200 });
     cancelButtonOpacity.value = withTiming(0, { duration: 200 });
     confirmButtonOpacity.value = withTiming(0, { duration: 200 }, () => {
-      runOnJS(onCancel)();
+      if (confirm) {
+        runOnJS(onConfirm)();
+      } else {
+        runOnJS(onCancel)();
+      }
     });
   };
 
@@ -126,20 +129,27 @@ export default function ValidationModal({
 
             <View style={styles.submitButtonsContainer}>
               <AnimatedButton
-                onPress={onDecline}
+                onPress={decline}
                 style={[styles.submitButton, animatedCancelButtonStyle]}
-                shadowStyle={{ boxShadow: "0 0 14px 0 #878787" }}
+                shadowStyle={{ boxShadow: "0 0 10px 0 #686868" }}
                 color="#EE7474"
                 deep={10}
               >
-                <Text style={styles.submitButtonLabel}>Annuler</Text>
+                <Text
+                  style={{
+                    ...styles.submitButtonLabel,
+                    ...styles.submitCancelButtonLabel,
+                  }}
+                >
+                  Annuler
+                </Text>
               </AnimatedButton>
 
               <AnimatedButton
-                onPress={onCanfirm}
+                onPress={confirm}
                 style={[styles.submitButton, animatedConfirmButtonStyle]}
-                shadowStyle={{ boxShadow: "0 0 14px 0 #878787" }}
-                color={darken("#D6F5BC")}
+                shadowStyle={{ boxShadow: "0 0 10px 0 #686868" }}
+                color="#ECECEC"
                 deep={10}
               >
                 <Text style={styles.submitButtonLabel}>Confirmer</Text>
@@ -170,7 +180,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     paddingVertical: 34,
     paddingHorizontal: 30,
-    backgroundColor: darken("#D6F5BC"),
+    backgroundColor: "#ECECEC",
   },
   modalBottomBorder: {
     left: 0,
@@ -179,17 +189,17 @@ const styles = StyleSheet.create({
     height: "50%",
     position: "absolute",
     borderCurve: "continuous",
-    backgroundColor: darken("#D6F5BC", 0.35),
+    backgroundColor: darken("#ECECEC", 0.15),
     borderBottomLeftRadius: 16,
     borderBottomRightRadius: 16,
-    boxShadow: "0 0 14px 0 #878787",
+    boxShadow: "0 0 10px 0 #686868",
   },
   title: {
     fontSize: 26,
     fontWeight: 700,
     fontFamily: "Rubik",
     textAlign: "center",
-    color: "#FFFFFF",
+    color: darken("#D6F5BC", 0.3),
   },
   description: {
     fontSize: 16,
@@ -197,7 +207,7 @@ const styles = StyleSheet.create({
     fontFamily: "Rubik",
     textAlign: "center",
     lineHeight: 22,
-    color: "#FFFFFF",
+    color: darken("#D6F5BC", 0.3),
   },
   submitButtonsContainer: {
     gap: 10,
@@ -212,6 +222,9 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
     fontWeight: 600,
     fontFamily: "Rubik",
-    color: "#FFFFFF",
+    color: darken("#D6F5BC", 0.3),
+  },
+  submitCancelButtonLabel: {
+    color: "#ECECEC",
   },
 });
