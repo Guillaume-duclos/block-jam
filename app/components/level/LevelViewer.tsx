@@ -34,7 +34,7 @@ import LevelViewerStars from "./LevelViewerStars";
 type Props = {
   level: number;
   difficulty: number;
-  layout: string;
+  scheme: string;
   locked?: boolean;
   colors: DificultyColors;
   onPress: () => void;
@@ -51,7 +51,7 @@ const LevelViewer = memo(
   ({
     level,
     difficulty,
-    layout,
+    scheme,
     locked,
     colors,
     onPress,
@@ -75,7 +75,7 @@ const LevelViewer = memo(
     // Initialise les valeurs de vehiclePositions
     const computeBlockPositions = (): void => {
       // On récupère le niveau
-      const level: string = layout;
+      const level: string = scheme;
 
       // Initialisation du tableau de positions de tous les véhicules
       let positions: BlockData[] = [];

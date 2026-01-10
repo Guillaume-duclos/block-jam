@@ -14,17 +14,6 @@ export default function Tutorial(): JSX.Element {
     navigation.navigate(Screen.MENU);
   };
 
-  const goToPlayground = () => {
-    navigation.navigate(Screen.PLAYGROUND, {
-      level: {
-        index: 1,
-        layout: "oIooLMoIBBLMAAJKooCCJKooxEEEoxGGHHoo",
-        minimumMove: 30,
-      },
-      difficultyIndex: 0,
-    });
-  };
-
   return (
     <View style={styles.container}>
       <Button title="Go to menu" onPress={markScreenAsSeen} />

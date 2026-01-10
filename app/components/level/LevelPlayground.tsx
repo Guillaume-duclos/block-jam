@@ -79,6 +79,8 @@ const LevelPlayground = memo(
     const historic = useRef<HistoryPosition[]>([]);
     const isAnimatabled = useRef<boolean>(true);
 
+    console.log({ resultModal });
+
     useImperativeHandle(
       ref,
       () => ({
@@ -134,15 +136,15 @@ const LevelPlayground = memo(
     // Initialise les valeurs de vehiclePositions
     const computeBlockPositions = (): void => {
       // On récupère le niveau
-      const layout: string = level?.layout!;
+      const scheme: string = level?.scheme!;
 
       // Initialisation du tableau de positions de tous les véhicules
       let positions: ElementData[] = [];
 
       // On parse toutes les lettres de la description de la grille
-      for (let i: number = 0; i < layout.length; i++) {
+      for (let i: number = 0; i < scheme.length; i++) {
         // 1. On récupère le label
-        const label: string = layout.charAt(i);
+        const label: string = scheme.charAt(i);
 
         // 2. On vérifie si le label n'a pas déjà été inséré
         const previousSameLabel: number = positions.findIndex(
@@ -153,7 +155,7 @@ const LevelPlayground = memo(
         let orientation: Orientation = Orientation.NULL;
 
         if (previousSameLabel === -1) {
-          if (layout[i + 1] === label) {
+          if (scheme[i + 1] === label) {
             orientation = Orientation.HORIZONTAL;
           } else {
             orientation = Orientation.VERTICAL;
@@ -337,7 +339,7 @@ const LevelPlayground = memo(
         levelScores = [];
       }
 
-      const ratio = level.minimumMove! / count;
+      const ratio = level.minimumMoves! / count;
 
       const newLevelScore: Score = {
         difficulty: difficultyIndex,
@@ -365,6 +367,8 @@ const LevelPlayground = memo(
       } else {
         levelScores.push(newLevelScore);
       }
+
+      console.log("==> ", newLevelScore);
 
       setScores(levelScores);
       setStorageObject(StorageKey.LEVEL_SCORE, levelScores);

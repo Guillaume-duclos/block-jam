@@ -38,13 +38,13 @@ const LevelItem = memo(({ levels, difficultyIndex }: Props): JSX.Element => {
 
   return (
     <View style={styles.levelItemsContainer}>
-      {levels.map((level: Level, index: number) => (
+      {levels.map((level: Level) => (
         <LevelViewer
-          key={index}
+          key={level.scheme}
           level={level.index}
           difficulty={difficultyIndex}
           locked={difficultyIndex > 0}
-          layout={level.layout}
+          scheme={level.scheme}
           colors={levelsData[difficultyIndex].colors}
           onPress={() => navigateToPlayground(level)}
           style={styles.levelItem}

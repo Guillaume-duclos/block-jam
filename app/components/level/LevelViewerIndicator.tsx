@@ -32,10 +32,6 @@ const SPRING_CONFIG = {
 
 const LevelViewerIndicator = memo(
   ({ level, score, isFocused, colors }: Props): JSX.Element => {
-    const progressTrophy = useSharedValue(0);
-    const progressContainer = useSharedValue(20);
-    const progressSubContainer = useSharedValue(16);
-
     const prevScoreRef = useRef(score);
 
     const scoreColor = !score
@@ -56,14 +52,14 @@ const LevelViewerIndicator = memo(
       [scoreColor]
     );
 
-    const paragraph = useMemo(() => {
+    const { width, paragraph } = useMemo(() => {
       const fontStyle = {
         fontSize: 13,
         fontFamilies: ["Rubik"],
         color: Skia.Color(scoreColor),
       };
 
-      const text = Skia.ParagraphBuilder.Make({
+      const builder = Skia.ParagraphBuilder.Make({
         maxLines: 1,
         textAlign: level < 9 ? TextAlign.Center : TextAlign.Left,
       })
@@ -71,18 +67,37 @@ const LevelViewerIndicator = memo(
         .addText(String(level + 1))
         .build();
 
-      text.layout(100);
+      // On force le layout sur une largeur fixe assez grande
+      builder.layout(100);
 
-      return text;
-    }, [level]);
+      const textWidth = builder.getLongestLine();
 
-    const textWidth = paragraph?.getLongestLine();
-    const width = textWidth ? (level < 9 ? 16 : textWidth + 8) : 16;
-    const trophyWidth = 10;
+      // Calcul de la largeur avec une valeur par défaut sécurisée
+      const computedWidth =
+        textWidth > 0 ? (level < 9 ? 16 : textWidth + 8) : level < 9 ? 16 : 24;
+
+      return {
+        width: computedWidth,
+        paragraph: builder,
+      };
+    }, [level, scoreColor]);
+
     const borderWidth = 4;
+    const trophyWidth = 10;
+
+    // Calculer la valeur initiale "statique"
+    const initialWidth = score
+      ? width + borderWidth + trophyWidth + 4
+      : width + 4;
+
+    const progressTrophy = useSharedValue(score ? 1 : 0);
+    const progressContainer = useSharedValue(initialWidth);
+    const progressSubContainer = useSharedValue(
+      score ? width + borderWidth + trophyWidth : width
+    );
 
     useEffect(() => {
-      if (score && textWidth && score === prevScoreRef.current) {
+      if (score && width && score === prevScoreRef.current) {
         progressTrophy.value = 1;
         progressContainer.value = width + borderWidth + trophyWidth + 4;
         progressSubContainer.value = width + borderWidth + trophyWidth;
@@ -92,7 +107,7 @@ const LevelViewerIndicator = memo(
         progressSubContainer.value = width;
         prevScoreRef.current = undefined;
       }
-    }, [score, textWidth]);
+    }, [score]);
 
     useEffect(() => {
       if (!isFocused || !score || score === prevScoreRef.current || !width) {
@@ -115,7 +130,7 @@ const LevelViewerIndicator = memo(
       );
 
       progressTrophy.value = withDelay(1500, withSpring(1, SPRING_CONFIG));
-    }, [score, isFocused, textWidth]);
+    }, [score, isFocused]);
 
     const containerWidth = useDerivedValue(() => {
       return progressContainer.value;

@@ -4,11 +4,11 @@ import React, { useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import Animated, {
   interpolateColor,
-  runOnJS,
   useAnimatedScrollHandler,
   useDerivedValue,
   useSharedValue,
 } from "react-native-reanimated";
+import { runOnJS } from "react-native-worklets";
 import LevelItemsList from "../components/level/LevelItemsList";
 import PaginationIndicator from "../components/PaginationIndicator";
 import { windowHeight, windowWidth } from "../constants/dimension";
@@ -112,7 +112,9 @@ export default function Menu() {
         drawDistance={windowHeight * 2}
         viewabilityConfig={levelItemsConfig}
         onViewableItemsChanged={viewableItemsChanged}
-        renderItem={({ item }) => <LevelItemsList level={item} />}
+        renderItem={({ item }) => (
+          <LevelItemsList key={item.index} level={item} />
+        )}
         showsVerticalScrollIndicator={false}
         keyExtractor={(_, index) => `vlist-${index}`}
         scrollEventThrottle={16}

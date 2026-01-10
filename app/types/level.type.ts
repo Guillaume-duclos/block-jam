@@ -9,8 +9,8 @@ export type MainLevel = {
 
 export type Level = {
   index: number;
-  layout: string;
-  minimumMove: number;
+  scheme: string;
+  minimumMoves: number;
 };
 
 export type LevelSavedData = {
