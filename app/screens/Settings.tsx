@@ -114,7 +114,6 @@ export default function Settings(): JSX.Element {
 
   const logScoreData = (): void => {
     const score = getStorageString(StorageKey.LEVEL_SCORE);
-    console.log(score);
   };
 
   const removeScoreData = (): void => {

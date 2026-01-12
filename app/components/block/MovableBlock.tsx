@@ -57,8 +57,8 @@ const MovableBlock = memo(
     // console.log("MovableBlock", Date.now());
 
     const dificultyTheme = useDificultyStore((value) => value.colors);
-    const mainBlockColor = dificultyTheme.mainBlock;
-    const color = dificultyTheme.secondary;
+    const mainBlockColor = dificultyTheme?.mainBlock;
+    const color = dificultyTheme?.secondary;
 
     const x: SharedValue<number> = useSharedValue(0);
     const y: SharedValue<number> = useSharedValue(0);
@@ -81,8 +81,8 @@ const MovableBlock = memo(
     }));
 
     const mainBlock = label === BlockType.MAIN_BLOCK ? mainBlockColor : color;
-    const secondBlockColor = darken(mainBlock, 0.08);
-    const arrowColor = darken(mainBlock, 0.2);
+    const secondBlockColor = darken(mainBlock!, 0.08);
+    const arrowColor = darken(mainBlock!, 0.2);
 
     useEffect(() => {
       if (animatabled) {
@@ -301,7 +301,7 @@ const MovableBlock = memo(
           style={[
             vehicleDimensions(),
             styles.blockContainer,
-            { boxShadow: `0 1px 3px 0 ${darken(color, 0.3)}` },
+            { boxShadow: `0 1px 3px 0 ${darken(color!, 0.3)}` },
             vehiclePosition,
           ]}
         >
@@ -309,12 +309,12 @@ const MovableBlock = memo(
             <View
               style={{
                 ...styles.blockBottomBorder,
-                backgroundColor: darken(mainBlock, 0.12),
+                backgroundColor: darken(mainBlock!, 0.12),
               }}
             />
 
             <LinearGradient
-              colors={[secondBlockColor, mainBlock]}
+              colors={[secondBlockColor, mainBlock!]}
               style={{
                 ...styles.block,
                 ...(label === BlockType.MAIN_BLOCK && styles.mainBlock),

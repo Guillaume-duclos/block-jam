@@ -18,7 +18,7 @@ import DificultyColors from "../../types/dificultyColors.type";
 import { darken } from "../../utils/color";
 
 type Props = {
-  level: number;
+  levelIndex: number;
   score: number | undefined;
   isFocused: boolean;
   colors: DificultyColors;
@@ -31,7 +31,7 @@ const SPRING_CONFIG = {
 };
 
 const LevelViewerIndicator = memo(
-  ({ level, score, isFocused, colors }: Props): JSX.Element => {
+  ({ levelIndex, score, isFocused, colors }: Props): JSX.Element => {
     const prevScoreRef = useRef(score);
 
     const scoreColor = !score
@@ -61,10 +61,10 @@ const LevelViewerIndicator = memo(
 
       const builder = Skia.ParagraphBuilder.Make({
         maxLines: 1,
-        textAlign: level < 9 ? TextAlign.Center : TextAlign.Left,
+        textAlign: levelIndex < 9 ? TextAlign.Center : TextAlign.Left,
       })
         .pushStyle({ ...fontStyle, fontStyle: { weight: FontWeight.Bold } })
-        .addText(String(level + 1))
+        .addText(String(levelIndex + 1))
         .build();
 
       // On force le layout sur une largeur fixe assez grande
@@ -74,13 +74,19 @@ const LevelViewerIndicator = memo(
 
       // Calcul de la largeur avec une valeur par défaut sécurisée
       const computedWidth =
-        textWidth > 0 ? (level < 9 ? 16 : textWidth + 8) : level < 9 ? 16 : 24;
+        textWidth > 0
+          ? levelIndex < 9
+            ? 16
+            : textWidth + 8
+          : levelIndex < 9
+          ? 16
+          : 24;
 
       return {
         width: computedWidth,
         paragraph: builder,
       };
-    }, [level, scoreColor]);
+    }, [levelIndex, scoreColor]);
 
     const borderWidth = 4;
     const trophyWidth = 10;
@@ -172,16 +178,16 @@ const LevelViewerIndicator = memo(
           <Paragraph
             paragraph={paragraph}
             x={
-              level === 0
+              levelIndex === 0
                 ? -0.5
-                : level < 9
+                : levelIndex < 9
                 ? 0
-                : level === 10
+                : levelIndex === 10
                 ? borderWidth - 0.5
                 : borderWidth
             }
             y={0.5}
-            width={level < 9 ? 16 : 100}
+            width={levelIndex < 9 ? 16 : 100}
           />
 
           <ImageSVG

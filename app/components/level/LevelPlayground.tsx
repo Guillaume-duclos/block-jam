@@ -59,7 +59,7 @@ const LevelPlayground = memo(
     navigateToNextLevel,
     style,
   }: Props): JSX.Element | undefined => {
-    // console.log("LevelPlayground", Date.now());
+    console.log("LevelPlayground", Date.now());
 
     const grid: number[] = useGrid();
     const dificultyTheme = useDificultyStore((value) => value.colors);
@@ -78,8 +78,6 @@ const LevelPlayground = memo(
 
     const historic = useRef<HistoryPosition[]>([]);
     const isAnimatabled = useRef<boolean>(true);
-
-    console.log({ resultModal });
 
     useImperativeHandle(
       ref,
@@ -367,8 +365,6 @@ const LevelPlayground = memo(
       } else {
         levelScores.push(newLevelScore);
       }
-
-      console.log("==> ", newLevelScore);
 
       setScores(levelScores);
       setStorageObject(StorageKey.LEVEL_SCORE, levelScores);

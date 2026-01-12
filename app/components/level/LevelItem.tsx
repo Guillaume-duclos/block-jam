@@ -26,27 +26,29 @@ const LevelItem = memo(({ levels, difficultyIndex }: Props): JSX.Element => {
   const setDificultyColors = useDificultyStore((value) => value.setColors);
 
   // Redirection vers le niveau
-  const navigateToPlayground = (level: Level): void => {
+  const navigateToPlayground = (levelIndex: number): void => {
     setDificultyColors(levelsData[difficultyIndex].colors);
 
     const canNavigate = canPress();
 
     if (canNavigate) {
-      navigation.push(Screen.PLAYGROUND, { level, difficultyIndex });
+      navigation.push(Screen.PLAYGROUND, {
+        levelIndex,
+        difficultyIndex,
+      });
     }
   };
-
   return (
     <View style={styles.levelItemsContainer}>
       {levels.map((level: Level) => (
         <LevelViewer
           key={level.scheme}
-          level={level.index}
-          difficulty={difficultyIndex}
+          levelIndex={level.index}
+          difficultyIndex={difficultyIndex}
           locked={difficultyIndex > 0}
           scheme={level.scheme}
           colors={levelsData[difficultyIndex].colors}
-          onPress={() => navigateToPlayground(level)}
+          onPress={navigateToPlayground}
           style={styles.levelItem}
         />
       ))}

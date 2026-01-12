@@ -19,7 +19,7 @@ import { darken } from "../utils/color";
 type playGroundRouteProp = RouteProp<RootStackParamList, Screen.PLAYGROUND>;
 
 const PlayGround = (): JSX.Element => {
-  // console.log("PlayGround");
+  console.log("PlayGround");
 
   const insets = useSafeAreaInsets();
   const route = useRoute<playGroundRouteProp>();
@@ -27,7 +27,7 @@ const PlayGround = (): JSX.Element => {
   const dificultyTheme = useDificultyStore((value) => value.colors);
 
   const difficulty: number = route.params.difficultyIndex;
-  const levelIndex: number = route.params.level.index;
+  const levelIndex: number = route.params.levelIndex;
 
   const levelsList = data[difficulty].levels;
 

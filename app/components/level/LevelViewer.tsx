@@ -1,4 +1,5 @@
-import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import {
   BlurMask,
   Canvas,
@@ -17,27 +18,32 @@ import {
   TapGesture,
 } from "react-native-gesture-handler";
 import {
-  useAnimatedReaction,
+  useDerivedValue,
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
 import { runOnJS } from "react-native-worklets";
 import { gridCount } from "../../config/config";
+import levelsData from "../../data/levels.json";
 import { BlockType } from "../../enums/blockType.enum";
 import { Orientation } from "../../enums/orientation.enum";
+import { Screen } from "../../enums/screen.enum";
+import { usePreventDoublePress } from "../../hooks/usePreventDoublePress";
+import { useDificultyStore } from "../../store/dificulty.store";
 import { useLevelStore } from "../../store/level.store";
 import DificultyColors from "../../types/dificultyColors.type";
+import RootStackParamList from "../../types/rootStackParamList.type";
 import { darken } from "../../utils/color";
 import LevelViewerIndicator from "./LevelViewerIndicator";
 import LevelViewerStars from "./LevelViewerStars";
 
 type Props = {
-  level: number;
-  difficulty: number;
+  levelIndex: number;
+  difficultyIndex: number;
   scheme: string;
   locked?: boolean;
   colors: DificultyColors;
-  onPress: () => void;
+  onPress: (levelIndex: number) => void;
   style?: ViewStyle;
 };
 
@@ -47,26 +53,33 @@ type BlockData = {
   orientation?: Orientation;
 };
 
+type levelItemNavigationProp = NativeStackNavigationProp<RootStackParamList>;
+
 const LevelViewer = memo(
   ({
-    level,
-    difficulty,
+    levelIndex,
+    difficultyIndex,
     scheme,
     locked,
     colors,
     onPress,
     style,
   }: Props): JSX.Element => {
+    const navigation = useNavigation<levelItemNavigationProp>();
+
     const isFocused = useIsFocused();
 
     const translateY = useSharedValue(0);
 
+    const canPress = usePreventDoublePress();
+
+    const setDificultyColors = useDificultyStore((value) => value.setColors);
+
     const score = useLevelStore(
-      (state) => state.getScore(difficulty, level)?.score
+      (state) => state.getScore(difficultyIndex, levelIndex)?.score
     );
 
     const [vehiclePositions, setVehiclePositions] = useState<BlockData[]>([]);
-    const [yNumber, setYNumber] = useState<number>(0);
 
     useEffect((): void => {
       computeBlockPositions();
@@ -250,24 +263,35 @@ const LevelViewer = memo(
     const panGesture: TapGesture = Gesture.Tap()
       .maxDuration(Number.MAX_SAFE_INTEGER)
       .onBegin(() => {
-        translateY.value = withTiming(3, { duration: 80 });
+        translateY.value = withTiming(3, { duration: 50 });
       })
       .onEnd(() => {
         translateY.value = withTiming(0, { duration: 80 }, () => {
-          runOnJS(onPress)();
+          runOnJS(onPress)(levelIndex);
         });
       })
       .onTouchesCancelled(() => {
-        translateY.value = withTiming(0, { duration: 80 });
+        translateY.value = withTiming(0, { duration: 50 });
       })
       .runOnJS(true);
 
-    useAnimatedReaction(
-      () => translateY.value,
-      (value) => {
-        runOnJS(setYNumber)(value);
+    const translate = useDerivedValue(() => {
+      return [{ translateY: translateY.value }];
+    });
+
+    // Redirection vers le niveau
+    const navigateToPlayground = (): void => {
+      setDificultyColors(levelsData[difficultyIndex].colors);
+
+      const canNavigate = canPress();
+
+      if (canNavigate) {
+        navigation.push(Screen.PLAYGROUND, {
+          levelIndex,
+          difficultyIndex,
+        });
       }
-    );
+    };
 
     return (
       <View style={{ ...styles.container, ...style }}>
@@ -287,7 +311,7 @@ const LevelViewer = memo(
               color={darken(colors.frame, 0.16)}
             />
 
-            <Group transform={[{ translateY: yNumber }]}>
+            <Group transform={translate}>
               <RoundedRect
                 x={0}
                 y={0}
@@ -349,7 +373,7 @@ const LevelViewer = memo(
 
               {/* NUMÉRO DU NIVEAU */}
               <LevelViewerIndicator
-                level={level}
+                levelIndex={levelIndex}
                 score={score}
                 isFocused={isFocused}
                 colors={colors}
