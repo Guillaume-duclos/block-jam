@@ -9,7 +9,7 @@ import LevelPlayground, {
   LevelPlaygroundRef,
 } from "../components/level/LevelPlayground";
 import LevelScore from "../components/level/LevelScore";
-import data from "../data/levels.json";
+import data from "../data/levels";
 import LevelNavigationType from "../enums/levelNavigationType.enum";
 import { Screen } from "../enums/screen.enum";
 import { useDificultyStore } from "../store/dificulty.store";
@@ -26,10 +26,10 @@ const PlayGround = (): JSX.Element => {
 
   const dificultyTheme = useDificultyStore((value) => value.colors);
 
-  const difficulty: number = route.params.difficultyIndex;
+  const difficultyIndex: number = route.params.difficultyIndex;
   const levelIndex: number = route.params.levelIndex;
 
-  const levelsList = data[difficulty].levels;
+  const levelsList = data[difficultyIndex].levels;
 
   const [activeLevelIndex, setActiveLevelIndex] = useState(levelIndex);
 
@@ -47,7 +47,7 @@ const PlayGround = (): JSX.Element => {
 
   return (
     <LinearGradient
-      colors={[darken(dificultyTheme.primary, 0.4), dificultyTheme.primary]}
+      colors={[darken(dificultyTheme!.primary, 0.4), dificultyTheme!.primary]}
       start={{ x: 0, y: 0 }}
       end={{ x: 0, y: 1 }}
       locations={[0, 0.25]}
@@ -62,9 +62,9 @@ const PlayGround = (): JSX.Element => {
       >
         {/* HEADER */}
         <PlaygroundHeader
-          difficulty={difficulty}
+          difficulty={difficultyIndex}
           currentLevel={activeLevelIndex + 1}
-          levelCount={data[difficulty].levels.length}
+          levelCount={3}
         />
 
         {/* LEVEL SCORES */}
@@ -75,13 +75,13 @@ const PlayGround = (): JSX.Element => {
           ref={levelPlaygroundRef}
           level={levelsList[activeLevelIndex]}
           levelIndex={activeLevelIndex}
-          difficultyIndex={difficulty}
+          difficultyIndex={difficultyIndex}
           navigateToNextLevel={navigateToSelectedLevel}
         />
 
         {/* BUTTONS CONTROLS */}
         <LevelControls
-          difficulty={difficulty}
+          difficulty={difficultyIndex}
           activeLevelIndex={activeLevelIndex}
           levelPlaygroundRef={levelPlaygroundRef}
           navigateToSelectedLevel={navigateToSelectedLevel}

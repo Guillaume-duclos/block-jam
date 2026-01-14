@@ -23,11 +23,13 @@ export default function FixedBlock({
   position,
   animatabled,
 }: Props): JSX.Element {
+  console.log("FixedBlock", { index });
+
   const x: number = (position - 6 * Math.floor(position / 6)) * caseSize;
   const y: number = Math.floor(position / 6) * caseSize;
 
   const dificultyTheme = useDificultyStore((value) => value.colors);
-  const color = dificultyTheme.fixedBlock;
+  const color = dificultyTheme!.fixedBlock;
 
   const blockScale: SharedValue<number> = useSharedValue(0.9);
   const blockOpacity: SharedValue<number> = useSharedValue(0);
@@ -39,30 +41,30 @@ export default function FixedBlock({
 
   useEffect(() => {
     if (animatabled) {
-      setTimeout(() => {
-        blockScale.value = withDelay(
-          index * 30,
-          withSpring(1, {
-            mass: 1,
-            damping: 15,
-            stiffness: 240,
-          })
-        );
+      const totalDelay = 300 + index * 30;
 
-        blockOpacity.value = withDelay(
-          index * 30,
-          withSpring(1, {
-            mass: 1,
-            damping: 15,
-            stiffness: 240,
-          })
-        );
-      }, 300);
+      blockScale.value = withDelay(
+        totalDelay,
+        withSpring(1, {
+          mass: 1,
+          damping: 15,
+          stiffness: 240,
+        })
+      );
+
+      blockOpacity.value = withDelay(
+        totalDelay,
+        withSpring(1, {
+          mass: 1,
+          damping: 15,
+          stiffness: 240,
+        })
+      );
     } else {
       blockScale.value = 1;
       blockOpacity.value = 1;
     }
-  }, []);
+  }, [animatabled, index]);
 
   return (
     <Animated.View

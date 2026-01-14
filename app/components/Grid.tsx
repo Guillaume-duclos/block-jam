@@ -56,6 +56,5 @@ const styles = StyleSheet.create({
   goalCase: {
     borderWidth: 2,
     borderColor: lighten("#DA6C6C"),
-    // backgroundColor: lighten("#DA6C6C", 0.6),
   },
 });

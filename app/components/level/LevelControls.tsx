@@ -2,7 +2,7 @@ import React, { Fragment, JSX, memo, RefObject, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import ArrowShapeTurnUpLeft from "../../assets/icons/ArrowShapeTurnUpLeft";
 import ArrowTriangleHead2ClockwiseRotate90 from "../../assets/icons/ArrowTriangleHead2ClockwiseRotate90";
-import data from "../../data/levels.json";
+import data from "../../data/levels";
 import LevelNavigationType from "../../enums/levelNavigationType.enum";
 import { useDificultyStore } from "../../store/dificulty.store";
 import { useLevelStore } from "../../store/level.store";

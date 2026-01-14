@@ -12,7 +12,7 @@ import { runOnJS } from "react-native-worklets";
 import LevelItemsList from "../components/level/LevelItemsList";
 import PaginationIndicator from "../components/PaginationIndicator";
 import { windowHeight, windowWidth } from "../constants/dimension";
-import data from "../data/levels.json";
+import data from "../data/levels";
 import { Orientation } from "../enums/orientation.enum";
 import { StorageKey } from "../enums/storageKey.enum";
 import { useDificultyStore } from "../store/dificulty.store";

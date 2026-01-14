@@ -24,7 +24,7 @@ import {
 } from "react-native-reanimated";
 import { runOnJS } from "react-native-worklets";
 import { gridCount } from "../../config/config";
-import levelsData from "../../data/levels.json";
+import levelsData from "../../data/levels";
 import { BlockType } from "../../enums/blockType.enum";
 import { Orientation } from "../../enums/orientation.enum";
 import { Screen } from "../../enums/screen.enum";

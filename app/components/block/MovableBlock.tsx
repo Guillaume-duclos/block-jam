@@ -86,25 +86,25 @@ const MovableBlock = memo(
 
     useEffect(() => {
       if (animatabled) {
-        setTimeout(() => {
-          blockScale.value = withDelay(
-            index * 30,
-            withSpring(1, {
-              mass: 1,
-              damping: 15,
-              stiffness: 240,
-            })
-          );
+        const totalDelay = 300 + index * 30;
 
-          blockOpacity.value = withDelay(
-            index * 30,
-            withSpring(1, {
-              mass: 1,
-              damping: 15,
-              stiffness: 240,
-            })
-          );
-        }, 300);
+        blockScale.value = withDelay(
+          totalDelay,
+          withSpring(1, {
+            mass: 1,
+            damping: 15,
+            stiffness: 240,
+          })
+        );
+
+        blockOpacity.value = withDelay(
+          totalDelay,
+          withSpring(1, {
+            mass: 1,
+            damping: 15,
+            stiffness: 240,
+          })
+        );
       } else {
         blockScale.value = 1;
         blockOpacity.value = 1;

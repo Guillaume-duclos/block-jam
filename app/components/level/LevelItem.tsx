@@ -3,7 +3,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import React, { JSX, memo } from "react";
 import { StyleSheet, View } from "react-native";
 import { windowWidth } from "../../constants/dimension";
-import levelsData from "../../data/levels.json";
+import levelsData from "../../data/levels";
 import { Screen } from "../../enums/screen.enum";
 import { usePreventDoublePress } from "../../hooks/usePreventDoublePress";
 import { useDificultyStore } from "../../store/dificulty.store";
@@ -38,6 +38,7 @@ const LevelItem = memo(({ levels, difficultyIndex }: Props): JSX.Element => {
       });
     }
   };
+
   return (
     <View style={styles.levelItemsContainer}>
       {levels.map((level: Level) => (
