@@ -1,9 +1,9 @@
-import { useRef } from "react";
+import { useCallback, useRef } from "react";
 
 export const usePreventDoublePress = (delay: number = 500) => {
   const lastPress = useRef(0);
 
-  return () => {
+  return useCallback(() => {
     const now = Date.now();
 
     if (now - lastPress.current > delay) {
@@ -12,5 +12,5 @@ export const usePreventDoublePress = (delay: number = 500) => {
     }
 
     return false;
-  };
+  }, [delay]);
 };

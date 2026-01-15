@@ -7,6 +7,7 @@ type State = {
   isResetEnabled: boolean;
   scores: Score[];
   getScore: (difficulty: number, level: number) => Score | undefined;
+  getCompletedLevelsByDificulty: (difficulty: number) => number | undefined;
   setCount: (value: number) => void;
   incrementCount: () => void;
   setIsUndoEnabled: (value: boolean) => void;
@@ -30,6 +31,11 @@ export const useLevelStore = create<State>((set, get) => ({
     return get().scores.find(
       (score) => score.difficulty === difficulty && score.level === level
     );
+  },
+
+  getCompletedLevelsByDificulty: (difficulty: number) => {
+    return get().scores.filter((score) => score.difficulty === difficulty)
+      .length;
   },
 
   setCount: (value) => set({ count: value }),

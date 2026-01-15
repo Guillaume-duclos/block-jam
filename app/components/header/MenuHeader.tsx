@@ -2,6 +2,8 @@ import React, { JSX } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import Settings from "../../assets/icons/GearShapeFill";
 import { menuHeaderHeight } from "../../constants/dimension";
+import data from "../../data/levels";
+import { useLevelStore } from "../../store/level.store";
 import PressableView from "../button/PressableView";
 
 type Props = {
@@ -9,22 +11,31 @@ type Props = {
   openSettings: () => void;
 };
 
-const MenuHeader = ({ difficulty, openSettings }: Props): JSX.Element => (
-  <View style={styles.container}>
-    <View style={styles.contentContainer}>
-      <Text style={styles.headerTitle}>Dificulty {difficulty}</Text>
-      <Text style={styles.headerProgression}>
-        <Text style={styles.headerProgressionCount}>2</Text>/156 completed
-      </Text>
-    </View>
+const MenuHeader = ({ difficulty, openSettings }: Props): JSX.Element => {
+  const completedLevels = useLevelStore((state) =>
+    state.getCompletedLevelsByDificulty(difficulty)
+  );
 
-    <View style={styles.headerSettingsButtonContainer}>
-      <PressableView onPress={openSettings}>
-        <Settings color="#FFFFFF" />
-      </PressableView>
+  const levelsCount = data[difficulty].levels.length;
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.contentContainer}>
+        <Text style={styles.headerTitle}>Dificulty {difficulty + 1}</Text>
+        <Text style={styles.headerProgression}>
+          <Text style={styles.headerProgressionCount}>{completedLevels}</Text>/
+          {levelsCount} completed
+        </Text>
+      </View>
+
+      <View style={styles.headerSettingsButtonContainer}>
+        <PressableView onPress={openSettings}>
+          <Settings color="#FFFFFF" />
+        </PressableView>
+      </View>
     </View>
-  </View>
-);
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -62,3 +73,6 @@ const styles = StyleSheet.create({
 });
 
 export default MenuHeader;
+function useGetCompletedScoresByDificulty(arg0: (state: any) => any) {
+  throw new Error("Function not implemented.");
+}

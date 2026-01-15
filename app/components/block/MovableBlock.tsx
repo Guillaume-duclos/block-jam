@@ -86,7 +86,7 @@ const MovableBlock = memo(
 
     useEffect(() => {
       if (animatabled) {
-        const totalDelay = 300 + index * 30;
+        const totalDelay = 500 + index * 30;
 
         blockScale.value = withDelay(
           totalDelay,
