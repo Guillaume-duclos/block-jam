@@ -1,18 +1,35 @@
-import React, { JSX, memo } from "react";
+import React, { JSX, memo, useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSequence,
+  withTiming,
+} from "react-native-reanimated";
 import { useDificultyStore } from "../../store/dificulty.store";
 import { useLevelStore } from "../../store/level.store";
 import { darken } from "../../utils/color";
 
-type Props = {};
-
-const LevelScore = memo(({}: Props): JSX.Element | undefined => {
-  console.log("LevelScore", Date.now());
+const LevelScore = memo((): JSX.Element => {
+  const scale = useSharedValue(1);
 
   const dificultyTheme = useDificultyStore((value) => value.colors);
   const mainColor = dificultyTheme?.primary!;
 
   const count = useLevelStore((value) => value.count);
+
+  useEffect(() => {
+    if (count > 0) {
+      scale.value = withSequence(
+        withTiming(1.06, { duration: 50 }),
+        withTiming(1, { duration: 50 })
+      );
+    }
+  }, [count]);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
 
   return (
     <View style={styles.container}>
@@ -25,16 +42,11 @@ const LevelScore = memo(({}: Props): JSX.Element | undefined => {
             Coups
           </Text>
 
-          <View style={{ borderWidth: 0 }}>
-            <Text
-              style={{ ...styles.count, color: darken(mainColor, 0.33) }}
-              // adjustsFontSizeToFit
-              // minimumFontScale={0.5}
-              // numberOfLines={1}
-            >
+          <Animated.View style={[animatedStyle, { borderWidth: 0 }]}>
+            <Text style={{ ...styles.count, color: darken(mainColor, 0.33) }}>
               {count}
             </Text>
-          </View>
+          </Animated.View>
         </View>
 
         {/* PREVIOUS SCORES */}
