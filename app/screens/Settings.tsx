@@ -44,6 +44,8 @@ export default function Settings(): JSX.Element {
   const appVersion = Application.nativeApplicationVersion;
   const buildVersion = Application.nativeBuildVersion;
 
+  console.log(showResetDataModal);
+
   const goBack = (): void => {
     navigation.goBack();
   };

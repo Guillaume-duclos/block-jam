@@ -68,7 +68,7 @@ const PlayGround = (): JSX.Element => {
         />
 
         {/* LEVEL SCORES */}
-        <LevelScore />
+        <LevelScore levelIndex={levelIndex} difficultyIndex={difficultyIndex} />
 
         {/* LEVEL PLAYGROUND */}
         <LevelPlayground

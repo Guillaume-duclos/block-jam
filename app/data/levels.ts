@@ -1,8 +1,6 @@
 const data = [
   {
     index: 0,
-    color: "#ACC696",
-    shadowColor: "#788B69",
     colors: {
       primary: "#D6F5BC",
       secondary: "#F5F7FF",
@@ -816,13 +814,11 @@ const data = [
   },
   {
     index: 1,
-    color: "#0284c7",
-    shadowColor: "#015c8b",
     colors: {
-      primary: "#0284C7",
+      primary: "#DED6C9",
       secondary: "#F5F7FF",
-      mainBlock: "#DA6C6C",
-      fixedBlock: "#939EB0",
+      mainBlock: "#D9693B",
+      fixedBlock: "#706459",
       frame: "#F5F7FF",
       white: "#FFFFFF",
     },
@@ -1631,8 +1627,6 @@ const data = [
   },
   {
     index: 2,
-    color: "#8b5cf6",
-    shadowColor: "#6140ac",
     colors: {
       primary: "#8B5CF6",
       secondary: "#F5F7FF",
@@ -2446,8 +2440,6 @@ const data = [
   },
   {
     index: 3,
-    color: "#eab308",
-    shadowColor: "#a47d06",
     colors: {
       primary: "#D6F5BC",
       secondary: "#F5F7FF",
@@ -3261,8 +3253,6 @@ const data = [
   },
   {
     index: 4,
-    color: "#f97316",
-    shadowColor: "##ae510f",
     colors: {
       primary: "#D6F5BC",
       secondary: "#F5F7FF",
@@ -4076,8 +4066,6 @@ const data = [
   },
   {
     index: 5,
-    color: "#f43f5e",
-    shadowColor: "#ab2c42",
     colors: {
       primary: "#D6F5BC",
       secondary: "#F5F7FF",

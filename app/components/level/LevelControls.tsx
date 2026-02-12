@@ -2,14 +2,14 @@ import React, { Fragment, JSX, memo, RefObject, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import ArrowShapeTurnUpLeft from "../../assets/icons/ArrowShapeTurnUpLeft";
 import ArrowTriangleHead2ClockwiseRotate90 from "../../assets/icons/ArrowTriangleHead2ClockwiseRotate90";
+import ArrowTriangleLeft from "../../assets/icons/ArrowTriangleLeft";
+import ArrowTriangleRight from "../../assets/icons/ArrowTriangleRight";
 import data from "../../data/levels";
 import LevelNavigationType from "../../enums/levelNavigationType.enum";
 import { useDificultyStore } from "../../store/dificulty.store";
 import { useLevelStore } from "../../store/level.store";
 import { darken } from "../../utils/color";
 import Button from "../button/Button";
-import NextLevelButton from "../button/NextLevelButton";
-import PreviousLevelButton from "../button/PreviousLevelButton";
 import ModalValidation from "../modal/ValidationModal";
 import { LevelPlaygroundRef } from "./LevelPlayground";
 
@@ -84,12 +84,17 @@ const LevelControls = memo(
       <Fragment>
         {/* BUTTONS CONTROLS */}
         <View style={styles.footerButtonsContainer}>
-          <PreviousLevelButton
+          <Button
             onPress={previousLevel}
             disabled={isPreviousLevelDisabled}
-            style={styles.footerButton}
             color={dificultyTheme.frame}
-          />
+            style={styles.footerButton}
+          >
+            <ArrowTriangleLeft
+              style={styles.leftFooterButtonIcon}
+              color={darken(dificultyTheme.frame, 0.3)}
+            />
+          </Button>
 
           <View style={styles.gamePlayButtonsContainer}>
             <Button
@@ -116,12 +121,17 @@ const LevelControls = memo(
             </Button>
           </View>
 
-          <NextLevelButton
+          <Button
             onPress={nextLevel}
             disabled={isNextLevelDisabled}
-            style={styles.footerButton}
             color={dificultyTheme.frame}
-          />
+            style={styles.footerButton}
+          >
+            <ArrowTriangleRight
+              style={styles.rightFooterButtonIcon}
+              color={darken(dificultyTheme.frame, 0.3)}
+            />
+          </Button>
         </View>
 
         {/* MODAL */}

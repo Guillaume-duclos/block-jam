@@ -1,4 +1,4 @@
-import React, { JSX, Ref } from "react";
+import React, { JSX, memo, Ref } from "react";
 import { StyleSheet, View, ViewStyle } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
@@ -17,87 +17,96 @@ type Props = {
   children?: React.ReactNode;
   deep?: number;
   color?: string;
+  borderColor?: string;
   style?: ViewStyle | ViewStyle[];
   contentContainerStyle?: ViewStyle | ViewStyle[];
   shadowStyle?: ViewStyle;
 };
 
-export default function Button({
-  ref,
-  disabled = false,
-  onPress,
-  onPressIn,
-  onPressOut,
-  children,
-  deep = 12,
-  color = "#F5F7FF",
-  style,
-  contentContainerStyle,
-  shadowStyle,
-}: Props): JSX.Element {
-  const progress = useSharedValue(0);
+const Button = memo(
+  ({
+    ref,
+    disabled = false,
+    onPress,
+    onPressIn,
+    onPressOut,
+    children,
+    deep = 12,
+    color = "#F5F7FF",
+    borderColor,
+    style,
+    contentContainerStyle,
+    shadowStyle,
+  }: Props): JSX.Element => {
+    const progress = useSharedValue(0);
 
-  const buttonStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: progress.value }],
-  }));
+    const buttonStyle = useAnimatedStyle(() => ({
+      transform: [{ translateY: progress.value }],
+    }));
 
-  const opacityStyle = useAnimatedStyle(
-    () => ({
-      opacity: withTiming(disabled ? 0.4 : 1, { duration: 80 }),
-    }),
-    [disabled]
-  );
+    const opacityStyle = useAnimatedStyle(
+      () => ({
+        opacity: withTiming(disabled ? 0.4 : 1, { duration: 80 }),
+      }),
+      [disabled]
+    );
 
-  const tapGesture = Gesture.Tap()
-    .enabled(!disabled)
-    .maxDuration(Number.MAX_SAFE_INTEGER)
-    .onBegin(() => {
-      onPressIn && onPressIn();
-      progress.value = withTiming(deep - deep / 1.5, { duration: 80 });
-    })
-    .onFinalize(() => {
-      onPressOut && onPressOut();
-      progress.value = withTiming(0, { duration: 80 });
-    })
-    .onTouchesUp(() => {
-      onPressOut && onPressOut();
-      progress.value = withTiming(0, { duration: 80 });
-    })
-    .onEnd(() => {
-      onPressOut && onPressOut();
-      onPress();
-    })
-    .runOnJS(true);
+    const tapGesture = Gesture.Tap()
+      .enabled(!disabled)
+      .maxDuration(Number.MAX_SAFE_INTEGER)
+      .onBegin(() => {
+        progress.value = withTiming(deep - deep / 1.5, { duration: 80 });
+        onPressIn && onPressIn();
+      })
+      .onFinalize(() => {
+        progress.value = withTiming(0, { duration: 80 });
+        onPressOut && onPressOut();
+      })
+      .onTouchesUp(() => {
+        progress.value = withTiming(0, { duration: 80 });
+        onPressOut && onPressOut();
+      })
+      .onEnd(() => {
+        onPressOut && onPressOut();
+        onPress();
+      })
+      .runOnJS(true);
 
-  return (
-    <GestureDetector gesture={tapGesture}>
-      <View
-        ref={ref}
-        style={[styles.container, ...(Array.isArray(style) ? style : [style])]}
-      >
+    return (
+      <GestureDetector gesture={tapGesture}>
         <View
-          style={{
-            ...styles.blockBottomBorder,
-            backgroundColor: darken(color, 0.15),
-            bottom: 16 - deep,
-            height: "50%",
-            ...shadowStyle,
-          }}
-        />
-        <Animated.View
+          ref={ref}
           style={[
-            styles.block,
-            contentContainerStyle,
-            { backgroundColor: color },
-            buttonStyle,
+            styles.container,
+            ...(Array.isArray(style) ? style : [style]),
           ]}
         >
-          <Animated.View style={opacityStyle}>{children}</Animated.View>
-        </Animated.View>
-      </View>
-    </GestureDetector>
-  );
-}
+          <View
+            style={{
+              ...styles.blockBottomBorder,
+              backgroundColor: borderColor
+                ? darken(borderColor, 0.09)
+                : darken(color, 0.15),
+              bottom: 16 - deep,
+              height: "50%",
+              ...shadowStyle,
+            }}
+          />
+          <Animated.View
+            style={[
+              styles.block,
+              contentContainerStyle,
+              { backgroundColor: color },
+              buttonStyle,
+            ]}
+          >
+            <Animated.View style={opacityStyle}>{children}</Animated.View>
+          </Animated.View>
+        </View>
+      </GestureDetector>
+    );
+  }
+);
 
 const styles = StyleSheet.create({
   container: {
@@ -120,3 +129,5 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 28,
   },
 });
+
+export default Button;

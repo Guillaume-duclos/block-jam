@@ -1,5 +1,5 @@
 import { BlurView } from "expo-blur";
-import React, { Fragment, JSX, useEffect } from "react";
+import React, { JSX, useEffect } from "react";
 import { StyleSheet, Text, View, ViewStyle } from "react-native";
 import Animated, {
   useAnimatedProps,
@@ -59,6 +59,10 @@ export default function ValidationModal({
     intensity: Math.round(blur.value),
   }));
 
+  const animatedoOpacityProps = useAnimatedProps(() => ({
+    opacity: blur.value,
+  }));
+
   const animatedModalStyle = useAnimatedStyle(() => ({
     opacity: blur.value / 50,
     transform: [{ scale: modalScale.value }],
@@ -110,55 +114,51 @@ export default function ValidationModal({
   };
 
   return (
-    <Fragment>
-      {isOpen && (
-        <AnimatedBlurView
-          tint="systemThinMaterialDark"
-          animatedProps={animatedBlurProps}
-          pointerEvents={isOpen ? "auto" : "none"}
-          style={{ ...styles.container, ...style }}
-        >
-          <View style={styles.contentContainer}>
-            <Animated.View style={animatedModalStyle}>
-              <View style={styles.modalBottomBorder} />
-              <View style={styles.modal}>
-                <Text style={styles.title}>{title}</Text>
-                <Text style={styles.description}>{description}</Text>
-              </View>
-            </Animated.View>
-
-            <View style={styles.submitButtonsContainer}>
-              <AnimatedButton
-                onPress={decline}
-                style={[styles.submitButton, animatedCancelButtonStyle]}
-                shadowStyle={{ boxShadow: "0 0 10px 0 #686868" }}
-                color="#EE7474"
-                deep={10}
-              >
-                <Text
-                  style={{
-                    ...styles.submitButtonLabel,
-                    ...styles.submitCancelButtonLabel,
-                  }}
-                >
-                  Annuler
-                </Text>
-              </AnimatedButton>
-
-              <AnimatedButton
-                onPress={confirm}
-                style={[styles.submitButton, animatedConfirmButtonStyle]}
-                shadowStyle={{ boxShadow: "0 0 10px 0 #686868" }}
-                color="#ECECEC"
-                deep={10}
-              >
-                <Text style={styles.submitButtonLabel}>Confirmer</Text>
-              </AnimatedButton>
-            </View>
+    <AnimatedBlurView
+      tint="systemThinMaterialDark"
+      animatedProps={animatedBlurProps}
+      pointerEvents={isOpen ? "auto" : "none"}
+      style={{ ...styles.container, ...style }}
+    >
+      <View style={styles.contentContainer}>
+        <Animated.View style={animatedModalStyle}>
+          <View style={styles.modalBottomBorder} />
+          <View style={styles.modal}>
+            <Text style={styles.title}>{title}</Text>
+            <Text style={styles.description}>{description}</Text>
           </View>
-        </AnimatedBlurView>
-      )}
-    </Fragment>
+        </Animated.View>
+
+        <View style={styles.submitButtonsContainer}>
+          <AnimatedButton
+            onPress={decline}
+            style={[styles.submitButton, animatedCancelButtonStyle]}
+            shadowStyle={{ boxShadow: "0 0 10px 0 #686868" }}
+            color="#EE7474"
+            deep={10}
+          >
+            <Text
+              style={{
+                ...styles.submitButtonLabel,
+                ...styles.submitCancelButtonLabel,
+              }}
+            >
+              Annuler
+            </Text>
+          </AnimatedButton>
+
+          <AnimatedButton
+            onPress={confirm}
+            style={[styles.submitButton, animatedConfirmButtonStyle]}
+            shadowStyle={{ boxShadow: "0 0 10px 0 #686868" }}
+            color="#ECECEC"
+            deep={10}
+          >
+            <Text style={styles.submitButtonLabel}>Confirmer</Text>
+          </AnimatedButton>
+        </View>
+      </View>
+    </AnimatedBlurView>
   );
 }
 
@@ -195,14 +195,14 @@ const styles = StyleSheet.create({
     boxShadow: "0 0 10px 0 #686868",
   },
   title: {
-    fontSize: 26,
+    fontSize: 30,
     fontWeight: 700,
     fontFamily: "Rubik",
     textAlign: "center",
     color: darken("#D6F5BC", 0.3),
   },
   description: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 500,
     fontFamily: "Rubik",
     textAlign: "center",

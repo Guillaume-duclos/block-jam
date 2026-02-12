@@ -10,88 +10,99 @@ import { useDificultyStore } from "../../store/dificulty.store";
 import { useLevelStore } from "../../store/level.store";
 import { darken } from "../../utils/color";
 
-const LevelScore = memo((): JSX.Element => {
-  const scale = useSharedValue(1);
+type Props = {
+  levelIndex: number;
+  difficultyIndex: number;
+};
 
-  const dificultyTheme = useDificultyStore((value) => value.colors);
-  const mainColor = dificultyTheme?.primary!;
+const LevelScore = memo(
+  ({ levelIndex, difficultyIndex }: Props): JSX.Element => {
+    const scale = useSharedValue(1);
 
-  const count = useLevelStore((value) => value.count);
+    const dificultyTheme = useDificultyStore((value) => value.colors);
+    const mainColor = dificultyTheme?.primary!;
 
-  useEffect(() => {
-    if (count > 0) {
-      scale.value = withSequence(
-        withTiming(1.06, { duration: 50 }),
-        withTiming(1, { duration: 50 })
-      );
-    }
-  }, [count]);
+    const score = useLevelStore((state) =>
+      state.getScore(difficultyIndex, levelIndex)
+    );
 
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
-  }));
+    const count = useLevelStore((value) => value.count);
 
-  return (
-    <View style={styles.container}>
-      <View style={styles.scoresSubContainer}>
-        {/* CURRENT COUNT */}
-        <View style={{ ...styles.scoreContainer }}>
-          <Text
-            style={{ ...styles.scoreTitle, color: darken(mainColor, 0.28) }}
-          >
-            Coups
-          </Text>
+    useEffect(() => {
+      if (count > 0) {
+        scale.value = withSequence(
+          withTiming(1.05, { duration: 50 }),
+          withTiming(1, { duration: 50 })
+        );
+      }
+    }, [count]);
 
-          <Animated.View style={[animatedStyle, { borderWidth: 0 }]}>
-            <Text style={{ ...styles.count, color: darken(mainColor, 0.33) }}>
-              {count}
-            </Text>
-          </Animated.View>
-        </View>
+    const animatedStyle = useAnimatedStyle(() => ({
+      transform: [{ scale: scale.value }],
+    }));
 
-        {/* PREVIOUS SCORES */}
-        <View
-          style={{
-            ...styles.scoreContainer,
-            ...styles.previousScoreContainer,
-          }}
-        >
-          <Text
-            adjustsFontSizeToFit
-            numberOfLines={2}
-            minimumFontScale={0.5}
-            style={{ ...styles.scoreTitle, color: darken(mainColor, 0.28) }}
-          >
-            Scores précédents
-          </Text>
-
-          <View style={styles.previousScoreLabelContainer}>
+    return (
+      <View style={styles.container}>
+        <View style={styles.scoresSubContainer}>
+          {/* CURRENT COUNT */}
+          <View style={{ ...styles.scoreContainer }}>
             <Text
-              numberOfLines={1}
-              adjustsFontSizeToFit
-              style={{
-                ...styles.previousScoreLabel,
-                color: darken(mainColor, 0.33),
-              }}
+              style={{ ...styles.scoreTitle, color: darken(mainColor, 0.28) }}
             >
-              Coups : 34
+              Coups
             </Text>
+
+            <Animated.View style={[animatedStyle, { borderWidth: 0 }]}>
+              <Text style={{ ...styles.count, color: darken(mainColor, 0.33) }}>
+                {count}
+              </Text>
+            </Animated.View>
+          </View>
+
+          {/* PREVIOUS SCORES */}
+          <View
+            style={{
+              ...styles.scoreContainer,
+              ...styles.previousScoreContainer,
+            }}
+          >
             <Text
-              numberOfLines={1}
               adjustsFontSizeToFit
-              style={{
-                ...styles.previousScoreLabel,
-                color: darken(mainColor, 0.33),
-              }}
+              numberOfLines={2}
+              minimumFontScale={0.5}
+              style={{ ...styles.scoreTitle, color: darken(mainColor, 0.28) }}
             >
-              Temps : 2:03
+              Scores précédents
             </Text>
+
+            <View style={styles.previousScoreLabelContainer}>
+              <Text
+                numberOfLines={1}
+                adjustsFontSizeToFit
+                style={{
+                  ...styles.previousScoreLabel,
+                  color: darken(mainColor, 0.33),
+                }}
+              >
+                Coups : {score?.count || "--"}
+              </Text>
+              <Text
+                numberOfLines={1}
+                adjustsFontSizeToFit
+                style={{
+                  ...styles.previousScoreLabel,
+                  color: darken(mainColor, 0.33),
+                }}
+              >
+                Temps : {score?.time || "--:--"}
+              </Text>
+            </View>
           </View>
         </View>
       </View>
-    </View>
-  );
-});
+    );
+  }
+);
 
 const styles = StyleSheet.create({
   container: {

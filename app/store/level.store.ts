@@ -13,6 +13,7 @@ type State = {
   setIsUndoEnabled: (value: boolean) => void;
   setIsResetEnabled: (value: boolean) => void;
   setScores: (value: Score[]) => void;
+  addNewScore: (value: Score) => void;
   resetScores: () => void;
   refresh: () => void;
   resetLevelData: () => void;
@@ -29,7 +30,7 @@ export const useLevelStore = create<State>((set, get) => ({
 
   getScore: (difficulty: number, level: number) => {
     return get().scores.find(
-      (score) => score.difficulty === difficulty && score.level === level
+      (score: Score) => score.difficulty === difficulty && score.level === level
     );
   },
 
@@ -47,6 +48,9 @@ export const useLevelStore = create<State>((set, get) => ({
   setIsResetEnabled: (value) => set({ isResetEnabled: value }),
 
   setScores: (value) => set({ scores: value }),
+
+  addNewScore: (value) =>
+    set((state) => ({ scores: [...state.scores, value] })),
 
   resetScores: () => set({ scores: [] }),
 

@@ -33,8 +33,8 @@ import {
 } from "../../utils/storage";
 import FixedBlock from "../block/FixedBlock";
 import MovableBlock from "../block/MovableBlock";
-import Grid from "../Grid";
 import ModalResult from "../modal/ResultModal";
+import LevelGrid from "./LevelGrid";
 
 type Props = {
   ref: RefObject<LevelPlaygroundRef | null>;
@@ -66,7 +66,7 @@ const LevelPlayground = memo(
     const mainColor = dificultyTheme?.primary!;
     const frameColor = dificultyTheme?.frame!;
 
-    const setScores = useLevelStore((value) => value.setScores);
+    const addNewScore = useLevelStore((value) => value.addNewScore);
     const incrementCount = useLevelStore((value) => value.incrementCount);
     const resetLevelData = useLevelStore((value) => value.resetLevelData);
     const setIsResetEnabled = useLevelStore((value) => value.setIsResetEnabled);
@@ -366,7 +366,7 @@ const LevelPlayground = memo(
         levelScores.push(newLevelScore);
       }
 
-      setScores(levelScores);
+      addNewScore(newLevelScore);
       setStorageObject(StorageKey.LEVEL_SCORE, levelScores);
       setResultModal(newLevelScore.score);
     };
@@ -444,7 +444,7 @@ const LevelPlayground = memo(
                 boxShadow: `0 0 1px 0.5px ${darken(mainColor, 0.35)} inset`,
               }}
             >
-              <Grid color={mainColor} />
+              <LevelGrid color={mainColor} />
 
               <GestureHandlerRootView>
                 {grid.length > 0 && vehiclePositions && renderBlocks()}
