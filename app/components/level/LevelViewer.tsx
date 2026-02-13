@@ -22,7 +22,6 @@ import {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import { runOnJS } from "react-native-worklets";
 import { gridCount } from "../../config/config";
 import { BlockType } from "../../enums/blockType.enum";
 import { Orientation } from "../../enums/orientation.enum";
@@ -267,7 +266,7 @@ const LevelViewer = memo(
       .onEnd(() => {
         translateY.value = withTiming(0, { duration: 80 }, () => {
           // runOnJS(onPress)(levelIndex);
-          runOnJS(navigateToPlayground)();
+          // runOnJS(navigateToPlayground)();
         });
       })
       .onTouchesCancelled(() => {
