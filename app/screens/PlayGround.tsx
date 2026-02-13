@@ -63,8 +63,8 @@ const PlayGround = (): JSX.Element => {
         {/* HEADER */}
         <PlaygroundHeader
           difficulty={difficultyIndex}
+          levelCount={levelsList.length}
           currentLevel={activeLevelIndex + 1}
-          levelCount={3}
         />
 
         {/* LEVEL SCORES */}

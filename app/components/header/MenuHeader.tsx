@@ -2,21 +2,23 @@ import React, { JSX } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import Settings from "../../assets/icons/GearShapeFill";
 import { menuHeaderHeight } from "../../constants/dimension";
-import data from "../../data/levels";
 import { useLevelStore } from "../../store/level.store";
 import PressableView from "../button/PressableView";
 
 type Props = {
   difficulty: number;
+  levelsCount: number;
   openSettings: () => void;
 };
 
-const MenuHeader = ({ difficulty, openSettings }: Props): JSX.Element => {
+const MenuHeader = ({
+  difficulty,
+  levelsCount,
+  openSettings,
+}: Props): JSX.Element => {
   const completedLevels = useLevelStore((state) =>
     state.getCompletedLevelsByDificulty(difficulty)
   );
-
-  const levelsCount = data[difficulty].levels.length;
 
   return (
     <View style={styles.container}>

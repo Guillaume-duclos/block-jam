@@ -24,7 +24,6 @@ import {
 } from "react-native-reanimated";
 import { runOnJS } from "react-native-worklets";
 import { gridCount } from "../../config/config";
-import levelsData from "../../data/levels";
 import { BlockType } from "../../enums/blockType.enum";
 import { Orientation } from "../../enums/orientation.enum";
 import { Screen } from "../../enums/screen.enum";
@@ -267,13 +266,13 @@ const LevelViewer = memo(
       })
       .onEnd(() => {
         translateY.value = withTiming(0, { duration: 80 }, () => {
-          runOnJS(onPress)(levelIndex);
+          // runOnJS(onPress)(levelIndex);
+          runOnJS(navigateToPlayground)();
         });
       })
       .onTouchesCancelled(() => {
         translateY.value = withTiming(0, { duration: 50 });
-      })
-      .runOnJS(true);
+      });
 
     const translate = useDerivedValue(() => {
       return [{ translateY: translateY.value }];
@@ -281,7 +280,7 @@ const LevelViewer = memo(
 
     // Redirection vers le niveau
     const navigateToPlayground = (): void => {
-      setDificultyColors(levelsData[difficultyIndex].colors);
+      setDificultyColors(colors);
 
       const canNavigate = canPress();
 

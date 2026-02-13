@@ -104,7 +104,11 @@ const LevelItemsList = memo(({ level }: Props): JSX.Element => {
       }}
     >
       {/* HEADER */}
-      <MenuHeader difficulty={level.index} openSettings={openSettings} />
+      <MenuHeader
+        difficulty={level.index}
+        levelsCount={level.levels.length}
+        openSettings={openSettings}
+      />
 
       {/* LISTE HORIZONTALE DE CHAQUE GRAND NIVEAU */}
       <FlashList

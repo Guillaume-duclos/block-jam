@@ -49,7 +49,7 @@ const LevelItem = memo(({ levels, difficultyIndex }: Props): JSX.Element => {
           locked={difficultyIndex > 0}
           scheme={level.scheme}
           colors={data[difficultyIndex].colors}
-          onPress={navigateToPlayground}
+          // onPress={navigateToPlayground}
           style={styles.levelItem}
         />
       ))}
