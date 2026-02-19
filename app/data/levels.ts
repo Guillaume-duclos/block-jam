@@ -815,10 +815,10 @@ const data = [
   {
     index: 1,
     colors: {
-      primary: "#DED6C9",
+      primary: "#F5F0A0",
       secondary: "#F5F7FF",
-      mainBlock: "#D9693B",
-      fixedBlock: "#706459",
+      mainBlock: "#C89020",
+      fixedBlock: "#908040",
       frame: "#F5F7FF",
       white: "#FFFFFF",
     },
@@ -1628,10 +1628,10 @@ const data = [
   {
     index: 2,
     colors: {
-      primary: "#8B5CF6",
+      primary: "#A8D8F5",
       secondary: "#F5F7FF",
-      mainBlock: "#DA6C6C",
-      fixedBlock: "#939EB0",
+      mainBlock: "#3890D0",
+      fixedBlock: "#5878A0",
       frame: "#F5F7FF",
       white: "#FFFFFF",
     },
@@ -2441,10 +2441,10 @@ const data = [
   {
     index: 3,
     colors: {
-      primary: "#D6F5BC",
+      primary: "#F5C0A0",
       secondary: "#F5F7FF",
-      mainBlock: "#DA6C6C",
-      fixedBlock: "#939EB0",
+      mainBlock: "#D06030",
+      fixedBlock: "#806040",
       frame: "#F5F7FF",
       white: "#FFFFFF",
     },
@@ -3254,10 +3254,10 @@ const data = [
   {
     index: 4,
     colors: {
-      primary: "#D6F5BC",
+      primary: "#F0A0B8",
       secondary: "#F5F7FF",
-      mainBlock: "#DA6C6C",
-      fixedBlock: "#939EB0",
+      mainBlock: "#B03060",
+      fixedBlock: "#804060",
       frame: "#F5F7FF",
       white: "#FFFFFF",
     },
@@ -4067,10 +4067,10 @@ const data = [
   {
     index: 5,
     colors: {
-      primary: "#D6F5BC",
+      primary: "#C0A0F0",
       secondary: "#F5F7FF",
-      mainBlock: "#DA6C6C",
-      fixedBlock: "#939EB0",
+      mainBlock: "#7030A0",
+      fixedBlock: "#583870",
       frame: "#F5F7FF",
       white: "#FFFFFF",
     },

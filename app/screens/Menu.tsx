@@ -1,6 +1,6 @@
 import { FlashList, FlashListRef } from "@shopify/flash-list";
 import { Canvas, LinearGradient, Rect, vec } from "@shopify/react-native-skia";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import Animated, {
   interpolateColor,
@@ -16,6 +16,7 @@ import data from "../data/levels";
 import { Orientation } from "../enums/orientation.enum";
 import { StorageKey } from "../enums/storageKey.enum";
 import { useDificultyStore } from "../store/dificulty.store";
+import { FocusProvider } from "../providers/FocusProvider";
 import { useLevelStore } from "../store/level.store";
 import { darken } from "../utils/color";
 import { getStorageString } from "../utils/storage";
@@ -32,25 +33,31 @@ export default function Menu() {
 
   const listRef = useRef<FlashListRef<any>>(null);
 
-  const scrollRange = data.map((_, i) => i * windowHeight);
+  const scrollRange = useRef(data.map((_, i) => i * windowHeight)).current;
 
-  const savedLevelScores = getStorageString(StorageKey.LEVEL_SCORE);
+  const startColorRange = useRef(
+    data.map(
+      (_, i) =>
+        darken(data[i].colors.primary) ??
+        darken(data[data.length - 1].colors.primary)
+    )
+  ).current;
 
-  if (savedLevelScores) {
-    setScores(JSON.parse(savedLevelScores));
-  }
+  const endColorRange = useRef(
+    data.map(
+      (_, i) =>
+        darken(data[i].colors.primary, 0.34) ??
+        darken(data[data.length - 1].colors.primary, 0.34)
+    )
+  ).current;
 
-  const startColorRange = data.map(
-    (_, i) =>
-      darken(data[i].colors.primary) ??
-      darken(data[data.length - 1].colors.primary)
-  );
+  useEffect(() => {
+    const savedLevelScores = getStorageString(StorageKey.LEVEL_SCORE);
 
-  const endColorRange = data.map(
-    (_, i) =>
-      darken(data[i].colors.primary, 0.34) ??
-      darken(data[data.length - 1].colors.primary, 0.34)
-  );
+    if (savedLevelScores) {
+      setScores(JSON.parse(savedLevelScores));
+    }
+  }, []);
 
   const setActiveIndex = (y: number) => {
     const id = Math.round(y / windowHeight);
@@ -90,45 +97,47 @@ export default function Menu() {
   });
 
   return (
-    <View style={styles.container}>
-      {/* BACKGROUND GRADIENT */}
-      <Canvas style={styles.canvas}>
-        <Rect x={0} y={0} width={windowWidth} height={windowHeight}>
-          <LinearGradient
-            start={vec(0, 0)}
-            end={vec(windowWidth, windowHeight)}
-            colors={gradientColors}
-          />
-        </Rect>
-      </Canvas>
+    <FocusProvider>
+      <View style={styles.container}>
+        {/* BACKGROUND GRADIENT */}
+        <Canvas style={styles.canvas}>
+          <Rect x={0} y={0} width={windowWidth} height={windowHeight}>
+            <LinearGradient
+              start={vec(0, 0)}
+              end={vec(windowWidth, windowHeight)}
+              colors={gradientColors}
+            />
+          </Rect>
+        </Canvas>
 
-      {/* LISTE VERTICALE */}
-      <AnimatedFlashList
-        ref={listRef}
-        data={data}
-        pagingEnabled
-        style={styles.list}
-        maxItemsInRecyclePool={3}
-        drawDistance={windowHeight * 2}
-        viewabilityConfig={levelItemsConfig}
-        onViewableItemsChanged={viewableItemsChanged}
-        renderItem={({ item }) => (
-          <LevelItemsList key={item.index} level={item} />
-        )}
-        showsVerticalScrollIndicator={false}
-        keyExtractor={(_, index) => `vlist-${index}`}
-        scrollEventThrottle={16}
-        onScroll={onScroll}
-      />
+        {/* LISTE VERTICALE */}
+        <AnimatedFlashList
+          ref={listRef}
+          data={data}
+          pagingEnabled
+          style={styles.list}
+          maxItemsInRecyclePool={3}
+          drawDistance={windowHeight * 2}
+          viewabilityConfig={levelItemsConfig}
+          onViewableItemsChanged={viewableItemsChanged}
+          renderItem={({ item }) => (
+            <LevelItemsList key={item.index} level={item} />
+          )}
+          showsVerticalScrollIndicator={false}
+          keyExtractor={(_, index) => `vlist-${index}`}
+          scrollEventThrottle={16}
+          onScroll={onScroll}
+        />
 
-      {/* PAGINATION */}
-      <PaginationIndicator
-        levels={data}
-        activeViewIndex={activeViewIndex}
-        orientation={Orientation.VERTICAL}
-        updateActiveIndex={updateActiveIndex}
-      />
-    </View>
+        {/* PAGINATION */}
+        <PaginationIndicator
+          levels={data}
+          activeViewIndex={activeViewIndex}
+          orientation={Orientation.VERTICAL}
+          updateActiveIndex={updateActiveIndex}
+        />
+      </View>
+    </FocusProvider>
   );
 }
 

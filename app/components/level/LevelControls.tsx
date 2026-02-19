@@ -27,7 +27,6 @@ const LevelControls = memo(
     difficulty,
     navigateToSelectedLevel,
   }: Props): JSX.Element | undefined => {
-    console.log("LevelControls", Date.now());
 
     const levelsList = data[difficulty].levels;
 

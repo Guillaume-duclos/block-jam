@@ -1,4 +1,4 @@
-import { useIsFocused, useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import {
   BlurMask,
@@ -10,7 +10,14 @@ import {
   Skia,
   vec,
 } from "@shopify/react-native-skia";
-import React, { JSX, memo, useEffect, useMemo, useState } from "react";
+import React, {
+  JSX,
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { StyleSheet, View, ViewStyle } from "react-native";
 import {
   Gesture,
@@ -31,6 +38,7 @@ import { useDificultyStore } from "../../store/dificulty.store";
 import { useLevelStore } from "../../store/level.store";
 import DificultyColors from "../../types/dificultyColors.type";
 import RootStackParamList from "../../types/rootStackParamList.type";
+import { useFocusContext } from "../../providers/FocusProvider";
 import { darken } from "../../utils/color";
 import LevelViewerIndicator from "./LevelViewerIndicator";
 import LevelViewerStars from "./LevelViewerStars";
@@ -41,7 +49,6 @@ type Props = {
   scheme: string;
   locked?: boolean;
   colors: DificultyColors;
-  onPress: (levelIndex: number) => void;
   style?: ViewStyle;
 };
 
@@ -60,12 +67,11 @@ const LevelViewer = memo(
     scheme,
     locked,
     colors,
-    onPress,
     style,
   }: Props): JSX.Element => {
     const navigation = useNavigation<levelItemNavigationProp>();
 
-    const isFocused = useIsFocused();
+    const isFocused = useFocusContext();
 
     const translateY = useSharedValue(0);
 
@@ -82,55 +88,6 @@ const LevelViewer = memo(
     useEffect((): void => {
       computeBlockPositions();
     }, []);
-
-    // Initialise les valeurs de vehiclePositions
-    const computeBlockPositions = (): void => {
-      // On récupère le niveau
-      const level: string = scheme;
-
-      // Initialisation du tableau de positions de tous les véhicules
-      let positions: BlockData[] = [];
-
-      // On parse toutes les lettres de la description de la grille
-      for (let i: number = 0; i < level.length; i++) {
-        // 1. On récupère le label
-        const label: string = level.charAt(i);
-
-        // 2. On vérifie si le label n'a pas déjà été inséré
-        const previousSameLabel: number = positions.findIndex(
-          (position): boolean => position.label === label
-        );
-
-        // 3. On récupère l'orientation
-        let orientation: Orientation = Orientation.NULL;
-
-        if (previousSameLabel === -1) {
-          if (level[i + 1] === label) {
-            orientation = Orientation.HORIZONTAL;
-          } else {
-            orientation = Orientation.VERTICAL;
-          }
-        }
-
-        // 4. On ajoute les données pour chaque élément
-        if (previousSameLabel !== -1) {
-          positions[previousSameLabel].position.push(i);
-        } else if (label === BlockType.EMPTY || label === BlockType.WALL) {
-          positions.push({
-            label,
-            position: [i],
-          });
-        } else {
-          positions.push({
-            label,
-            position: [i],
-            orientation,
-          });
-        }
-      }
-
-      setVehiclePositions(positions);
-    };
 
     const playgroundSize = 72;
     const playgroundGridSize = 72 - 8;
@@ -258,27 +215,57 @@ const LevelViewer = memo(
       );
     }, [vehiclePositions]);
 
-    const panGesture: TapGesture = Gesture.Tap()
-      .maxDuration(Number.MAX_SAFE_INTEGER)
-      .onBegin(() => {
-        translateY.value = withTiming(3, { duration: 50 });
-      })
-      .onEnd(() => {
-        translateY.value = withTiming(0, { duration: 80 }, () => {
-          // runOnJS(onPress)(levelIndex);
-          // runOnJS(navigateToPlayground)();
-        });
-      })
-      .onTouchesCancelled(() => {
-        translateY.value = withTiming(0, { duration: 50 });
-      });
+    // Initialise les valeurs de vehiclePositions
+    const computeBlockPositions = (): void => {
+      // On récupère le niveau
+      const level: string = scheme;
 
-    const translate = useDerivedValue(() => {
-      return [{ translateY: translateY.value }];
-    });
+      // Initialisation du tableau de positions de tous les véhicules
+      let positions: BlockData[] = [];
+
+      // On parse toutes les lettres de la description de la grille
+      for (let i: number = 0; i < level.length; i++) {
+        // 1. On récupère le label
+        const label: string = level.charAt(i);
+
+        // 2. On vérifie si le label n'a pas déjà été inséré
+        const previousSameLabel: number = positions.findIndex(
+          (position): boolean => position.label === label
+        );
+
+        // 3. On récupère l'orientation
+        let orientation: Orientation = Orientation.NULL;
+
+        if (previousSameLabel === -1) {
+          if (level[i + 1] === label) {
+            orientation = Orientation.HORIZONTAL;
+          } else {
+            orientation = Orientation.VERTICAL;
+          }
+        }
+
+        // 4. On ajoute les données pour chaque élément
+        if (previousSameLabel !== -1) {
+          positions[previousSameLabel].position.push(i);
+        } else if (label === BlockType.EMPTY || label === BlockType.WALL) {
+          positions.push({
+            label,
+            position: [i],
+          });
+        } else {
+          positions.push({
+            label,
+            position: [i],
+            orientation,
+          });
+        }
+      }
+
+      setVehiclePositions(positions);
+    };
 
     // Redirection vers le niveau
-    const navigateToPlayground = (): void => {
+    const navigateToPlayground = useCallback((): void => {
       setDificultyColors(colors);
 
       const canNavigate = canPress();
@@ -289,7 +276,25 @@ const LevelViewer = memo(
           difficultyIndex,
         });
       }
-    };
+    }, [colors, levelIndex, difficultyIndex]);
+
+    const panGesture: TapGesture = Gesture.Tap()
+      .maxDuration(Number.MAX_SAFE_INTEGER)
+      .onBegin(() => {
+        translateY.value = withTiming(3, { duration: 50 });
+      })
+      .onEnd(() => {
+        translateY.value = withTiming(0, { duration: 80 });
+        navigateToPlayground();
+      })
+      .onTouchesCancelled(() => {
+        translateY.value = withTiming(0, { duration: 50 });
+      })
+      .runOnJS(true);
+
+    const translate = useDerivedValue(() => {
+      return [{ translateY: translateY.value }];
+    });
 
     return (
       <View style={{ ...styles.container, ...style }}>

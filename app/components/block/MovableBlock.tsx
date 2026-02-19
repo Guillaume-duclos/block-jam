@@ -8,12 +8,11 @@ import {
   PanGesture,
 } from "react-native-gesture-handler";
 import Animated, {
+  cancelAnimation,
   interpolate,
   SharedValue,
   useAnimatedStyle,
   useSharedValue,
-  withDelay,
-  withSpring,
   withTiming,
 } from "react-native-reanimated";
 import ArrowTriangleDownFill from "../../assets/icons/ArrowTriangleDownFill";
@@ -29,7 +28,6 @@ import { darken } from "../../utils/color";
 
 type Props = {
   ref?: Ref<View> | undefined;
-  index: number;
   label: string;
   range: number[];
   position: number[];
@@ -45,7 +43,6 @@ type Props = {
 
 const MovableBlock = memo(
   ({
-    index,
     label,
     range,
     position,
@@ -85,37 +82,46 @@ const MovableBlock = memo(
     const arrowColor = darken(mainBlock!, 0.2);
 
     useEffect(() => {
-      if (animatabled) {
-        const totalDelay = 500 + index * 30;
+      blockScale.value = 1;
+      blockOpacity.value = 1;
 
-        blockScale.value = withDelay(
-          totalDelay,
-          withSpring(1, {
-            mass: 1,
-            damping: 15,
-            stiffness: 240,
-          })
-        );
+      // if (animatabled) {
+      //   const totalDelay = 0 + index * 20;
+      //   blockScale.value = withDelay(
+      //     totalDelay,
+      //     withSpring(1, {
+      //       mass: 1,
+      //       damping: 15,
+      //       stiffness: 240,
+      //     })
+      //   );
+      //   blockOpacity.value = withDelay(
+      //     totalDelay,
+      //     withSpring(1, {
+      //       mass: 1,
+      //       damping: 15,
+      //       stiffness: 240,
+      //     })
+      //   );
+      // } else {
+      //   blockScale.value = 1;
+      //   blockOpacity.value = 1;
+      // }
 
-        blockOpacity.value = withDelay(
-          totalDelay,
-          withSpring(1, {
-            mass: 1,
-            damping: 15,
-            stiffness: 240,
-          })
-        );
-      } else {
-        blockScale.value = 1;
-        blockOpacity.value = 1;
-      }
+      return () => {
+        cancelAnimation(x);
+        cancelAnimation(y);
+        cancelAnimation(blockScale);
+        cancelAnimation(blockOpacity);
+        cancelAnimation(progress);
+      };
     }, []);
 
     useEffect(() => {
-      const px =
-        (position[0] - gridCount * Math.floor(position[0] / gridCount)) *
-        caseSize;
-      const py = Math.floor(position[0] / gridCount) * caseSize;
+      const col = position[0] % gridCount;
+      const row = Math.floor(position[0] / gridCount);
+      const px = col * caseSize;
+      const py = row * caseSize;
 
       if (animatabled) {
         x.value = withTiming(px, { duration: animationDuration });
@@ -132,14 +138,14 @@ const MovableBlock = memo(
       let height: number;
 
       if (orientation === Orientation.HORIZONTAL) {
-        width = caseSize * position.length;
-        height = caseSize;
+        width = caseSize * position.length - 5;
+        height = caseSize - 5;
       } else {
-        width = caseSize;
-        height = caseSize * position.length;
+        width = caseSize - 5;
+        height = caseSize * position.length - 5;
       }
 
-      return { height: height - 4, width: width - 4 };
+      return { height, width };
     };
 
     // Calcule la tranche de la grille la plus proche en fonction de la position courante
@@ -303,9 +309,10 @@ const MovableBlock = memo(
             styles.blockContainer,
             { boxShadow: `0 1px 3px 0 ${darken(color!, 0.3)}` },
             vehiclePosition,
+            blockStyle,
           ]}
         >
-          <Animated.View style={[styles.blockSubContainer, blockStyle]}>
+          <View style={styles.blockSubContainer}>
             <View
               style={{
                 ...styles.blockBottomBorder,
@@ -355,7 +362,7 @@ const MovableBlock = memo(
                 />
               </Animated.View>
             )}
-          </Animated.View>
+          </View>
         </Animated.View>
       </GestureDetector>
     );

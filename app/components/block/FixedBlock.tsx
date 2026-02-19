@@ -5,8 +5,6 @@ import Animated, {
   SharedValue,
   useAnimatedStyle,
   useSharedValue,
-  withDelay,
-  withSpring,
 } from "react-native-reanimated";
 import { caseSize } from "../../constants/dimension";
 import { useDificultyStore } from "../../store/dificulty.store";
@@ -25,7 +23,7 @@ export default function FixedBlock({
 }: Props): JSX.Element {
   console.log("FixedBlock", { index });
 
-  const x: number = (position - 6 * Math.floor(position / 6)) * caseSize;
+  const x: number = (position % 6) * caseSize;
   const y: number = Math.floor(position / 6) * caseSize;
 
   const dificultyTheme = useDificultyStore((value) => value.colors);
@@ -40,30 +38,28 @@ export default function FixedBlock({
   }));
 
   useEffect(() => {
-    if (animatabled) {
-      const totalDelay = 300 + index * 30;
-
-      blockScale.value = withDelay(
-        totalDelay,
-        withSpring(1, {
-          mass: 1,
-          damping: 15,
-          stiffness: 240,
-        })
-      );
-
-      blockOpacity.value = withDelay(
-        totalDelay,
-        withSpring(1, {
-          mass: 1,
-          damping: 15,
-          stiffness: 240,
-        })
-      );
-    } else {
-      blockScale.value = 1;
-      blockOpacity.value = 1;
-    }
+    // if (animatabled) {
+    //   const totalDelay = 0 + index * 30;
+    //   blockScale.value = withDelay(
+    //     totalDelay,
+    //     withSpring(1, {
+    //       mass: 1,
+    //       damping: 15,
+    //       stiffness: 240,
+    //     })
+    //   );
+    //   blockOpacity.value = withDelay(
+    //     totalDelay,
+    //     withSpring(1, {
+    //       mass: 1,
+    //       damping: 15,
+    //       stiffness: 240,
+    //     })
+    //   );
+    // } else {
+    //   blockScale.value = 1;
+    //   blockOpacity.value = 1;
+    // }
   }, [animatabled, index]);
 
   return (

@@ -21,8 +21,6 @@ const PlaygroundHeader = ({
   currentLevel,
   levelCount,
 }: Props): JSX.Element => {
-  console.log("PlaygroundHeader", Date.now());
-
   const navigation = useNavigation<NavigationProp>();
 
   const dificultyTheme = useDificultyStore((value) => value.colors);
@@ -49,7 +47,9 @@ const PlaygroundHeader = ({
   // Redirige vers le menu
   const goBack = (): void => {
     navigation.goBack();
-    resetLevelData();
+    requestIdleCallback(() => {
+      resetLevelData();
+    });
   };
 
   // Annule la redirection vers le niveau sélectionné
