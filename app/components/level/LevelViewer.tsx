@@ -25,6 +25,7 @@ import {
   TapGesture,
 } from "react-native-gesture-handler";
 import {
+  runOnJS,
   useDerivedValue,
   useSharedValue,
   withTiming,
@@ -281,16 +282,18 @@ const LevelViewer = memo(
     const panGesture: TapGesture = Gesture.Tap()
       .maxDuration(Number.MAX_SAFE_INTEGER)
       .onBegin(() => {
+        "worklet";
         translateY.value = withTiming(3, { duration: 50 });
       })
       .onEnd(() => {
+        "worklet";
         translateY.value = withTiming(0, { duration: 80 });
-        navigateToPlayground();
+        runOnJS(navigateToPlayground)();
       })
       .onTouchesCancelled(() => {
+        "worklet";
         translateY.value = withTiming(0, { duration: 50 });
-      })
-      .runOnJS(true);
+      });
 
     const translate = useDerivedValue(() => {
       return [{ translateY: translateY.value }];
