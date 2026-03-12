@@ -13,24 +13,24 @@ import { darken } from "../../utils/color";
 type Props = {
   index: number;
   position: number;
+  initialX: number;
+  initialY: number;
   animatabled?: boolean;
 };
 
 export default function FixedBlock({
   index,
   position,
+  initialX,
+  initialY,
   animatabled,
 }: Props): JSX.Element {
-  console.log("FixedBlock", { index });
-
-  const x: number = (position % 6) * caseSize;
-  const y: number = Math.floor(position / 6) * caseSize;
 
   const dificultyTheme = useDificultyStore((value) => value.colors);
   const color = dificultyTheme!.fixedBlock;
 
-  const blockScale: SharedValue<number> = useSharedValue(0.9);
-  const blockOpacity: SharedValue<number> = useSharedValue(0);
+  const blockScale: SharedValue<number> = useSharedValue(1);
+  const blockOpacity: SharedValue<number> = useSharedValue(1);
 
   const blockStyle = useAnimatedStyle(() => ({
     opacity: blockOpacity.value,
@@ -66,8 +66,8 @@ export default function FixedBlock({
     <Animated.View
       style={[
         {
-          top: y + 2,
-          left: x + 2,
+          top: initialY + 2,
+          left: initialX + 2,
           width: caseSize - 4,
           height: caseSize - 4,
           boxShadow: `0 1px 3px 0 ${darken(color, 0.3)}`,

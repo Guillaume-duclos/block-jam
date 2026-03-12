@@ -409,11 +409,16 @@ const LevelPlayground = memo(
         } else if (data.label === BlockType.WALL) {
           return data.position.map(
             (position: number, blocIndex: number): JSX.Element => {
+              const col = position % gridCount;
+              const row = Math.floor(position / gridCount);
+
               return (
                 <FixedBlock
                   key={`${data.label}-${blocIndex}`}
                   index={vehicleIndex}
                   position={position}
+                  initialX={col * caseSize}
+                  initialY={row * caseSize}
                   animatabled={isAnimatabled.current}
                 />
               );
