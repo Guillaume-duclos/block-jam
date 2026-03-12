@@ -28,25 +28,31 @@ import { darken } from "../../utils/color";
 
 type Props = {
   ref?: Ref<View> | undefined;
+  index: number;
   label: string;
   range: number[];
   position: number[];
   orientation: Orientation;
+  initialX: number;
+  initialY: number;
   hapticEnable?: boolean;
   animatabled?: boolean;
   updatePosition: (
     label: string,
     position: number[],
-    addToHistory?: boolean
+    addToHistory?: boolean,
   ) => void;
 };
 
 const MovableBlock = memo(
   ({
+    index,
     label,
     range,
     position,
     orientation,
+    initialX,
+    initialY,
     hapticEnable,
     animatabled,
     updatePosition,
@@ -57,12 +63,13 @@ const MovableBlock = memo(
     const mainBlockColor = dificultyTheme?.mainBlock;
     const color = dificultyTheme?.secondary;
 
-    const x: SharedValue<number> = useSharedValue(0);
-    const y: SharedValue<number> = useSharedValue(0);
-    const blockScale: SharedValue<number> = useSharedValue(0.9);
-    const blockOpacity: SharedValue<number> = useSharedValue(0);
+    const x: SharedValue<number> = useSharedValue(initialX);
+    const y: SharedValue<number> = useSharedValue(initialY);
+    const blockScale: SharedValue<number> = useSharedValue(1);
+    const blockOpacity: SharedValue<number> = useSharedValue(1);
     const localPosition: RefObject<number[]> = useRef(position);
     const vibrationEnable: RefObject<boolean> = useRef(true);
+    const isMounted = useRef(false);
     const startX = useRef<number>(0);
     const startY = useRef<number>(0);
 
@@ -82,8 +89,8 @@ const MovableBlock = memo(
     const arrowColor = darken(mainBlock!, 0.2);
 
     useEffect(() => {
-      blockScale.value = 1;
-      blockOpacity.value = 1;
+      // blockScale.value = 1;
+      // blockOpacity.value = 1;
 
       // if (animatabled) {
       //   const totalDelay = 0 + index * 20;
@@ -93,7 +100,7 @@ const MovableBlock = memo(
       //       mass: 1,
       //       damping: 15,
       //       stiffness: 240,
-      //     })
+      //     }),
       //   );
       //   blockOpacity.value = withDelay(
       //     totalDelay,
@@ -101,7 +108,7 @@ const MovableBlock = memo(
       //       mass: 1,
       //       damping: 15,
       //       stiffness: 240,
-      //     })
+      //     }),
       //   );
       // } else {
       //   blockScale.value = 1;
@@ -123,13 +130,14 @@ const MovableBlock = memo(
       const px = col * caseSize;
       const py = row * caseSize;
 
-      if (animatabled) {
+      if (animatabled && isMounted.current) {
         x.value = withTiming(px, { duration: animationDuration });
         y.value = withTiming(py, { duration: animationDuration });
       } else {
         x.value = px;
         y.value = py;
       }
+      isMounted.current = true;
     }, [position, animatabled]);
 
     // Calcule les dimensions du véhicule
@@ -221,7 +229,7 @@ const MovableBlock = memo(
           [
             range[0] * caseSize,
             range[1] * caseSize - (position.length - 1) * caseSize,
-          ]
+          ],
         );
 
         return {
@@ -237,7 +245,7 @@ const MovableBlock = memo(
           [
             range[0] * caseSize,
             range[1] * caseSize - (position.length - 1) * caseSize,
-          ]
+          ],
         );
 
         return {
@@ -292,7 +300,7 @@ const MovableBlock = memo(
       })
       .onEnd((): void => {
         if (localPosition.current[0] !== position[0]) {
-          updatePosition(localPosition.current, label, true);
+          updatePosition(label, localPosition.current, true);
         }
 
         vibrationEnable.current = true;
@@ -366,7 +374,7 @@ const MovableBlock = memo(
         </Animated.View>
       </GestureDetector>
     );
-  }
+  },
 );
 
 const styles = StyleSheet.create({

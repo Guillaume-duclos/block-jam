@@ -5,6 +5,7 @@ import {
   GestureDetector,
   TapGesture,
 } from "react-native-gesture-handler";
+import { runOnJS } from "react-native-worklets";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -36,18 +37,21 @@ export default function PressableView({
     .enabled(!disabled)
     .maxDuration(Number.MAX_SAFE_INTEGER)
     .onBegin(() => {
+      "worklet";
       progress.value = withTiming(minimumScale, { duration: 100 });
     })
     .onFinalize(() => {
+      "worklet";
       progress.value = withTiming(1, { duration: 100 });
     })
     .onTouchesUp(() => {
+      "worklet";
       progress.value = withTiming(1, { duration: 100 });
     })
     .onEnd(() => {
-      onPress();
-    })
-    .runOnJS(true);
+      "worklet";
+      runOnJS(onPress)();
+    });
 
   return (
     <GestureDetector gesture={tapGesture}>

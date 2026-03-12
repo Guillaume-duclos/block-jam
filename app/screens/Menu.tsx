@@ -8,15 +8,14 @@ import Animated, {
   useDerivedValue,
   useSharedValue,
 } from "react-native-reanimated";
-import { runOnJS } from "react-native-worklets";
 import LevelItemsList from "../components/level/LevelItemsList";
 import PaginationIndicator from "../components/PaginationIndicator";
 import { windowHeight, windowWidth } from "../constants/dimension";
 import data from "../data/levels";
 import { Orientation } from "../enums/orientation.enum";
 import { StorageKey } from "../enums/storageKey.enum";
-import { useDificultyStore } from "../store/dificulty.store";
 import { FocusProvider } from "../providers/FocusProvider";
+import { useDificultyStore } from "../store/dificulty.store";
 import { useLevelStore } from "../store/level.store";
 import { darken } from "../utils/color";
 import { getStorageString } from "../utils/storage";
@@ -39,16 +38,16 @@ export default function Menu() {
     data.map(
       (_, i) =>
         darken(data[i].colors.primary) ??
-        darken(data[data.length - 1].colors.primary)
-    )
+        darken(data[data.length - 1].colors.primary),
+    ),
   ).current;
 
   const endColorRange = useRef(
     data.map(
       (_, i) =>
         darken(data[i].colors.primary, 0.34) ??
-        darken(data[data.length - 1].colors.primary, 0.34)
-    )
+        darken(data[data.length - 1].colors.primary, 0.34),
+    ),
   ).current;
 
   useEffect(() => {
@@ -59,14 +58,6 @@ export default function Menu() {
     }
   }, []);
 
-  const setActiveIndex = (y: number) => {
-    const id = Math.round(y / windowHeight);
-    const clamped = Math.max(0, Math.min(id, data.length - 1));
-
-    setActiveViewIndex(clamped);
-    setDificultyColors(data[clamped].colors);
-  };
-
   const levelItemsConfig = useRef({
     minimumViewTime: 0,
     viewAreaCoveragePercentThreshold: 50,
@@ -74,14 +65,15 @@ export default function Menu() {
 
   const viewableItemsChanged = useRef(({ viewableItems }: any): void => {
     if (viewableItems.length) {
-      setActiveViewIndex(viewableItems[0].index);
+      const index = viewableItems[0].index;
+      setActiveViewIndex(index);
+      setDificultyColors(data[index].colors);
     }
   }).current;
 
   const onScroll = useAnimatedScrollHandler({
     onScroll: (event) => {
       scroll.value = event.contentOffset.y;
-      runOnJS(setActiveIndex)(event.contentOffset.y);
     },
   });
 
@@ -117,7 +109,7 @@ export default function Menu() {
           pagingEnabled
           style={styles.list}
           maxItemsInRecyclePool={3}
-          drawDistance={windowHeight * 2}
+          // drawDistance={isFocused ? windowHeight * 2 : 0}
           viewabilityConfig={levelItemsConfig}
           onViewableItemsChanged={viewableItemsChanged}
           renderItem={({ item }) => (

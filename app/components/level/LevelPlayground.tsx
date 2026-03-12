@@ -10,9 +10,10 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { StyleSheet, View, ViewStyle } from "react-native";
+import { InteractionManager, StyleSheet, View, ViewStyle } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { playgroundSize } from "../../constants/dimension";
+import { gridCount } from "../../config/config";
+import { caseSize, playgroundSize } from "../../constants/dimension";
 import { BlockType } from "../../enums/blockType.enum";
 import LevelNavigationType from "../../enums/levelNavigationType.enum";
 import { Orientation } from "../../enums/orientation.enum";
@@ -59,7 +60,6 @@ const LevelPlayground = memo(
     navigateToNextLevel,
     style,
   }: Props): JSX.Element | undefined => {
-
     const grid: number[] = useGrid();
     const dificultyTheme = useDificultyStore((value) => value.colors);
     const mainColor = dificultyTheme?.primary!;
@@ -95,8 +95,8 @@ const LevelPlayground = memo(
 
           if (lastPosition) {
             updateBlockPosition(
+              lastPosition.label,
               lastPosition.previousPosition,
-              lastPosition.label
             );
           }
 
@@ -105,21 +105,25 @@ const LevelPlayground = memo(
           }
         },
       }),
-      [historic.current]
+      [historic.current],
     );
 
     useFocusEffect(
       useCallback(() => {
         const hapticEnable = getStorageBoolean(
-          StorageKey.ALLOW_DRAG_HAPTIC_FEEDBACK
+          StorageKey.ALLOW_DRAG_HAPTIC_FEEDBACK,
         );
 
         setHapticEnable(hapticEnable || false);
-      }, [])
+      }, []),
     );
 
     useEffect((): (() => void) => {
-      computeBlockPositions();
+      resetLevelData();
+
+      const interaction = InteractionManager.runAfterInteractions(() => {
+        computeBlockPositions();
+      });
 
       let timeOut: NodeJS.Timeout;
 
@@ -127,7 +131,10 @@ const LevelPlayground = memo(
         timeOut = setTimeout(() => (isAnimatabled.current = false), 0);
       }
 
-      return () => clearTimeout(timeOut);
+      return () => {
+        interaction.cancel();
+        clearTimeout(timeOut);
+      };
     }, [level]);
 
     // Initialise les valeurs de vehiclePositions
@@ -145,7 +152,7 @@ const LevelPlayground = memo(
 
         // 2. On vérifie si le label n'a pas déjà été inséré
         const previousSameLabel: number = positions.findIndex(
-          (position): boolean => position.label === label
+          (position): boolean => position.label === label,
         );
 
         // 3. On récupère l'orientation
@@ -200,13 +207,13 @@ const LevelPlayground = memo(
 
     // Mise à jour de la nouvelle position du dernier bloc déplacé
     const updateBlockPosition = (
-      position: number[],
       label: string,
-      addToHistory?: boolean
+      position: number[],
+      addToHistory?: boolean,
     ): void => {
       // On récupère l'index du véhicule dans le tableau des positions avec le label
       const index = vehiclePositions.findIndex(
-        (position) => position.label === label
+        (position) => position.label === label,
       );
 
       // On ajoute la nouvelle position dans l'historique si l'option est activé
@@ -275,7 +282,7 @@ const LevelPlayground = memo(
     // Calcule de la plage de valeur de déplacement possible
     const computeBlockRange = (
       element: ElementData,
-      occupiedPositions: number[]
+      occupiedPositions: number[],
     ): number[] => {
       // On récupère la plage de valeur minimum et maximum du véhicule
       let min = firstLineCaseIndex(element.position, element.orientation);
@@ -297,7 +304,7 @@ const LevelPlayground = memo(
 
       // 2. On récupère les cases libres dans la ligne
       const emptyCases: number[] = lineCases.filter(
-        (value: number) => !occupiedPositions.includes(value)
+        (value: number) => !occupiedPositions.includes(value),
       );
 
       // 3. On récupère les positions minimum et maximum disponibles
@@ -387,15 +394,19 @@ const LevelPlayground = memo(
     const renderBlocks = (): JSX.Element[] => {
       return vehiclePositions.map((data: any, vehicleIndex: number) => {
         if (data.label !== BlockType.EMPTY && data.label !== BlockType.WALL) {
+          const col = data.position[0] % gridCount;
+          const row = Math.floor(data.position[0] / gridCount);
+
           return (
             <MovableBlock
               key={data.label}
               index={vehicleIndex}
-              grid={grid}
               label={data.label}
               range={data.range}
               position={data.position}
               orientation={data.orientation}
+              initialX={col * caseSize}
+              initialY={row * caseSize}
               hapticEnable={hapticEnable}
               animatabled={isAnimatabled.current}
               updatePosition={updateBlockPosition}
@@ -412,7 +423,7 @@ const LevelPlayground = memo(
                   animatabled={isAnimatabled.current}
                 />
               );
-            }
+            },
           );
         }
       });
@@ -460,7 +471,7 @@ const LevelPlayground = memo(
         />
       </Fragment>
     );
-  }
+  },
 );
 
 const styles = StyleSheet.create({

@@ -1,22 +1,12 @@
-import { useEffect, useState } from 'react';
 import { Dimensions } from 'react-native';
 
 const windowWidth: number = Dimensions.get('window').width;
 
-const useGrid = (): number[] => {
-  const [grid, setGrid] = useState<number[]>([]);
+const grid: number[] = [];
+for (let i: number = 0; i <= 6; i++) {
+  grid.push(((windowWidth * 0.9) / 6) * i);
+}
 
-  useEffect((): void => {
-    const gridSlices: number[] = [];
-
-    for (let i: number = 0; i <= 6; i++) {
-      gridSlices.push(((windowWidth * 0.9) / 6) * i);
-    }
-
-    setGrid(gridSlices);
-  }, []);
-
-  return grid;
-};
+const useGrid = (): number[] => grid;
 
 export default useGrid;
