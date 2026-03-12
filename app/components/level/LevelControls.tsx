@@ -54,6 +54,7 @@ const LevelControls = memo(
     // Redirige vers le viveau sélectionné
     const confirmLevelNavigation = (): void => {
       navigateToSelectedLevel(showConfirmationModal as LevelNavigationType);
+      setShowConfirmationModal(undefined);
     };
 
     // Annule la redirection vers le niveau sélectionné

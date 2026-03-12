@@ -120,20 +120,14 @@ const LevelPlayground = memo(
 
     useEffect((): (() => void) => {
       resetLevelData();
+      isAnimatabled.current = false;
 
       const interaction = InteractionManager.runAfterInteractions(() => {
         computeBlockPositions();
       });
 
-      let timeOut: NodeJS.Timeout;
-
-      if (isAnimatabled.current) {
-        timeOut = setTimeout(() => (isAnimatabled.current = false), 0);
-      }
-
       return () => {
         interaction.cancel();
-        clearTimeout(timeOut);
       };
     }, [level]);
 
