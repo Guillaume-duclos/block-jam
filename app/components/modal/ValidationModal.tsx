@@ -59,10 +59,6 @@ export default function ValidationModal({
     intensity: Math.round(blur.value),
   }));
 
-  const animatedoOpacityProps = useAnimatedProps(() => ({
-    opacity: blur.value,
-  }));
-
   const animatedModalStyle = useAnimatedStyle(() => ({
     opacity: blur.value / 50,
     transform: [{ scale: modalScale.value }],

@@ -6,6 +6,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
+import { runOnJS } from "react-native-worklets";
 import { darken } from "../../utils/color";
 
 type Props = {
@@ -48,30 +49,32 @@ const Button = memo(
       () => ({
         opacity: withTiming(disabled ? 0.4 : 1, { duration: 80 }),
       }),
-      [disabled]
+      [disabled],
     );
 
     const tapGesture = Gesture.Tap()
       .enabled(!disabled)
       .maxDuration(Number.MAX_SAFE_INTEGER)
       .onBegin(() => {
+        "worklet";
         progress.value = withTiming(deep - deep / 1.5, { duration: 80 });
-        onPressIn && onPressIn();
+        onPressIn && runOnJS(onPressIn)();
       })
       .onFinalize(() => {
+        "worklet";
         progress.value = withTiming(0, { duration: 80 });
-        onPressOut && onPressOut();
+        onPressOut && runOnJS(onPressOut)();
       })
       .onTouchesUp(() => {
+        "worklet";
         progress.value = withTiming(0, { duration: 80 });
-        onPressOut && onPressOut();
+        onPressOut && runOnJS(onPressOut)();
       })
       .onEnd(() => {
-        onPressOut && onPressOut();
-        onPress();
-      })
-      .runOnJS(true);
-
+        "worklet";
+        onPressOut && runOnJS(onPressOut)();
+        runOnJS(onPress)();
+      });
     return (
       <GestureDetector gesture={tapGesture}>
         <View
@@ -105,7 +108,7 @@ const Button = memo(
         </View>
       </GestureDetector>
     );
-  }
+  },
 );
 
 const styles = StyleSheet.create({

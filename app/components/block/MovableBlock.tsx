@@ -118,6 +118,8 @@ const MovableBlock = memo(
     }, []);
 
     useEffect(() => {
+      localPosition.current = position;
+
       const col = position[0] % gridCount;
       const row = Math.floor(position[0] / gridCount);
       const px = col * caseSize;
