@@ -19,6 +19,12 @@ import { darken } from "../../utils/color";
 import { formatScore } from "../../utils/format";
 import Button from "../button/Button";
 
+const STAR_SPRING_CONFIG = {
+  mass: 1,
+  damping: 15,
+  stiffness: 200,
+};
+
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
 const AnimatedButton = Animated.createAnimatedComponent(Button);
 
@@ -42,6 +48,12 @@ export default function ResultModal({
   const confirmButtonScale = useSharedValue(0.95);
   const confirmButtonOpacity = useSharedValue(0);
 
+  const starProgress = [
+    useSharedValue(0),
+    useSharedValue(0),
+    useSharedValue(0),
+  ];
+
   const animationConfig: SpringConfig = {
     mass: 1,
     damping: 15,
@@ -53,8 +65,16 @@ export default function ResultModal({
     if (score) {
       animateBlur();
       animateScale();
+      animateStars();
     }
   }, [score]);
+
+  const animatedStarStyles = starProgress.map((progress) =>
+    useAnimatedStyle(() => ({
+      opacity: progress.value,
+      transform: [{ scale: progress.value }],
+    })),
+  );
 
   const animatedBlurProps = useAnimatedProps(() => ({
     intensity: Math.round(blur.value),
@@ -77,6 +97,16 @@ export default function ResultModal({
 
   const animateBlur = (): void => {
     blur.value = withTiming(50, { duration: 200 });
+  };
+
+  const animateStars = (): void => {
+    starProgress.forEach((progress, index) => {
+      progress.value = 0;
+      progress.value = withDelay(
+        500 + index * 150,
+        withSpring(1, STAR_SPRING_CONFIG),
+      );
+    });
   };
 
   const animateScale = (): void => {
@@ -123,7 +153,7 @@ export default function ResultModal({
         );
         units -= 1;
       } else {
-        result.push(<Star key={i} color="#474746ff" style={styles.star} />);
+        result.push(<Star key={i} color="#e5be74" style={styles.star} />);
       }
     }
 
@@ -144,7 +174,22 @@ export default function ResultModal({
               <View style={styles.modalBottomBorder} />
               <View style={styles.modal}>
                 <Text style={styles.title}>Level completed!</Text>
-                <View style={styles.starsContainer}>{stars}</View>
+                <View style={styles.starsContainer}>
+                  {stars.map((star, index) => (
+                    <View key={index} style={styles.starWrapper}>
+                      <Star color="#e5be74" style={styles.star} />
+                      <Animated.View
+                        style={[
+                          StyleSheet.absoluteFill,
+                          styles.starOverlay,
+                          animatedStarStyles[index],
+                        ]}
+                      >
+                        {star}
+                      </Animated.View>
+                    </View>
+                  ))}
+                </View>
                 <View style={styles.scroreContainer}>
                   <Text style={styles.scoreLabel}>Score</Text>
                   <Text style={styles.scoreValue}>
@@ -226,6 +271,14 @@ const styles = StyleSheet.create({
     gap: 20,
     justifyContent: "center",
     flexDirection: "row",
+  },
+  starWrapper: {
+    width: 46,
+    height: 46,
+  },
+  starOverlay: {
+    alignItems: "center",
+    justifyContent: "center",
   },
   star: {
     width: 46,

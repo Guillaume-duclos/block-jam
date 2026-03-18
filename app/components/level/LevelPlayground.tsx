@@ -474,7 +474,11 @@ const LevelPlayground = memo(
         </View>
 
         {/* RESULT MODAL */}
-        <ResultModal score={1} replay={replay} nextLevel={nextLevel} />
+        <ResultModal
+          score={resultModal}
+          replay={replay}
+          nextLevel={nextLevel}
+        />
       </Fragment>
     );
   },
