@@ -119,7 +119,7 @@ export default function ResultModal({
         units -= 2;
       } else if (units === 1) {
         result.push(
-          <StarSemiFill key={i} color="#e5be74" style={styles.star} />
+          <StarSemiFill key={i} color="#e5be74" style={styles.star} />,
         );
         units -= 1;
       } else {
@@ -143,11 +143,14 @@ export default function ResultModal({
             <Animated.View style={animatedModalStyle}>
               <View style={styles.modalBottomBorder} />
               <View style={styles.modal}>
-                <Text style={styles.title}>Level completed</Text>
+                <Text style={styles.title}>Level completed!</Text>
                 <View style={styles.starsContainer}>{stars}</View>
-                <Text style={styles.score}>
-                  Score : {formatScore((score * 1000).toFixed(0))}
-                </Text>
+                <View style={styles.scroreContainer}>
+                  <Text style={styles.scoreLabel}>Score</Text>
+                  <Text style={styles.scoreValue}>
+                    {formatScore((score * 1000).toFixed(0))}
+                  </Text>
+                </View>
               </View>
             </Animated.View>
 
@@ -212,10 +215,11 @@ const styles = StyleSheet.create({
     boxShadow: "0 0 14px 0 #878787",
   },
   title: {
-    fontSize: 34,
+    fontSize: 30,
     fontWeight: 800,
     fontFamily: "Rubik",
     textAlign: "center",
+    textTransform: "uppercase",
     color: darken("#D6F5BC", 0.3),
   },
   starsContainer: {
@@ -227,9 +231,20 @@ const styles = StyleSheet.create({
     width: 46,
     height: 46,
   },
-  score: {
-    fontSize: 24,
-    fontWeight: 800,
+  scroreContainer: {
+    marginTop: 6,
+  },
+  scoreLabel: {
+    fontSize: 16,
+    fontWeight: 600,
+    fontFamily: "Rubik",
+    textAlign: "center",
+    textTransform: "uppercase",
+    color: darken("#D6F5BC", 0.3),
+  },
+  scoreValue: {
+    fontSize: 48,
+    fontWeight: 700,
     fontFamily: "Rubik",
     textAlign: "center",
     color: darken("#D6F5BC", 0.3),

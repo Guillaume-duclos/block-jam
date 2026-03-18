@@ -34,7 +34,7 @@ import {
 } from "../../utils/storage";
 import FixedBlock from "../block/FixedBlock";
 import MovableBlock from "../block/MovableBlock";
-import ModalResult from "../modal/ResultModal";
+import ResultModal from "../modal/ResultModal";
 import LevelGrid from "./LevelGrid";
 
 type Props = {
@@ -473,12 +473,8 @@ const LevelPlayground = memo(
           </View>
         </View>
 
-        {/* MODAL */}
-        <ModalResult
-          score={resultModal}
-          replay={replay}
-          nextLevel={nextLevel}
-        />
+        {/* RESULT MODAL */}
+        <ResultModal score={1} replay={replay} nextLevel={nextLevel} />
       </Fragment>
     );
   },
