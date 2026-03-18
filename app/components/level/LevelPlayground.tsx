@@ -120,16 +120,27 @@ const LevelPlayground = memo(
 
     useEffect((): (() => void) => {
       resetLevelData();
-      isAnimatabled.current = false;
 
-      const interaction = InteractionManager.runAfterInteractions(() => {
+      if (isAnimatabled.current) {
+        const interaction = InteractionManager.runAfterInteractions(() => {
+          computeBlockPositions();
+        });
+
+        return () => {
+          interaction.cancel();
+          isAnimatabled.current = false;
+        };
+      } else {
         computeBlockPositions();
-      });
-
-      return () => {
-        interaction.cancel();
-      };
+        return () => {};
+      }
     }, [level]);
+
+    useEffect(() => {
+      if (isAnimatabled.current && vehiclePositions.length > 0) {
+        isAnimatabled.current = false;
+      }
+    }, [vehiclePositions]);
 
     // Initialise les valeurs de vehiclePositions
     const computeBlockPositions = (): void => {

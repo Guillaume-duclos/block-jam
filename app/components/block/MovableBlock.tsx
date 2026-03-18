@@ -13,6 +13,8 @@ import Animated, {
   SharedValue,
   useAnimatedStyle,
   useSharedValue,
+  withDelay,
+  withSpring,
   withTiming,
 } from "react-native-reanimated";
 import ArrowTriangleDownFill from "../../assets/icons/ArrowTriangleDownFill";
@@ -65,8 +67,12 @@ const MovableBlock = memo(
 
     const x: SharedValue<number> = useSharedValue(initialX);
     const y: SharedValue<number> = useSharedValue(initialY);
-    const blockScale: SharedValue<number> = useSharedValue(1);
-    const blockOpacity: SharedValue<number> = useSharedValue(1);
+    const blockScale: SharedValue<number> = useSharedValue(
+      animatabled ? 0.9 : 1,
+    );
+    const blockOpacity: SharedValue<number> = useSharedValue(
+      animatabled ? 0 : 1,
+    );
     const localPosition: RefObject<number[]> = useRef(position);
     const vibrationEnable: RefObject<boolean> = useRef(true);
     const isMounted = useRef(false);
@@ -81,7 +87,6 @@ const MovableBlock = memo(
 
     const blockStyle = useAnimatedStyle(() => ({
       opacity: blockOpacity.value,
-      transform: [{ scale: blockScale.value }],
     }));
 
     const mainBlock = label === BlockType.MAIN_BLOCK ? mainBlockColor : color;
@@ -89,31 +94,19 @@ const MovableBlock = memo(
     const arrowColor = darken(mainBlock!, 0.2);
 
     useEffect(() => {
-      // blockScale.value = 1;
-      // blockOpacity.value = 1;
+      if (animatabled) {
+        const totalDelay = index * 20;
 
-      // if (animatabled) {
-      //   const totalDelay = 0 + index * 20;
-      //   blockScale.value = withDelay(
-      //     totalDelay,
-      //     withSpring(1, {
-      //       mass: 1,
-      //       damping: 15,
-      //       stiffness: 240,
-      //     }),
-      //   );
-      //   blockOpacity.value = withDelay(
-      //     totalDelay,
-      //     withSpring(1, {
-      //       mass: 1,
-      //       damping: 15,
-      //       stiffness: 240,
-      //     }),
-      //   );
-      // } else {
-      //   blockScale.value = 1;
-      //   blockOpacity.value = 1;
-      // }
+        blockScale.value = withDelay(
+          totalDelay,
+          withSpring(1, { mass: 1, damping: 15, stiffness: 240 }),
+        );
+
+        blockOpacity.value = withDelay(
+          totalDelay,
+          withSpring(1, { mass: 1, damping: 15, stiffness: 240 }),
+        );
+      }
 
       return () => {
         cancelAnimation(x);
@@ -233,7 +226,11 @@ const MovableBlock = memo(
         );
 
         return {
-          transform: [{ translateX: positionX }, { translateY: y.value }],
+          transform: [
+            { translateX: positionX },
+            { translateY: y.value },
+            { scale: blockScale.value },
+          ],
         };
       } else {
         const positionY: number = interpolate(
@@ -249,7 +246,11 @@ const MovableBlock = memo(
         );
 
         return {
-          transform: [{ translateX: x.value }, { translateY: positionY }],
+          transform: [
+            { translateX: x.value },
+            { translateY: positionY },
+            { scale: blockScale.value },
+          ],
         };
       }
     }, [range]);

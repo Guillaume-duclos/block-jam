@@ -1,6 +1,6 @@
 import React, { JSX } from "react";
 import { StyleSheet, View, ViewStyle } from "react-native";
-import Svg, { Line } from "react-native-svg";
+import StarFill from "../../assets/icons/StarFill";
 import { goalCaseIndex } from "../../config/config";
 import { caseSize } from "../../constants/dimension";
 import { useDificultyStore } from "../../store/dificulty.store";
@@ -34,37 +34,15 @@ export default function LevelGrid({ color, style }: Props): JSX.Element {
               ...(index === goalCaseIndex && {
                 borderColor: lighten(mainBlockColor),
                 borderWidth: 2,
+                opacity: 0.75,
               }),
             }}
           >
             {index === goalCaseIndex && (
-              // <StarFill color={lighten(mainBlockColor)} />
-
-              <Svg
-                height="100%"
-                width="100%"
-                viewBox={`0 0 ${caseSize - 5} ${caseSize - 5}`}
-                preserveAspectRatio="none"
-              >
-                {[...Array(6)].map((_, i) => {
-                  // On calcule la position pour répartir les 6 lignes
-                  // (i + 1) * (100 / 7) permet d'avoir un espace égal avant et après
-                  const pos = (i + 1) * (100 / 7);
-
-                  return (
-                    <Line
-                      key={i}
-                      x1={pos}
-                      y1="0"
-                      x2="0"
-                      y2={pos}
-                      stroke={lighten(mainBlockColor)}
-                      strokeWidth="2"
-                      vectorEffect="non-scaling-stroke"
-                    />
-                  );
-                })}
-              </Svg>
+              <StarFill
+                style={{ width: 22, height: 22 }}
+                color={lighten(mainBlockColor)}
+              />
             )}
           </View>
         );

@@ -2,9 +2,12 @@ import { LinearGradient } from "expo-linear-gradient";
 import React, { JSX, useEffect } from "react";
 import { StyleSheet, View } from "react-native";
 import Animated, {
+  cancelAnimation,
   SharedValue,
   useAnimatedStyle,
   useSharedValue,
+  withDelay,
+  withSpring,
 } from "react-native-reanimated";
 import { caseSize } from "../../constants/dimension";
 import { useDificultyStore } from "../../store/dificulty.store";
@@ -29,8 +32,8 @@ export default function FixedBlock({
   const dificultyTheme = useDificultyStore((value) => value.colors);
   const color = dificultyTheme!.fixedBlock;
 
-  const blockScale: SharedValue<number> = useSharedValue(1);
-  const blockOpacity: SharedValue<number> = useSharedValue(1);
+  const blockScale: SharedValue<number> = useSharedValue(animatabled ? 0.9 : 1);
+  const blockOpacity: SharedValue<number> = useSharedValue(animatabled ? 0 : 1);
 
   const blockStyle = useAnimatedStyle(() => ({
     opacity: blockOpacity.value,
@@ -38,29 +41,25 @@ export default function FixedBlock({
   }));
 
   useEffect(() => {
-    // if (animatabled) {
-    //   const totalDelay = 0 + index * 30;
-    //   blockScale.value = withDelay(
-    //     totalDelay,
-    //     withSpring(1, {
-    //       mass: 1,
-    //       damping: 15,
-    //       stiffness: 240,
-    //     })
-    //   );
-    //   blockOpacity.value = withDelay(
-    //     totalDelay,
-    //     withSpring(1, {
-    //       mass: 1,
-    //       damping: 15,
-    //       stiffness: 240,
-    //     })
-    //   );
-    // } else {
-    //   blockScale.value = 1;
-    //   blockOpacity.value = 1;
-    // }
-  }, [animatabled, index]);
+    if (animatabled) {
+      const totalDelay = index * 20;
+
+      blockScale.value = withDelay(
+        totalDelay,
+        withSpring(1, { mass: 1, damping: 15, stiffness: 240 }),
+      );
+
+      blockOpacity.value = withDelay(
+        totalDelay,
+        withSpring(1, { mass: 1, damping: 15, stiffness: 240 }),
+      );
+    }
+
+    return () => {
+      cancelAnimation(blockScale);
+      cancelAnimation(blockOpacity);
+    };
+  }, []);
 
   return (
     <Animated.View
