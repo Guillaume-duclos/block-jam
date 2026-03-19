@@ -1,5 +1,6 @@
 import { BlurView } from "expo-blur";
 import React, { Fragment, JSX, useEffect, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { StyleSheet, Text, View, ViewStyle } from "react-native";
 import Animated, {
   useAnimatedProps,
@@ -41,6 +42,7 @@ export default function ResultModal({
   nextLevel,
   style,
 }: Props): JSX.Element {
+  const { t } = useTranslation();
   const blur = useSharedValue(0);
   const modalScale = useSharedValue(0.95);
   const cancelButtonScale = useSharedValue(0.95);
@@ -173,7 +175,7 @@ export default function ResultModal({
             <Animated.View style={animatedModalStyle}>
               <View style={styles.modalBottomBorder} />
               <View style={styles.modal}>
-                <Text style={styles.title}>Level completed!</Text>
+                <Text style={styles.title}>{t("levelCompleted")}</Text>
                 <View style={styles.starsContainer}>
                   {stars.map((star, index) => (
                     <View key={index} style={styles.starWrapper}>
@@ -191,7 +193,7 @@ export default function ResultModal({
                   ))}
                 </View>
                 <View style={styles.scroreContainer}>
-                  <Text style={styles.scoreLabel}>Score</Text>
+                  <Text style={styles.scoreLabel}>{t("score")}</Text>
                   <Text style={styles.scoreValue}>
                     {formatScore((score * 1000).toFixed(0))}
                   </Text>
@@ -207,7 +209,7 @@ export default function ResultModal({
                 color="#ECECEC"
                 deep={10}
               >
-                <Text style={styles.submitButtonLabel}>Rejouer</Text>
+                <Text style={styles.submitButtonLabel}>{t("replay")}</Text>
               </AnimatedButton>
 
               <AnimatedButton
@@ -217,7 +219,7 @@ export default function ResultModal({
                 color="#ECECEC"
                 deep={10}
               >
-                <Text style={styles.submitButtonLabel}>Suivant</Text>
+                <Text style={styles.submitButtonLabel}>{t("next")}</Text>
               </AnimatedButton>
             </View>
           </View>

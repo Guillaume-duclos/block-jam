@@ -1,5 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { Fragment, JSX, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { StyleSheet, Text, View } from "react-native";
 import ArrowShapeLeftFill from "../../assets/icons/ArrowShapeLeftFill";
 import Settings from "../../assets/icons/GearShapeFill";
@@ -23,6 +24,7 @@ const PlaygroundHeader = ({
 }: Props): JSX.Element => {
   const navigation = useNavigation<NavigationProp>();
 
+  const { t } = useTranslation();
   const dificultyTheme = useDificultyStore((value) => value.colors);
   const resetLevelData = useLevelStore((value) => value.resetLevelData);
 
@@ -67,10 +69,10 @@ const PlaygroundHeader = ({
           <Text
             style={{ ...styles.headerDificulty, color: dificultyTheme.white }}
           >
-            Difficulté {difficulty + 1}
+            {t("dificulty")} {difficulty + 1}
           </Text>
           <Text style={{ ...styles.headerLevel, color: dificultyTheme.white }}>
-            Niveau{" "}
+            {t("level")}{" "}
             <Text style={styles.headerCurrentLevelNumber}>{currentLevel}</Text>/
             {levelCount}
           </Text>
@@ -86,8 +88,8 @@ const PlaygroundHeader = ({
         isOpen={showConfirmationModal}
         onConfirm={goBack}
         onCancel={cancelGoBack}
-        title="Confirmation"
-        description="Lorem Ipsum is simply dummy text of the printing and typesetting industry."
+        title={t("confirmation")}
+        description={t("confirmationDescription")}
         style={styles.modal}
       />
     </Fragment>

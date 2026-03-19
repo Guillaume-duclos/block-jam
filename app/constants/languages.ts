@@ -7,17 +7,17 @@ import { Language } from "../enums/language.enum";
 export const languages = [
   {
     language: Language.EN,
-    label: "English",
+    label: "english",
     icon: FlagEn,
   },
   {
     language: Language.FR,
-    label: "French",
+    label: "french",
     icon: FlagFr,
   },
   {
     language: Language.ES,
-    label: "Spanish",
+    label: "spanish",
     icon: FlagEs,
   },
 ];

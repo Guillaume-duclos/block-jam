@@ -1,5 +1,6 @@
 import { BlurView } from "expo-blur";
 import React, { JSX, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { StyleSheet, Text, View, ViewStyle } from "react-native";
 import Animated, {
   useAnimatedProps,
@@ -33,6 +34,7 @@ export default function ValidationModal({
   onCancel,
   style,
 }: Props): JSX.Element {
+  const { t } = useTranslation();
   const blur = useSharedValue(0);
   const modalScale = useSharedValue(0.95);
   const cancelButtonScale = useSharedValue(0.95);
@@ -138,7 +140,7 @@ export default function ValidationModal({
                   ...styles.submitCancelButtonLabel,
                 }}
               >
-                Annuler
+                {t("cancel")}
               </Text>
             </Button>
           </Animated.View>
@@ -150,7 +152,7 @@ export default function ValidationModal({
               color="#ECECEC"
               deep={10}
             >
-              <Text style={styles.submitButtonLabel}>Confirmer</Text>
+              <Text style={styles.submitButtonLabel}>{t("confirm")}</Text>
             </Button>
           </Animated.View>
         </View>

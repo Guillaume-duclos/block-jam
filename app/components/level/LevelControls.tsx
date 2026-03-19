@@ -1,4 +1,5 @@
 import React, { Fragment, JSX, memo, RefObject, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { StyleSheet, View } from "react-native";
 import ArrowShapeTurnUpLeft from "../../assets/icons/ArrowShapeTurnUpLeft";
 import ArrowTriangleHead2ClockwiseRotate90 from "../../assets/icons/ArrowTriangleHead2ClockwiseRotate90";
@@ -30,6 +31,7 @@ const LevelControls = memo(
 
     const levelsList = data[difficulty].levels;
 
+    const { t } = useTranslation();
     const dificultyTheme = useDificultyStore((value) => value.colors);
     const isResetEnabled = useLevelStore((value) => value.isResetEnabled);
     const isUndoEnabled = useLevelStore((value) => value.isUndoEnabled);
@@ -139,8 +141,8 @@ const LevelControls = memo(
           isOpen={!!showConfirmationModal}
           onConfirm={confirmLevelNavigation}
           onCancel={cancelLevelNavigation}
-          title="Confirmation"
-          description="Lorem Ipsum is simply dummy text of the printing and typesetting industry."
+          title={t("confirmation")}
+          description={t("confirmationDescription")}
         />
       </Fragment>
     );

@@ -93,7 +93,7 @@ export default function Settings(): JSX.Element {
               ...(language === savedLanguage && { fontWeight: 700 }),
             }}
           >
-            {label}
+            {t(label)}
           </Text>
         </View>
       );
@@ -136,45 +136,45 @@ export default function Settings(): JSX.Element {
         }}
       >
         {/* GAME PLAY */}
-        <SectionContainer title="Game play">
+        <SectionContainer title={t("gameplay")}>
           <Fragment>
             <SwitchRow
-              label="Active feedback"
+              label={t("activeFeedback")}
               selected={isHapticActive}
               onChange={changeHapticActive}
             />
 
             <Button onPress={displayResetDataModal}>
-              <Text style={styles.buttonLabel}>Reset levels data</Text>
+              <Text style={styles.buttonLabel}>{t("resetLevelData")}</Text>
             </Button>
           </Fragment>
         </SectionContainer>
 
         {/* LANGUE */}
-        <SectionContainer title="Language">
+        <SectionContainer title={t("language")}>
           <View style={styles.languagesContainer}>{renderLanguages()}</View>
         </SectionContainer>
 
         {/* TUTORIAL */}
-        <SectionContainer title="Tutorial">
+        <SectionContainer title={t("tutorial")}>
           <Fragment>
             <NavigationLink
-              label="See tutorial"
+              label={t("seeTutorial")}
               onPress={() => navigate(Screen.TUTORIAL)}
             />
           </Fragment>
         </SectionContainer>
 
         {/* CGU */}
-        <SectionContainer title="CGU">
+        <SectionContainer title={t("cgu")}>
           <Fragment>
             <NavigationLink
-              label="Terms of use"
+              label={t("termsOfUse")}
               onPress={() => navigate(Screen.TERMS_OF_USE)}
             />
 
             <NavigationLink
-              label="Privacy policy"
+              label={t("privacyPolicy")}
               onPress={() => navigate(Screen.PRIVACY_POLICY)}
             />
           </Fragment>
@@ -182,35 +182,35 @@ export default function Settings(): JSX.Element {
 
         {/* DEV MODE */}
         {__DEV__ && (
-          <SectionContainer title="Dev mode">
+          <SectionContainer title={t("devMode")}>
             <Fragment>
-              <NavigationLink label="Log score data" onPress={logScoreData} />
+              <NavigationLink label={t("logScoreData")} onPress={logScoreData} />
               <NavigationLink
-                label="Remove score data"
+                label={t("removeScoreData")}
                 onPress={removeScoreData}
               />
-              <NavigationLink label="Remove all data" onPress={removeAllData} />
+              <NavigationLink label={t("removeAllData")} onPress={removeAllData} />
             </Fragment>
           </SectionContainer>
         )}
 
         {/* CRÉDITS */}
-        <SectionContainer title="Credits">
+        <SectionContainer title={t("credits")}>
           <View style={styles.creditsContainer}>
             <View style={styles.appIcon} />
             <View style={styles.appInformations}>
               <Text style={styles.appInformationsText}>
-                App version:{" "}
+                {t("appVersion")}:{" "}
                 <Text style={styles.appInformationsVersion}>{appVersion}</Text>
               </Text>
               <Text style={styles.appInformationsText}>
-                Build version:{" "}
+                {t("buildVersion")}:{" "}
                 <Text style={styles.appInformationsVersion}>
                   {buildVersion}
                 </Text>
               </Text>
               <Text style={styles.appInformationsText}>
-                Author:{" "}
+                {t("author")}:{" "}
                 <Text style={styles.appInformationsTextLight}>
                   Guillaume Duclos
                 </Text>
@@ -225,8 +225,8 @@ export default function Settings(): JSX.Element {
         isOpen={showResetDataModal}
         onConfirm={removeLevelsData}
         onCancel={hiddeResetDataModal}
-        title="Confirmation"
-        description="Lorem Ipsum is simply dummy text of the printing and typesetting industry."
+        title={t("confirmation")}
+        description={t("confirmationDescription")}
       />
     </View>
   );

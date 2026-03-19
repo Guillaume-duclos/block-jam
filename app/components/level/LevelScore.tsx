@@ -1,4 +1,5 @@
 import React, { JSX, memo, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { StyleSheet, Text, View } from "react-native";
 import Animated, {
   useAnimatedStyle,
@@ -17,6 +18,7 @@ type Props = {
 
 const LevelScore = memo(
   ({ levelIndex, difficultyIndex }: Props): JSX.Element => {
+    const { t } = useTranslation();
     const scale = useSharedValue(1);
 
     const dificultyTheme = useDificultyStore((value) => value.colors);
@@ -49,7 +51,7 @@ const LevelScore = memo(
             <Text
               style={{ ...styles.scoreTitle, color: darken(mainColor, 0.28) }}
             >
-              Coups
+              {t("moves")}
             </Text>
 
             <Animated.View style={[animatedStyle, { borderWidth: 0 }]}>
@@ -72,7 +74,7 @@ const LevelScore = memo(
               minimumFontScale={0.5}
               style={{ ...styles.scoreTitle, color: darken(mainColor, 0.28) }}
             >
-              Scores précédents
+              {t("previousScores")}
             </Text>
 
             <View style={styles.previousScoreLabelContainer}>
@@ -84,7 +86,7 @@ const LevelScore = memo(
                   color: darken(mainColor, 0.33),
                 }}
               >
-                Coups : {score?.count || "--"}
+                {t("moves")} : {score?.count || "--"}
               </Text>
               <Text
                 numberOfLines={1}
@@ -94,7 +96,7 @@ const LevelScore = memo(
                   color: darken(mainColor, 0.33),
                 }}
               >
-                Temps : {score?.time || "--:--"}
+                {t("time")} : {score?.time || "--:--"}
               </Text>
             </View>
           </View>

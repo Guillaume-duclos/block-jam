@@ -1,4 +1,5 @@
 import React, { JSX } from "react";
+import { useTranslation } from "react-i18next";
 import { StyleSheet, Text, View } from "react-native";
 import Settings from "../../assets/icons/GearShapeFill";
 import { menuHeaderHeight } from "../../constants/dimension";
@@ -16,6 +17,7 @@ const MenuHeader = ({
   levelsCount,
   openSettings,
 }: Props): JSX.Element => {
+  const { t } = useTranslation();
   const completedLevels = useLevelStore((state) =>
     state.getCompletedLevelsByDificulty(difficulty)
   );
@@ -23,10 +25,10 @@ const MenuHeader = ({
   return (
     <View style={styles.container}>
       <View style={styles.contentContainer}>
-        <Text style={styles.headerTitle}>Dificulty {difficulty + 1}</Text>
+        <Text style={styles.headerTitle}>{t("dificulty")} {difficulty + 1}</Text>
         <Text style={styles.headerProgression}>
           <Text style={styles.headerProgressionCount}>{completedLevels}</Text>/
-          {levelsCount} completed
+          {levelsCount} {t("completed")}
         </Text>
       </View>
 
