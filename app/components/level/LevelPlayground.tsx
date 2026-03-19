@@ -77,6 +77,7 @@ const LevelPlayground = memo(
 
     const historic = useRef<HistoryPosition[]>([]);
     const isAnimatabled = useRef<boolean>(true);
+    const levelVersion = useRef<number>(0);
 
     useImperativeHandle(
       ref,
@@ -207,6 +208,7 @@ const LevelPlayground = memo(
         return { ...position };
       });
 
+      levelVersion.current += 1;
       setVehiclePositions(positions);
     };
 
@@ -404,7 +406,7 @@ const LevelPlayground = memo(
 
           return (
             <MovableBlock
-              key={data.label}
+              key={`${levelVersion.current}-${data.label}`}
               index={vehicleIndex}
               label={data.label}
               range={data.range}
@@ -425,7 +427,7 @@ const LevelPlayground = memo(
 
               return (
                 <FixedBlock
-                  key={`${data.label}-${blocIndex}`}
+                  key={`${levelVersion.current}-${data.label}-${blocIndex}`}
                   index={vehicleIndex}
                   position={position}
                   initialX={col * caseSize}
