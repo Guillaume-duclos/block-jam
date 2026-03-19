@@ -60,6 +60,10 @@ const Button = memo(
         progress.value = withTiming(deep - deep / 1.5, { duration: 80 });
         onPressIn && runOnJS(onPressIn)();
       })
+      .onTouchesCancelled(() => {
+        "worklet";
+        progress.value = withTiming(0, { duration: 80 });
+      })
       .onFinalize(() => {
         "worklet";
         progress.value = withTiming(0, { duration: 80 });

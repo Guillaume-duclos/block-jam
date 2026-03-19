@@ -15,7 +15,6 @@ import { darken } from "../../utils/color";
 import Button from "../button/Button";
 
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
-const AnimatedButton = Animated.createAnimatedComponent(Button);
 
 type Props = {
   isOpen: boolean;
@@ -126,32 +125,34 @@ export default function ValidationModal({
         </Animated.View>
 
         <View style={styles.submitButtonsContainer}>
-          <AnimatedButton
-            onPress={decline}
-            style={[styles.submitButton, animatedCancelButtonStyle]}
-            shadowStyle={{ boxShadow: "0 0 10px 0 #686868" }}
-            color="#EE7474"
-            deep={10}
-          >
-            <Text
-              style={{
-                ...styles.submitButtonLabel,
-                ...styles.submitCancelButtonLabel,
-              }}
+          <Animated.View style={[styles.submitButton, animatedCancelButtonStyle]}>
+            <Button
+              onPress={decline}
+              shadowStyle={{ boxShadow: "0 0 10px 0 #686868" }}
+              color="#EE7474"
+              deep={10}
             >
-              Annuler
-            </Text>
-          </AnimatedButton>
+              <Text
+                style={{
+                  ...styles.submitButtonLabel,
+                  ...styles.submitCancelButtonLabel,
+                }}
+              >
+                Annuler
+              </Text>
+            </Button>
+          </Animated.View>
 
-          <AnimatedButton
-            onPress={confirm}
-            style={[styles.submitButton, animatedConfirmButtonStyle]}
-            shadowStyle={{ boxShadow: "0 0 10px 0 #686868" }}
-            color="#ECECEC"
-            deep={10}
-          >
-            <Text style={styles.submitButtonLabel}>Confirmer</Text>
-          </AnimatedButton>
+          <Animated.View style={[styles.submitButton, animatedConfirmButtonStyle]}>
+            <Button
+              onPress={confirm}
+              shadowStyle={{ boxShadow: "0 0 10px 0 #686868" }}
+              color="#ECECEC"
+              deep={10}
+            >
+              <Text style={styles.submitButtonLabel}>Confirmer</Text>
+            </Button>
+          </Animated.View>
         </View>
       </View>
     </AnimatedBlurView>
