@@ -46,10 +46,8 @@ const PlaygroundHeader = ({
 
   // Redirige vers le menu
   const goBack = (): void => {
+    resetLevelData();
     navigation.goBack();
-    requestIdleCallback(() => {
-      resetLevelData();
-    });
   };
 
   // Annule la redirection vers le niveau sélectionné
