@@ -8,6 +8,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
+import { runOnJS } from "react-native-worklets";
 import { darken } from "../../utils/color";
 
 type Props = {
@@ -39,7 +40,7 @@ export default function Switch({
     backgroundColor: interpolateColor(
       progress.value,
       [0, 26],
-      ["#B1BDD1", activeColor]
+      ["#B1BDD1", activeColor],
     ),
   }));
 
@@ -51,14 +52,14 @@ export default function Switch({
   const panGesture = Gesture.Pan()
     .minDistance(0)
     .onUpdate((event): void => {
+      "worklet";
       if (
         (event.translationX > 4 && !selected) ||
         (event.translationX < -4 && selected)
       ) {
-        updateValue();
+        runOnJS(updateValue)();
       }
-    })
-    .runOnJS(true);
+    });
 
   return (
     <Pressable onPress={updateValue} disabled={!onChange || disabled}>

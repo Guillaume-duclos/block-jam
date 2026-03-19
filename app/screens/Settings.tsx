@@ -44,8 +44,6 @@ export default function Settings(): JSX.Element {
   const appVersion = Application.nativeApplicationVersion;
   const buildVersion = Application.nativeBuildVersion;
 
-  console.log(showResetDataModal);
-
   const goBack = (): void => {
     navigation.goBack();
   };
@@ -301,6 +299,8 @@ const styles = StyleSheet.create({
   },
   appInformations: {
     gap: 3,
+    justifyContent: "space-evenly",
+    borderWidth: 0,
   },
   appInformationsText: {
     color: "#FFFFFF",

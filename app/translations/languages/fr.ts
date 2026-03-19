@@ -1,5 +1,5 @@
 const fr = {
-  settings: "Parámetros",
+  settings: "Paramètres",
 };
 
 export default fr;
