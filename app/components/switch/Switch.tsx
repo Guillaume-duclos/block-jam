@@ -1,14 +1,12 @@
 import * as Haptics from "expo-haptics";
 import React, { JSX, useEffect } from "react";
 import { Pressable, StyleSheet, ViewStyle } from "react-native";
-import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
   interpolateColor,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import { runOnJS } from "react-native-worklets";
 import { darken } from "../../utils/color";
 
 type Props = {
@@ -49,24 +47,10 @@ export default function Switch({
     Haptics.impactAsync();
   };
 
-  const panGesture = Gesture.Pan()
-    .minDistance(0)
-    .onUpdate((event): void => {
-      "worklet";
-      if (
-        (event.translationX > 4 && !selected) ||
-        (event.translationX < -4 && selected)
-      ) {
-        runOnJS(updateValue)();
-      }
-    });
-
   return (
     <Pressable onPress={updateValue} disabled={!onChange || disabled}>
       <Animated.View style={[styles.container, style, containerStyle]}>
-        <GestureDetector gesture={panGesture}>
-          <Animated.View style={[styles.switch, thumbStyle]} />
-        </GestureDetector>
+        <Animated.View style={[styles.switch, thumbStyle]} />
       </Animated.View>
     </Pressable>
   );
