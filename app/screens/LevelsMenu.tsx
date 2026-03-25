@@ -1,36 +1,24 @@
-import { FlashList, FlashListRef } from "@shopify/flash-list";
 import { Canvas, LinearGradient, Rect, vec } from "@shopify/react-native-skia";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { StyleSheet, View } from "react-native";
-import Animated, {
+import {
   interpolateColor,
-  useAnimatedScrollHandler,
   useDerivedValue,
   useSharedValue,
 } from "react-native-reanimated";
 import LevelItemsList from "../components/level/LevelItemsList";
-import PaginationIndicator from "../components/PaginationIndicator";
 import { windowHeight, windowWidth } from "../constants/dimension";
 import data from "../data/levels";
-import { Orientation } from "../enums/orientation.enum";
 import { StorageKey } from "../enums/storageKey.enum";
 import { FocusProvider } from "../providers/FocusProvider";
-import { useDificultyStore } from "../store/dificulty.store";
 import { useLevelStore } from "../store/level.store";
 import { darken } from "../utils/color";
 import { getStorageString } from "../utils/storage";
 
-const AnimatedFlashList = Animated.createAnimatedComponent(FlashList);
-
-export default function Menu() {
+export default function LevelsMenu() {
   const setScores = useLevelStore((value) => value.setScores);
-  const setDificultyColors = useDificultyStore((value) => value.setColors);
-
-  const [activeViewIndex, setActiveViewIndex] = useState(0);
 
   const scroll = useSharedValue(0);
-
-  const listRef = useRef<FlashListRef<any>>(null);
 
   const scrollRange = useRef(data.map((_, i) => i * windowHeight)).current;
 
@@ -58,29 +46,6 @@ export default function Menu() {
     }
   }, []);
 
-  const levelItemsConfig = useRef({
-    minimumViewTime: 0,
-    viewAreaCoveragePercentThreshold: 50,
-  }).current;
-
-  const viewableItemsChanged = useRef(({ viewableItems }: any): void => {
-    if (viewableItems.length) {
-      const index = viewableItems[0].index;
-      setActiveViewIndex(index);
-      setDificultyColors(data[index].colors);
-    }
-  }).current;
-
-  const onScroll = useAnimatedScrollHandler({
-    onScroll: (event) => {
-      scroll.value = event.contentOffset.y;
-    },
-  });
-
-  const updateActiveIndex = (index: number): void => {
-    listRef.current?.scrollToIndex({ index, animated: false });
-  };
-
   const gradientColors = useDerivedValue(() => {
     const start = interpolateColor(scroll.value, scrollRange, startColorRange);
     const end = interpolateColor(scroll.value, scrollRange, endColorRange);
@@ -102,32 +67,7 @@ export default function Menu() {
           </Rect>
         </Canvas>
 
-        {/* LISTE VERTICALE */}
-        <AnimatedFlashList
-          ref={listRef}
-          data={data}
-          pagingEnabled
-          style={styles.list}
-          maxItemsInRecyclePool={3}
-          // drawDistance={isFocused ? windowHeight * 2 : 0}
-          viewabilityConfig={levelItemsConfig}
-          onViewableItemsChanged={viewableItemsChanged}
-          renderItem={({ item }) => (
-            <LevelItemsList key={item.index} level={item} />
-          )}
-          showsVerticalScrollIndicator={false}
-          keyExtractor={(_, index) => `vlist-${index}`}
-          scrollEventThrottle={16}
-          onScroll={onScroll}
-        />
-
-        {/* PAGINATION */}
-        <PaginationIndicator
-          levels={data}
-          activeViewIndex={activeViewIndex}
-          orientation={Orientation.VERTICAL}
-          updateActiveIndex={updateActiveIndex}
-        />
+        <LevelItemsList level={data[0]} />
       </View>
     </FocusProvider>
   );

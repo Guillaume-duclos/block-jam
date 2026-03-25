@@ -5,7 +5,8 @@ import {
 import { StyleSheet, View } from "react-native";
 import { Screen } from "../enums/screen.enum";
 import { StorageKey } from "../enums/storageKey.enum";
-import Menu from "../screens/Menu";
+import DifficultiesMenu from "../screens/DifficultiesMenu";
+import LevelsMenu from "../screens/LevelsMenu";
 import PlayGround from "../screens/PlayGround";
 import PrivacyPolicy from "../screens/PrivacyPolicy";
 import Settings from "../screens/Settings";
@@ -24,10 +25,12 @@ const Navigation = () => {
   };
 
   const turialScreenViewed = getStorageBoolean(
-    StorageKey.TUTORIAL_SCREEN_VIEWED
+    StorageKey.TUTORIAL_SCREEN_VIEWED,
   );
 
-  const initialRouteName = turialScreenViewed ? Screen.MENU : Screen.TUTORIAL;
+  const initialRouteName = turialScreenViewed
+    ? Screen.DIFFICULTIES_MENU
+    : Screen.TUTORIAL;
 
   function SettingsStack() {
     return (
@@ -52,9 +55,11 @@ const Navigation = () => {
         initialRouteName={initialRouteName}
       >
         <Stack.Screen name={Screen.TUTORIAL} component={Tutorial} />
-
-        <Stack.Screen name={Screen.MENU} component={Menu} />
-
+        <Stack.Screen
+          name={Screen.DIFFICULTIES_MENU}
+          component={DifficultiesMenu}
+        />
+        <Stack.Screen name={Screen.LEVELS_MENU} component={LevelsMenu} />
         <Stack.Screen
           name={Screen.PLAYGROUND}
           component={PlayGround}
@@ -62,7 +67,6 @@ const Navigation = () => {
             gestureEnabled: false,
           }}
         />
-
         <Stack.Screen
           name={Screen.SETTINGS}
           component={SettingsStack}

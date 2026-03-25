@@ -12,11 +12,12 @@ import {
   menuLevelHeight,
   menuVerticalPadding,
   windowHeight,
+  windowWidth,
 } from "../../constants/dimension";
 import { Screen } from "../../enums/screen.enum";
 import { Level, MainLevel } from "../../types/level.type";
 import NavigationProp from "../../types/navigation.type";
-import MenuHeader from "../header/MenuHeader";
+import LevelsMenuHeader from "../header/LevelsMenuHeader";
 import PaginationIndicator from "../PaginationIndicator";
 import LevelItem from "./LevelItem";
 
@@ -83,7 +84,7 @@ const LevelItemsList = memo(({ level }: Props): JSX.Element => {
 
   const data = useMemo(
     () => splitLevels(level.levels, rowsCount),
-    [level.levels]
+    [level.levels],
   );
 
   // Ouvre les paramètres
@@ -104,7 +105,7 @@ const LevelItemsList = memo(({ level }: Props): JSX.Element => {
       }}
     >
       {/* HEADER */}
-      <MenuHeader
+      <LevelsMenuHeader
         difficulty={level.index}
         levelsCount={level.levels.length}
         openSettings={openSettings}
@@ -116,6 +117,7 @@ const LevelItemsList = memo(({ level }: Props): JSX.Element => {
         horizontal
         pagingEnabled
         data={data}
+        drawDistance={windowWidth * 8}
         maxItemsInRecyclePool={8}
         viewabilityConfig={levelItemsConfig}
         initialScrollIndex={activeViewIndex}

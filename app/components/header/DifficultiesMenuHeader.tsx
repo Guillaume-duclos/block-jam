@@ -12,20 +12,22 @@ type Props = {
   openSettings: () => void;
 };
 
-const MenuHeader = ({
+const DifficultiesMenuHeader = ({
   difficulty,
   levelsCount,
   openSettings,
 }: Props): JSX.Element => {
   const { t } = useTranslation();
   const completedLevels = useLevelStore((state) =>
-    state.getCompletedLevelsByDificulty(difficulty)
+    state.getCompletedLevelsByDificulty(difficulty),
   );
 
   return (
     <View style={styles.container}>
       <View style={styles.contentContainer}>
-        <Text style={styles.headerTitle}>{t("dificulty")} {difficulty + 1}</Text>
+        <Text style={styles.headerTitle}>
+          {t("dificulty")} {difficulty + 1}
+        </Text>
         <Text style={styles.headerProgression}>
           <Text style={styles.headerProgressionCount}>{completedLevels}</Text>/
           {levelsCount} {t("completed")}
@@ -76,7 +78,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MenuHeader;
-function useGetCompletedScoresByDificulty(arg0: (state: any) => any) {
-  throw new Error("Function not implemented.");
-}
+export default DifficultiesMenuHeader;

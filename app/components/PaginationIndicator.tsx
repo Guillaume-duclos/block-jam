@@ -1,47 +1,18 @@
-import React, { Fragment, JSX, memo, useEffect, useMemo } from "react";
+import React, { JSX, memo, useEffect } from "react";
 import { StyleSheet, View } from "react-native";
-import Animated, {
-  Extrapolation,
-  interpolate,
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-} from "react-native-reanimated";
-import Dumbbell1 from "../assets/icons/Dumbbell1";
-import Dumbbell2 from "../assets/icons/Dumbbell2";
-import Dumbbell3 from "../assets/icons/Dumbbell3";
-import Dumbbell4 from "../assets/icons/Dumbbell4";
-import Dumbbell5 from "../assets/icons/Dumbbell5";
-import Dumbbell6 from "../assets/icons/Dumbbell6";
+import { useSharedValue, withSpring } from "react-native-reanimated";
 import { menuFooterHeight, windowHeight } from "../constants/dimension";
-import { Orientation } from "../enums/orientation.enum";
-import { useTheme } from "../providers/themeContext";
+import { useTheme } from "../providers/ThemeContext";
 
 interface Props {
   levels: any;
   activeViewIndex: number;
-  orientation?: Orientation;
   updateActiveIndex: (index: number) => void;
 }
 
 const PaginationIndicator = memo(
-  ({
-    levels,
-    activeViewIndex,
-    orientation = Orientation.HORIZONTAL,
-  }: Props): JSX.Element => {
+  ({ levels, activeViewIndex }: Props): JSX.Element => {
     const animatedIndex = useSharedValue(activeViewIndex);
-
-    const difficultyIcons = useMemo(() => {
-      return [
-        <Dumbbell1 style={{ width: 18, height: 24 }} />,
-        <Dumbbell2 style={{ width: 18, height: 24 }} />,
-        <Dumbbell3 style={{ width: 18, height: 24 }} />,
-        <Dumbbell4 style={{ width: 18, height: 24 }} />,
-        <Dumbbell5 style={{ width: 18, height: 24 }} />,
-        <Dumbbell6 style={{ width: 18, height: 24 }} />,
-      ];
-    }, []);
 
     const colors = useTheme();
 
@@ -54,55 +25,18 @@ const PaginationIndicator = memo(
     }, [activeViewIndex]);
 
     return (
-      <Fragment>
-        {orientation === Orientation.HORIZONTAL ? (
-          <View style={styles.container}>
-            {levels.map((_: any, index: number) => (
-              <View
-                key={`dot-${index}`}
-                style={{
-                  ...styles.dot,
-                  backgroundColor: colors.theme.white,
-                  opacity: activeViewIndex === index ? 1 : 0.4,
-                }}
-              />
-            ))}
-          </View>
-        ) : (
-          <View style={styles.verticalContainer}>
-            <View style={styles.verticalSubContainer}>
-              {levels.map((_: any, index: number) => {
-                const animatedStyle = useAnimatedStyle(() => {
-                  const opacity = interpolate(
-                    animatedIndex.value,
-                    [index - 1, index, index + 1],
-                    [0.4, 1, 0.4],
-                    Extrapolation.CLAMP,
-                  );
-
-                  const scale = interpolate(
-                    animatedIndex.value,
-                    [index - 1, index, index + 1],
-                    [0.8, 1, 0.8],
-                    Extrapolation.CLAMP,
-                  );
-
-                  return { opacity, transform: [{ scale }] };
-                });
-
-                return (
-                  <Animated.View
-                    key={`dot-${index}`}
-                    style={[styles.dot, styles.verticalDot, animatedStyle]}
-                  >
-                    {difficultyIcons[index]}
-                  </Animated.View>
-                );
-              })}
-            </View>
-          </View>
-        )}
-      </Fragment>
+      <View style={styles.container}>
+        {levels.map((_: any, index: number) => (
+          <View
+            key={`dot-${index}`}
+            style={{
+              ...styles.dot,
+              backgroundColor: colors.theme.white,
+              opacity: activeViewIndex === index ? 1 : 0.4,
+            }}
+          />
+        ))}
+      </View>
     );
   },
 );
