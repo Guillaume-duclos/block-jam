@@ -126,14 +126,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 20,
-    borderRadius: 32,
+    borderRadius: 16,
   },
   blockBottomBorder: {
     left: 0,
     right: 0,
     position: "absolute",
-    borderBottomLeftRadius: 28,
-    borderBottomRightRadius: 28,
+    borderBottomLeftRadius: 14,
+    borderBottomRightRadius: 14,
   },
 });
 

@@ -127,7 +127,9 @@ export default function ValidationModal({
         </Animated.View>
 
         <View style={styles.submitButtonsContainer}>
-          <Animated.View style={[styles.submitButton, animatedCancelButtonStyle]}>
+          <Animated.View
+            style={[styles.submitButton, animatedCancelButtonStyle]}
+          >
             <Button
               onPress={decline}
               shadowStyle={{ boxShadow: "0 0 10px 0 #686868" }}
@@ -145,7 +147,9 @@ export default function ValidationModal({
             </Button>
           </Animated.View>
 
-          <Animated.View style={[styles.submitButton, animatedConfirmButtonStyle]}>
+          <Animated.View
+            style={[styles.submitButton, animatedConfirmButtonStyle]}
+          >
             <Button
               onPress={confirm}
               shadowStyle={{ boxShadow: "0 0 10px 0 #686868" }}

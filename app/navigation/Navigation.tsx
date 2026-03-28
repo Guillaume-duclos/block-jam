@@ -59,7 +59,13 @@ const Navigation = () => {
           name={Screen.DIFFICULTIES_MENU}
           component={DifficultiesMenu}
         />
-        <Stack.Screen name={Screen.LEVELS_MENU} component={LevelsMenu} />
+        <Stack.Screen
+          name={Screen.LEVELS_MENU}
+          component={LevelsMenu}
+          options={{
+            gestureEnabled: false,
+          }}
+        />
         <Stack.Screen
           name={Screen.PLAYGROUND}
           component={PlayGround}

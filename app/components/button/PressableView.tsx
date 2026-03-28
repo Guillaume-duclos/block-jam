@@ -5,12 +5,12 @@ import {
   GestureDetector,
   TapGesture,
 } from "react-native-gesture-handler";
-import { runOnJS } from "react-native-worklets";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
+import { runOnJS } from "react-native-worklets";
 
 type Props = {
   disabled?: boolean;
