@@ -114,7 +114,6 @@ const LevelPlayground = memo(
         const hapticEnable = getStorageBoolean(
           StorageKey.ALLOW_DRAG_HAPTIC_FEEDBACK,
         );
-
         setHapticEnable(hapticEnable || false);
       }, []),
     );
@@ -145,71 +144,49 @@ const LevelPlayground = memo(
 
     // Initialise les valeurs de vehiclePositions
     const computeBlockPositions = (): void => {
-      // On récupère le niveau
       const scheme: string = level?.scheme!;
+      const positions: ElementData[] = [];
+      const labelIndexMap = new Map<string, number>();
 
-      // Initialisation du tableau de positions de tous les véhicules
-      let positions: ElementData[] = [];
+      for (let i = 0; i < scheme.length; i++) {
+        const label = scheme.charAt(i);
+        const existingIndex = labelIndexMap.get(label);
 
-      // On parse toutes les lettres de la description de la grille
-      for (let i: number = 0; i < scheme.length; i++) {
-        // 1. On récupère le label
-        const label: string = scheme.charAt(i);
-
-        // 2. On vérifie si le label n'a pas déjà été inséré
-        const previousSameLabel: number = positions.findIndex(
-          (position): boolean => position.label === label,
-        );
-
-        // 3. On récupère l'orientation
-        let orientation: Orientation = Orientation.NULL;
-
-        if (previousSameLabel === -1) {
-          if (scheme[i + 1] === label) {
-            orientation = Orientation.HORIZONTAL;
-          } else {
-            orientation = Orientation.VERTICAL;
-          }
+        if (existingIndex !== undefined) {
+          positions[existingIndex].position.push(i);
+          continue;
         }
 
-        // 4. On ajoute les données pour chaque élément
-        if (previousSameLabel !== -1) {
-          positions[previousSameLabel].position.push(i);
-        } else if (label === BlockType.EMPTY || label === BlockType.WALL) {
-          positions.push({
-            label,
-            position: [i],
-          });
+        labelIndexMap.set(label, positions.length);
+
+        if (label === BlockType.EMPTY || label === BlockType.WALL) {
+          positions.push({ label, position: [i] });
         } else {
-          positions.push({
-            label,
-            range: [],
-            position: [i],
-            orientation,
-          });
+          const orientation =
+            scheme[i + 1] === label
+              ? Orientation.HORIZONTAL
+              : Orientation.VERTICAL;
+          positions.push({ label, range: [], position: [i], orientation });
         }
       }
 
-      // 5. On récupère toutes les positions occupées
-      const occupiedPositions = computesOccupiedPositions(positions);
+      const occupiedSet = computesOccupiedPositions(positions);
 
-      // 6. On récupère les plages de valeur min et max
-      positions = positions.map((position) => {
+      const positionsWithRanges = positions.map((position) => {
         if (
           position.label !== BlockType.WALL &&
           position.label !== BlockType.EMPTY
         ) {
           return {
             ...position,
-            range: computeBlockRange(position, occupiedPositions),
+            range: computeBlockRange(position, occupiedSet),
           };
         }
-
-        return { ...position };
+        return position;
       });
 
       levelVersion.current += 1;
-      setVehiclePositions(positions);
+      setVehiclePositions(positionsWithRanges);
     };
 
     // Mise à jour de la nouvelle position du dernier bloc déplacé
@@ -218,119 +195,96 @@ const LevelPlayground = memo(
       position: number[],
       addToHistory?: boolean,
     ): void => {
-      // On récupère l'index du véhicule dans le tableau des positions avec le label
-      const index = vehiclePositions.findIndex(
-        (position) => position.label === label,
-      );
+      const index = vehiclePositions.findIndex((p) => p.label === label);
 
-      // On ajoute la nouvelle position dans l'historique si l'option est activé
       if (addToHistory) {
-        const newHistoricPositions: HistoryPosition = {
-          previousPosition: [...vehiclePositions[index].position],
-          label,
-        };
-
-        historic.current = [...historic.current, newHistoricPositions];
+        historic.current = [
+          ...historic.current,
+          { previousPosition: [...vehiclePositions[index].position], label },
+        ];
       }
 
-      // On récupère toutes les positions
-      let newPositions = vehiclePositions;
+      // Crée un nouveau tableau sans muter le state
+      const withUpdatedPosition = vehiclePositions.map((p, i) =>
+        i === index ? { ...p, position } : p,
+      );
 
-      // On ajoute les nouvelles valeurs du véhicule
-      newPositions[index].position = position;
+      const occupiedSet = computesOccupiedPositions(withUpdatedPosition);
 
-      // On met à jour la valeur du range des autres véhicules
-      const occupiedPositions = computesOccupiedPositions(newPositions);
-
-      // On récupère les plages de valeur min et max
-      newPositions = vehiclePositions.map((position: ElementData) => {
-        if (
-          position.label !== BlockType.WALL &&
-          position.label !== BlockType.EMPTY
-        ) {
-          return {
-            ...position,
-            range: computeBlockRange(position, occupiedPositions),
-          };
+      const newPositions = withUpdatedPosition.map((p: ElementData) => {
+        if (p.label !== BlockType.WALL && p.label !== BlockType.EMPTY) {
+          return { ...p, range: computeBlockRange(p, occupiedSet) };
         }
-
-        return { ...position };
+        return p;
       });
 
-      // On met à jour la tableau des positions et le compteur de mouvement
       setVehiclePositions(newPositions);
-      incrementCount();
 
-      // On active le bouton de retour en arrière et de reset
+      // N'incrémente le compteur que pour les vrais mouvements, pas les undos
+      if (addToHistory) {
+        incrementCount();
+      }
+
       setIsUndoEnabled(true);
       setIsResetEnabled(true);
 
-      // On vérifie si le bloc est le bloc principale et si il est sur la case gagnante
       if (label === BlockType.MAIN_BLOCK && position[1] === 17) {
         saveLevelScore();
       }
     };
 
     // Récupère toutes les positions occupées par les blocs
-    const computesOccupiedPositions = (positions: ElementData[]): number[] => {
-      const occupiedPositions: number[] = [];
-
-      for (let i: number = 0; i < positions.length; i++) {
-        if (positions[i].label !== BlockType.EMPTY) {
-          for (let y: number = 0; y < positions[i].position.length; y++) {
-            occupiedPositions.push(positions[i].position[y]);
+    const computesOccupiedPositions = (
+      positions: ElementData[],
+    ): Set<number> => {
+      const set = new Set<number>();
+      for (const p of positions) {
+        if (p.label !== BlockType.EMPTY) {
+          for (const pos of p.position) {
+            set.add(pos);
           }
         }
       }
-
-      return occupiedPositions;
+      return set;
     };
 
     // Calcule de la plage de valeur de déplacement possible
     const computeBlockRange = (
       element: ElementData,
-      occupiedPositions: number[],
+      occupiedSet: Set<number>,
     ): number[] => {
-      // On récupère la plage de valeur minimum et maximum du véhicule
       let min = firstLineCaseIndex(element.position, element.orientation);
       let max = lastLineCaseIndex(element.position, element.orientation);
 
-      // On calcule les positions minimum et maximum pour le véhicule
       const lineCases: number[] = [];
 
-      // 1. On récupère toutes les cases de la ligne
       if (element.orientation === Orientation.HORIZONTAL) {
-        for (let i: number = min; i <= max; i++) {
+        for (let i = min; i <= max; i++) {
           lineCases.push(i);
         }
       } else {
-        for (let i: number = min; i <= max; i += 6) {
+        for (let i = min; i <= max; i += 6) {
           lineCases.push(i);
         }
       }
 
-      // 2. On récupère les cases libres dans la ligne
       const emptyCases: number[] = lineCases.filter(
-        (value: number) => !occupiedPositions.includes(value),
+        (value) => !occupiedSet.has(value),
       );
 
-      // 3. On récupère les positions minimum et maximum disponibles
-      let minPosition: number = element.position[0];
-      let maxPosition: number = element.position[element.position.length - 1];
+      let minPosition = element.position[0];
+      let maxPosition = element.position[element.position.length - 1];
 
       const offset = element.orientation === Orientation.HORIZONTAL ? 1 : 6;
 
-      // On récupère la position minimum
       while (emptyCases.includes(minPosition - offset)) {
         minPosition -= offset;
       }
 
-      // On récupère la position maximum
       while (emptyCases.includes(maxPosition + offset)) {
         maxPosition += offset;
       }
 
-      // 4. On convertit les positions minimale et maximale au format correspondant
       min = lineCases.indexOf(minPosition);
       max = lineCases.indexOf(maxPosition);
 
@@ -359,12 +313,10 @@ const LevelPlayground = memo(
         score: ratio,
       };
 
-      // Vérifie si le score existe déjà (même difficulté et niveau)
-      const existingIndex = levelScores.findIndex((score) => {
-        return (
-          score.difficulty === difficultyIndex && score.level === levelIndex
-        );
-      });
+      const existingIndex = levelScores.findIndex(
+        (score) =>
+          score.difficulty === difficultyIndex && score.level === levelIndex,
+      );
 
       if (existingIndex !== -1) {
         const previousScore = levelScores[existingIndex].score;
