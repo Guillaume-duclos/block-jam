@@ -1,3 +1,4 @@
+import { RouteProp, useRoute } from "@react-navigation/native";
 import { Canvas, LinearGradient, Rect, vec } from "@shopify/react-native-skia";
 import React, { useEffect, useRef } from "react";
 import { StyleSheet, View } from "react-native";
@@ -9,14 +10,22 @@ import {
 import LevelItemsList from "../components/level/LevelItemsList";
 import { windowHeight, windowWidth } from "../constants/dimension";
 import data from "../data/levels";
+import { Screen } from "../enums/screen.enum";
 import { StorageKey } from "../enums/storageKey.enum";
 import { FocusProvider } from "../providers/FocusProvider";
 import { useLevelStore } from "../store/level.store";
+import RootStackParamList from "../types/rootStackParamList.type";
 import { darken } from "../utils/color";
 import { getStorageString } from "../utils/storage";
 
+type playGroundRouteProp = RouteProp<RootStackParamList, Screen.PLAYGROUND>;
+
 export default function LevelsMenu() {
   const setScores = useLevelStore((value) => value.setScores);
+
+  const route = useRoute<playGroundRouteProp>();
+
+  const levels = data[route.params.difficultyIndex];
 
   const scroll = useSharedValue(0);
 
@@ -67,7 +76,8 @@ export default function LevelsMenu() {
           </Rect>
         </Canvas>
 
-        <LevelItemsList level={data[0]} />
+        {/* LEVELS LIST */}
+        <LevelItemsList level={levels} />
       </View>
     </FocusProvider>
   );

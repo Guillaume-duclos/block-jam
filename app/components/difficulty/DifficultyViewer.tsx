@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import React, { JSX, memo, Ref } from "react";
+import React, { JSX, memo } from "react";
 import { StyleSheet, View, ViewStyle } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
@@ -14,11 +14,9 @@ import RootStackParamList from "../../types/rootStackParamList.type";
 import { darken } from "../../utils/color";
 
 type Props = {
-  ref?: Ref<View> | undefined;
+  difficultyIndex: number;
   disabled?: boolean;
-  deep?: number;
   color?: string;
-  borderColor?: string;
   style?: ViewStyle | ViewStyle[];
   contentContainerStyle?: ViewStyle | ViewStyle[];
 };
@@ -27,11 +25,9 @@ type levelItemNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 const DifficultyViewer = memo(
   ({
-    ref,
+    difficultyIndex,
     disabled = false,
-    deep = 12,
     color = "#F5F7FF",
-    borderColor,
     style,
     contentContainerStyle,
   }: Props): JSX.Element => {
@@ -44,7 +40,7 @@ const DifficultyViewer = memo(
     }));
 
     const redirectToLevel = (): void => {
-      navigation.navigate(Screen.LEVELS_MENU);
+      navigation.navigate(Screen.LEVELS_MENU, { difficultyIndex });
     };
 
     const tapGesture = Gesture.Tap()
@@ -52,7 +48,7 @@ const DifficultyViewer = memo(
       .maxDuration(Number.MAX_SAFE_INTEGER)
       .onBegin(() => {
         "worklet";
-        progress.value = withTiming(deep - deep / 1.5, { duration: 80 });
+        progress.value = withTiming(12 - 12 / 1.5, { duration: 80 });
       })
       .onTouchesCancelled(() => {
         "worklet";
@@ -74,7 +70,6 @@ const DifficultyViewer = memo(
     return (
       <GestureDetector gesture={tapGesture}>
         <View
-          ref={ref}
           style={[
             styles.container,
             ...(Array.isArray(style) ? style : [style]),

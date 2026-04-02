@@ -15,23 +15,34 @@ const slideKeyframes = css.keyframes({
 });
 
 const fadeInKeyframes = css.keyframes({
-  from: { opacity: 0 },
-  to: { opacity: 1 },
+  from: { opacity: 0, transform: [{ scale: 0.7 }] },
+  to: { opacity: 1, transform: [{ scale: 1 }] },
 });
 
 const fadeOutKeyframes = css.keyframes({
-  from: { opacity: 1 },
-  to: { opacity: 0 },
+  from: { opacity: 1, transform: [{ scale: 1 }] },
+  to: { opacity: 0, transform: [{ scale: 0.7 }] },
 });
 
-const arrowAnimation = css.create({
+const arrowSlideAnimation = css.create({
   slide: {
-    animationName: [slideKeyframes, fadeInKeyframes, fadeOutKeyframes],
-    animationDelay: ["1s", "1s", "4.7s"],
-    animationDuration: ["1.2s", "0.3s", "0.3s"],
-    animationTimingFunction: ["ease-in-out", "ease-out", "ease-in"],
-    animationIterationCount: ["infinite", 1, 1],
-    animationFillMode: ["none", "both", "forwards"],
+    animationName: slideKeyframes,
+    animationDelay: "1s",
+    animationDuration: "1.2s",
+    animationTimingFunction: "ease-in-out",
+    animationIterationCount: "infinite",
+    animationFillMode: "none",
+  },
+});
+
+const arrowFadeAnimation = css.create({
+  fade: {
+    animationName: [fadeInKeyframes, fadeOutKeyframes],
+    animationDelay: ["1s", "4.7s"],
+    animationDuration: ["0.25s", "0.25s"],
+    animationTimingFunction: ["ease-out", "ease-in"],
+    animationIterationCount: [1, 1],
+    animationFillMode: ["both", "forwards"],
   },
 });
 
@@ -58,49 +69,44 @@ export default function LevelGrid({ color, style }: Props): JSX.Element {
         const row = Math.floor(index / 6);
 
         return (
-          <>
+          <View
+            key={index}
+            style={{
+              ...styles.grid,
+              width: caseSize - 5,
+              height: caseSize - 5,
+              top: row * caseSize + 2,
+              left: col * caseSize + 2,
+              borderColor: darken(color, 0.27),
+              ...(index === goalCaseIndex && {
+                borderColor: lighten(mainBlockColor),
+                borderWidth: 2,
+              }),
+            }}
+          >
             {index === goalCaseIndex && showArrow && (
               <Animated.View
                 style={[
-                  {
-                    top: 140,
-                    right: -30,
-                    position: "absolute",
-                  },
-                  arrowAnimation.slide,
+                  styles.arrowGoalCaseIndicatorContainer,
+                  arrowSlideAnimation.slide,
                 ]}
               >
-                <ArrowTriangleLeftFill
-                  color={lighten(mainBlockColor)}
-                  style={{ width: 18 }}
-                />
+                <Animated.View style={arrowFadeAnimation.fade}>
+                  <ArrowTriangleLeftFill
+                    color={lighten(mainBlockColor)}
+                    style={styles.arrowGoalCaseIndicator}
+                  />
+                </Animated.View>
               </Animated.View>
             )}
 
-            <View
-              key={index}
-              style={{
-                ...styles.grid,
-                width: caseSize - 5,
-                height: caseSize - 5,
-                top: row * caseSize + 2,
-                left: col * caseSize + 2,
-                borderColor: darken(color, 0.3),
-                ...(index === goalCaseIndex && {
-                  borderColor: lighten(mainBlockColor),
-                  borderWidth: 2,
-                  opacity: 0.75,
-                }),
-              }}
-            >
-              {index === goalCaseIndex && (
-                <StarFill
-                  style={{ width: 22, height: 22 }}
-                  color={lighten(mainBlockColor)}
-                />
-              )}
-            </View>
-          </>
+            {index === goalCaseIndex && (
+              <StarFill
+                style={{ width: 22, height: 22 }}
+                color={lighten(mainBlockColor)}
+              />
+            )}
+          </View>
         );
       })}
     </View>
@@ -124,5 +130,14 @@ const styles = StyleSheet.create({
   },
   goalCase: {
     borderWidth: 2,
+  },
+  arrowGoalCaseIndicatorContainer: {
+    top: (caseSize - 4) / 2 - 18 / 2 - 2,
+    right: -35,
+    position: "absolute",
+  },
+  arrowGoalCaseIndicator: {
+    width: 18,
+    height: 18,
   },
 });

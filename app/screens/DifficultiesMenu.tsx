@@ -1,19 +1,15 @@
-import { useNavigation } from "@react-navigation/native";
 import React, { JSX } from "react";
 import { ScrollView, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import DifficultyViewer from "../components/difficulty/DifficultyViewer";
 import DifficultiesMenuHeader from "../components/header/DifficultiesMenuHeader";
 import difficulties from "../data/difficulties";
-import NavigationProp from "../types/navigation.type";
 
 export default function DifficultiesMenu() {
-  const navigation = useNavigation<NavigationProp>();
-
   const renderDifficulties = (): any => {
     return difficulties.map(
       (difficulty, index): JSX.Element => (
-        <DifficultyViewer key={index} onPress={() => {}} />
+        <DifficultyViewer key={index} difficultyIndex={index} />
       ),
     );
   };
