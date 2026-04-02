@@ -1,4 +1,4 @@
-const data = [
+const difficulties = [
   {
     colors: {
       primary: "#D6F5BC",
@@ -67,4 +67,4 @@ const data = [
   },
 ];
 
-export default data;
+export default difficulties;

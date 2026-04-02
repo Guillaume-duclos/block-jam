@@ -1,3 +1,5 @@
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import React, { JSX, memo, Ref } from "react";
 import { StyleSheet, View, ViewStyle } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
@@ -7,53 +9,43 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { runOnJS } from "react-native-worklets";
-import Radius from "../../enums/radius.enum";
+import { Screen } from "../../enums/screen.enum";
+import RootStackParamList from "../../types/rootStackParamList.type";
 import { darken } from "../../utils/color";
 
 type Props = {
   ref?: Ref<View> | undefined;
   disabled?: boolean;
-  onPress: () => void;
-  onPressIn?: () => void;
-  onPressOut?: () => void;
-  children?: React.ReactNode;
   deep?: number;
   color?: string;
   borderColor?: string;
   style?: ViewStyle | ViewStyle[];
   contentContainerStyle?: ViewStyle | ViewStyle[];
-  shadowStyle?: ViewStyle;
-  radius?: string;
 };
 
-const Button = memo(
+type levelItemNavigationProp = NativeStackNavigationProp<RootStackParamList>;
+
+const DifficultyViewer = memo(
   ({
     ref,
     disabled = false,
-    onPress,
-    onPressIn,
-    onPressOut,
-    children,
     deep = 12,
     color = "#F5F7FF",
     borderColor,
     style,
     contentContainerStyle,
-    shadowStyle,
-    radius = Radius.SQUARE,
   }: Props): JSX.Element => {
+    const navigation = useNavigation<levelItemNavigationProp>();
+
     const progress = useSharedValue(0);
 
     const buttonStyle = useAnimatedStyle(() => ({
       transform: [{ translateY: progress.value }],
     }));
 
-    const opacityStyle = useAnimatedStyle(
-      () => ({
-        opacity: withTiming(disabled ? 0.4 : 1, { duration: 80 }),
-      }),
-      [disabled],
-    );
+    const redirectToLevel = (): void => {
+      navigation.navigate(Screen.LEVELS_MENU);
+    };
 
     const tapGesture = Gesture.Tap()
       .enabled(!disabled)
@@ -61,7 +53,6 @@ const Button = memo(
       .onBegin(() => {
         "worklet";
         progress.value = withTiming(deep - deep / 1.5, { duration: 80 });
-        onPressIn && runOnJS(onPressIn)();
       })
       .onTouchesCancelled(() => {
         "worklet";
@@ -70,17 +61,14 @@ const Button = memo(
       .onFinalize(() => {
         "worklet";
         progress.value = withTiming(0, { duration: 80 });
-        onPressOut && runOnJS(onPressOut)();
       })
       .onTouchesUp(() => {
         "worklet";
         progress.value = withTiming(0, { duration: 80 });
-        onPressOut && runOnJS(onPressOut)();
       })
       .onEnd(() => {
         "worklet";
-        onPressOut && runOnJS(onPressOut)();
-        runOnJS(onPress)();
+        runOnJS(redirectToLevel)();
       });
 
     return (
@@ -95,14 +83,8 @@ const Button = memo(
           <View
             style={{
               ...styles.blockBottomBorder,
-              backgroundColor: borderColor
-                ? darken(borderColor, 0.09)
-                : darken(color, 0.15),
-              bottom: 16 - deep,
+              backgroundColor: darken(color, 0.4),
               height: "50%",
-              borderBottomLeftRadius: radius === Radius.ROUND ? 30 : 14,
-              borderBottomRightRadius: radius === Radius.ROUND ? 30 : 14,
-              ...shadowStyle,
             }}
           />
           <Animated.View
@@ -110,14 +92,11 @@ const Button = memo(
               styles.block,
               contentContainerStyle,
               {
-                backgroundColor: color,
-                borderRadius: radius === Radius.ROUND ? 32 : 16,
+                backgroundColor: darken(color, 0.2),
               },
               buttonStyle,
             ]}
-          >
-            <Animated.View style={opacityStyle}>{children}</Animated.View>
-          </Animated.View>
+          ></Animated.View>
         </View>
       </GestureDetector>
     );
@@ -126,21 +105,24 @@ const Button = memo(
 
 const styles = StyleSheet.create({
   container: {
-    height: 64,
     borderRadius: 32,
   },
   block: {
+    minHeight: 100,
     width: "100%",
-    height: 50,
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 20,
+    borderRadius: 16,
   },
   blockBottomBorder: {
     left: 0,
     right: 0,
+    bottom: -8,
     position: "absolute",
+    borderBottomLeftRadius: 14,
+    borderBottomRightRadius: 14,
   },
 });
 
-export default Button;
+export default DifficultyViewer;

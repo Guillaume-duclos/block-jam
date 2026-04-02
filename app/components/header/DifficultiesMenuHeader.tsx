@@ -18,6 +18,7 @@ const DifficultiesMenuHeader = ({
   openSettings,
 }: Props): JSX.Element => {
   const { t } = useTranslation();
+
   const completedLevels = useLevelStore((state) =>
     state.getCompletedLevelsByDificulty(difficulty),
   );
@@ -25,9 +26,7 @@ const DifficultiesMenuHeader = ({
   return (
     <View style={styles.container}>
       <View style={styles.contentContainer}>
-        <Text style={styles.headerTitle}>
-          {t("dificulty")} {difficulty + 1}
-        </Text>
+        <Text style={styles.headerTitle}>{t("dificulty")}</Text>
         <Text style={styles.headerProgression}>
           <Text style={styles.headerProgressionCount}>{completedLevels}</Text>/
           {levelsCount} {t("completed")}

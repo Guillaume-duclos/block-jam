@@ -1,6 +1,14 @@
 import * as Haptics from "expo-haptics";
 import { LinearGradient } from "expo-linear-gradient";
-import React, { JSX, memo, Ref, RefObject, useEffect, useMemo, useRef } from "react";
+import React, {
+  JSX,
+  memo,
+  Ref,
+  RefObject,
+  useEffect,
+  useMemo,
+  useRef,
+} from "react";
 import { StyleSheet, View } from "react-native";
 import {
   Gesture,
@@ -9,6 +17,7 @@ import {
 } from "react-native-gesture-handler";
 import Animated, {
   cancelAnimation,
+  css,
   SharedValue,
   useAnimatedStyle,
   useSharedValue,
@@ -76,6 +85,21 @@ const MovableBlock = memo(
     const startY = useRef<number>(0);
 
     const progress = useSharedValue(0);
+
+    const arrowBlinkKeyframes = css.keyframes({
+      from: { opacity: 0 },
+      to: { opacity: 1 },
+    });
+
+    const arrowBlinkAnimation = css.create({
+      blink: {
+        animationName: arrowBlinkKeyframes,
+        animationDuration: "0.6s",
+        animationTimingFunction: "ease-in-out",
+        animationIterationCount: "infinite",
+        animationDirection: "alternate",
+      },
+    });
 
     const arrowStyle = useAnimatedStyle(() => ({
       opacity: progress.value,
@@ -211,11 +235,11 @@ const MovableBlock = memo(
       .onStart(() => {
         startX.current = x.value;
         startY.current = y.value;
+        progress.value = withTiming(0, { duration: 100 });
       })
       .onUpdate((event): void => {
         const minRange = range[0] * caseSize;
-        const maxRange =
-          range[1] * caseSize - (position.length - 1) * caseSize;
+        const maxRange = range[1] * caseSize - (position.length - 1) * caseSize;
 
         const translation =
           orientation === Orientation.HORIZONTAL
@@ -269,14 +293,18 @@ const MovableBlock = memo(
                   arrowStyle,
                 ]}
               >
-                <ArrowTriangleLeftFill
-                  style={styles.arrow}
-                  color={arrowColor}
-                />
-                <ArrowTriangleRightFill
-                  style={styles.arrow}
-                  color={arrowColor}
-                />
+                <Animated.View style={arrowBlinkAnimation.blink}>
+                  <ArrowTriangleLeftFill
+                    style={styles.arrow}
+                    color={arrowColor}
+                  />
+                </Animated.View>
+                <Animated.View style={arrowBlinkAnimation.blink}>
+                  <ArrowTriangleRightFill
+                    style={styles.arrow}
+                    color={arrowColor}
+                  />
+                </Animated.View>
               </Animated.View>
             )}
 
@@ -288,11 +316,18 @@ const MovableBlock = memo(
                   arrowStyle,
                 ]}
               >
-                <ArrowTriangleUpFill style={styles.arrow} color={arrowColor} />
-                <ArrowTriangleDownFill
-                  style={styles.arrow}
-                  color={arrowColor}
-                />
+                <Animated.View style={arrowBlinkAnimation.blink}>
+                  <ArrowTriangleUpFill
+                    style={styles.arrow}
+                    color={arrowColor}
+                  />
+                </Animated.View>
+                <Animated.View style={arrowBlinkAnimation.blink}>
+                  <ArrowTriangleDownFill
+                    style={styles.arrow}
+                    color={arrowColor}
+                  />
+                </Animated.View>
               </Animated.View>
             )}
           </View>
@@ -335,6 +370,7 @@ const styles = StyleSheet.create({
     height: "100%",
     position: "absolute",
     justifyContent: "space-between",
+    alignItems: "center",
   },
   arrowHorizontalContainer: {
     flexDirection: "row",
@@ -347,7 +383,6 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     alignContent: "center",
     transform: [{ scale: 0.6 }],
-    opacity: 0.7,
   },
 });
 

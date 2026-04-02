@@ -1,29 +1,42 @@
 import { useNavigation } from "@react-navigation/native";
-import React from "react";
-import { Button, StyleSheet, Text, View } from "react-native";
-import { windowHeight, windowWidth } from "../constants/dimension";
-import { Screen } from "../enums/screen.enum";
+import React, { JSX } from "react";
+import { ScrollView, StyleSheet } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import DifficultyViewer from "../components/difficulty/DifficultyViewer";
+import DifficultiesMenuHeader from "../components/header/DifficultiesMenuHeader";
+import difficulties from "../data/difficulties";
 import NavigationProp from "../types/navigation.type";
 
 export default function DifficultiesMenu() {
   const navigation = useNavigation<NavigationProp>();
 
+  const renderDifficulties = (): any => {
+    return difficulties.map(
+      (difficulty, index): JSX.Element => (
+        <DifficultyViewer key={index} onPress={() => {}} />
+      ),
+    );
+  };
+
   return (
-    <View style={styles.container}>
-      <Text>Difficulties menu</Text>
-      <Button
-        title="Menu"
-        onPress={() => navigation.navigate(Screen.LEVELS_MENU)}
-      />
-    </View>
+    <ScrollView style={styles.container}>
+      <SafeAreaView style={styles.safeArea}>
+        <DifficultiesMenuHeader
+          difficulty={0}
+          levelsCount={0}
+          openSettings={() => {}}
+        />
+        {renderDifficulties()}
+      </SafeAreaView>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: "center",
-    justifyContent: "center",
-    width: windowWidth,
-    minHeight: windowHeight,
+    paddingHorizontal: 34,
+  },
+  safeArea: {
+    gap: 50,
   },
 });

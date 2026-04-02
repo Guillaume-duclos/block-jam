@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		184E35E6B75A41A2AD8D9469 /* GoogleSansCodeVariable.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C9121E84FC614A94B7E24203 /* GoogleSansCodeVariable.ttf */; };
-		1FBAE6BCBD24138151AD1E1D /* libPods-blockjam.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CFAD9474A3E0660FB5493D8 /* libPods-blockjam.a */; };
 		3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */; };
 		502EC573CCC75BFC375601D8 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4E0914DC0D330F092C7037C /* ExpoModulesProvider.swift */; };
 		97340DC92B724AE0872D6B20 /* RubikItalicVariable.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1C66EECA28F04CF9AD3EEDD3 /* RubikItalicVariable.ttf */; };
@@ -17,20 +16,21 @@
 		C8B7E7D056A4877787654631 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 1DC9E2A4FBB29E89B7B86EFD /* PrivacyInfo.xcprivacy */; };
 		F015037DE5E54FBBB05911CA /* GoogleSansCodeItalicVariable.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 60A4C3AE700D4D9F8CFFBBD1 /* GoogleSansCodeItalicVariable.ttf */; };
 		F11748422D0307B40044C1D9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F11748412D0307B40044C1D9 /* AppDelegate.swift */; };
+		F69B4DFC1358513B366D2A49 /* libPods-blockjam.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4015898019F5113296594FD5 /* libPods-blockjam.a */; };
 		F88BD41C11494AFCB230E1B1 /* RubikVariable.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 73757568BCAE4C9491744947 /* RubikVariable.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		0BFCF19B135FAEB5F81A746B /* Pods-blockjam.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-blockjam.debug.xcconfig"; path = "Target Support Files/Pods-blockjam/Pods-blockjam.debug.xcconfig"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* blockjam.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = blockjam.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = blockjam/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = blockjam/Info.plist; sourceTree = "<group>"; };
 		1C66EECA28F04CF9AD3EEDD3 /* RubikItalicVariable.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = RubikItalicVariable.ttf; path = ../app/assets/fonts/Rubik/RubikItalicVariable.ttf; sourceTree = "<group>"; };
 		1DC9E2A4FBB29E89B7B86EFD /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = blockjam/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
-		4CFAD9474A3E0660FB5493D8 /* libPods-blockjam.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-blockjam.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4015898019F5113296594FD5 /* libPods-blockjam.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-blockjam.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		45B1328ABD10B9C3A91A649F /* Pods-blockjam.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-blockjam.release.xcconfig"; path = "Target Support Files/Pods-blockjam/Pods-blockjam.release.xcconfig"; sourceTree = "<group>"; };
 		60A4C3AE700D4D9F8CFFBBD1 /* GoogleSansCodeItalicVariable.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = GoogleSansCodeItalicVariable.ttf; path = ../app/assets/fonts/GoogleSansCode/GoogleSansCodeItalicVariable.ttf; sourceTree = "<group>"; };
 		73757568BCAE4C9491744947 /* RubikVariable.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = RubikVariable.ttf; path = ../app/assets/fonts/Rubik/RubikVariable.ttf; sourceTree = "<group>"; };
-		9094EE62866FAF68A825BF36 /* Pods-blockjam.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-blockjam.release.xcconfig"; path = "Target Support Files/Pods-blockjam/Pods-blockjam.release.xcconfig"; sourceTree = "<group>"; };
+		740B5BA295FC3C88B06C84D3 /* Pods-blockjam.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-blockjam.debug.xcconfig"; path = "Target Support Files/Pods-blockjam/Pods-blockjam.debug.xcconfig"; sourceTree = "<group>"; };
 		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = blockjam/SplashScreen.storyboard; sourceTree = "<group>"; };
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
 		C4E0914DC0D330F092C7037C /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-blockjam/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
@@ -45,7 +45,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1FBAE6BCBD24138151AD1E1D /* libPods-blockjam.a in Frameworks */,
+				F69B4DFC1358513B366D2A49 /* libPods-blockjam.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -69,8 +69,8 @@
 		2B41839E04079EE408EE747E /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				0BFCF19B135FAEB5F81A746B /* Pods-blockjam.debug.xcconfig */,
-				9094EE62866FAF68A825BF36 /* Pods-blockjam.release.xcconfig */,
+				740B5BA295FC3C88B06C84D3 /* Pods-blockjam.debug.xcconfig */,
+				45B1328ABD10B9C3A91A649F /* Pods-blockjam.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -79,7 +79,7 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				4CFAD9474A3E0660FB5493D8 /* libPods-blockjam.a */,
+				4015898019F5113296594FD5 /* libPods-blockjam.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -158,14 +158,14 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "blockjam" */;
 			buildPhases = (
-				08A4A3CD28434E44B6B9DE2E /* [CP] Check Pods Manifest.lock */,
+				55FD1805C8FF8919986261E2 /* [CP] Check Pods Manifest.lock */,
 				CCD3C90862F9EFC1FE9B702A /* [Expo] Configure project */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				800E24972A6A228C8D4807E9 /* [CP] Copy Pods Resources */,
-				C9C852948C58255A6364DAC6 /* [CP] Embed Pods Frameworks */,
+				694D63C41B46B37BF7971AF7 /* [CP] Embed Pods Frameworks */,
+				1EF2C6E393ED255F6ACE5CA3 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -241,29 +241,7 @@
 			shellPath = /bin/sh;
 			shellScript = "if [[ -f \"$PODS_ROOT/../.xcode.env\" ]]; then\n  source \"$PODS_ROOT/../.xcode.env\"\nfi\nif [[ -f \"$PODS_ROOT/../.xcode.env.local\" ]]; then\n  source \"$PODS_ROOT/../.xcode.env.local\"\nfi\n\n# The project root by default is one level up from the ios directory\nexport PROJECT_ROOT=\"$PROJECT_DIR\"/..\n\nif [[ \"$CONFIGURATION\" = *Debug* ]]; then\n  export SKIP_BUNDLING=1\nfi\nif [[ -z \"$ENTRY_FILE\" ]]; then\n  # Set the entry JS file using the bundler's entry resolution.\n  export ENTRY_FILE=\"$(\"$NODE_BINARY\" -e \"require('expo/scripts/resolveAppEntry')\" \"$PROJECT_ROOT\" ios absolute | tail -n 1)\"\nfi\n\nif [[ -z \"$CLI_PATH\" ]]; then\n  # Use Expo CLI\n  export CLI_PATH=\"$(\"$NODE_BINARY\" --print \"require.resolve('@expo/cli', { paths: [require.resolve('expo/package.json')] })\")\"\nfi\nif [[ -z \"$BUNDLE_COMMAND\" ]]; then\n  # Default Expo CLI command for bundling\n  export BUNDLE_COMMAND=\"export:embed\"\nfi\n\n# Source .xcode.env.updates if it exists to allow\n# SKIP_BUNDLING to be unset if needed\nif [[ -f \"$PODS_ROOT/../.xcode.env.updates\" ]]; then\n  source \"$PODS_ROOT/../.xcode.env.updates\"\nfi\n# Source local changes to allow overrides\n# if needed\nif [[ -f \"$PODS_ROOT/../.xcode.env.local\" ]]; then\n  source \"$PODS_ROOT/../.xcode.env.local\"\nfi\n\n`\"$NODE_BINARY\" --print \"require('path').dirname(require.resolve('react-native/package.json')) + '/scripts/react-native-xcode.sh'\"`\n\n";
 		};
-		08A4A3CD28434E44B6B9DE2E /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-blockjam-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		800E24972A6A228C8D4807E9 /* [CP] Copy Pods Resources */ = {
+		1EF2C6E393ED255F6ACE5CA3 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -301,7 +279,29 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-blockjam/Pods-blockjam-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		C9C852948C58255A6364DAC6 /* [CP] Embed Pods Frameworks */ = {
+		55FD1805C8FF8919986261E2 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-blockjam-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		694D63C41B46B37BF7971AF7 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -355,7 +355,7 @@
 /* Begin XCBuildConfiguration section */
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 0BFCF19B135FAEB5F81A746B /* Pods-blockjam.debug.xcconfig */;
+			baseConfigurationReference = 740B5BA295FC3C88B06C84D3 /* Pods-blockjam.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -392,7 +392,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9094EE62866FAF68A825BF36 /* Pods-blockjam.release.xcconfig */;
+			baseConfigurationReference = 45B1328ABD10B9C3A91A649F /* Pods-blockjam.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;

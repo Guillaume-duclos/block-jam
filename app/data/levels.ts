@@ -1,4 +1,4 @@
-const data = [
+const levels = [
   {
     index: 0,
     colors: {
@@ -4879,4 +4879,4 @@ const data = [
   },
 ];
 
-export default data;
+export default levels;

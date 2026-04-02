@@ -7,6 +7,7 @@ import ArrowTriangleLeft from "../../assets/icons/ArrowTriangleLeft";
 import ArrowTriangleRight from "../../assets/icons/ArrowTriangleRight";
 import data from "../../data/levels";
 import LevelNavigationType from "../../enums/levelNavigationType.enum";
+import Radius from "../../enums/radius.enum";
 import { useDificultyStore } from "../../store/dificulty.store";
 import { useLevelStore } from "../../store/level.store";
 import { darken } from "../../utils/color";
@@ -28,7 +29,6 @@ const LevelControls = memo(
     difficulty,
     navigateToSelectedLevel,
   }: Props): JSX.Element | undefined => {
-
     const levelsList = data[difficulty].levels;
 
     const { t } = useTranslation();
@@ -91,6 +91,7 @@ const LevelControls = memo(
             disabled={isPreviousLevelDisabled}
             color={dificultyTheme.frame}
             style={styles.footerButton}
+            radius={Radius.ROUND}
           >
             <ArrowTriangleLeft
               style={styles.leftFooterButtonIcon}
@@ -104,6 +105,7 @@ const LevelControls = memo(
               style={styles.gamePlayButton}
               disabled={!isResetEnabled}
               color={dificultyTheme.frame}
+              radius={Radius.ROUND}
             >
               <ArrowTriangleHead2ClockwiseRotate90
                 color={darken(dificultyTheme.frame, 0.3)}
@@ -115,6 +117,7 @@ const LevelControls = memo(
               style={styles.gamePlayButton}
               disabled={!isUndoEnabled}
               color={dificultyTheme.frame}
+              radius={Radius.ROUND}
             >
               <ArrowShapeTurnUpLeft
                 style={{ top: -1, left: -1 }}
@@ -128,6 +131,7 @@ const LevelControls = memo(
             disabled={isNextLevelDisabled}
             color={dificultyTheme.frame}
             style={styles.footerButton}
+            radius={Radius.ROUND}
           >
             <ArrowTriangleRight
               style={styles.rightFooterButtonIcon}
@@ -146,7 +150,7 @@ const LevelControls = memo(
         />
       </Fragment>
     );
-  }
+  },
 );
 
 const styles = StyleSheet.create({
