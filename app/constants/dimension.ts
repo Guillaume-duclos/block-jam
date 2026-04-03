@@ -13,9 +13,9 @@ export const gridWidth: number = windowWidth * 0.75;
 export const gridHeight: number = windowWidth * 0.75;
 
 // Case sizes
-export const playgroundSize: number = windowWidth * 0.94;
-export const playgroundGridSize: number = playgroundSize - 40;
-export const caseSize: number = playgroundGridSize / 6;
+export const caseSize: number = Math.floor((windowWidth * 0.94 - 40) / 6);
+export const playgroundGridSize: number = caseSize * 6;
+export const playgroundSize: number = playgroundGridSize + 40;
 
 // Menu sizes
 export const menuHeaderHeight: number = 58;

@@ -1,4 +1,4 @@
-import React, { JSX, useEffect, useState } from "react";
+import React, { Fragment, JSX, useEffect, useState } from "react";
 import { StyleSheet, View, ViewStyle } from "react-native";
 import Animated, { css } from "react-native-reanimated";
 import ArrowTriangleLeftFill from "../../assets/icons/ArrowTriangleLeftFill";
@@ -24,7 +24,7 @@ const fadeOutKeyframes = css.keyframes({
   to: { opacity: 0, transform: [{ scale: 0.6 }] },
 });
 
-const SLIDE_DELAY = 1;
+const SLIDE_DELAY = 1.5;
 const SLIDE_DURATION = 1.2;
 const SLIDE_ITERATIONS = 3;
 const FADE_DURATION = 0.2;
@@ -52,6 +52,33 @@ const arrowFadeAnimation = css.create({
     animationTimingFunction: ["ease-out", "ease-in"],
     animationIterationCount: [1, 1],
     animationFillMode: ["both", "forwards"],
+  },
+});
+
+const squareFadeInKeyframes = css.keyframes({
+  from: { opacity: 0 },
+  to: { opacity: 1 },
+});
+
+const squareScaleKeyframes = css.keyframes({
+  "0%": { transform: [{ scale: 1.1 }] },
+  "50%": { transform: [{ scale: 1 }] },
+  "100%": { transform: [{ scale: 1.1 }] },
+});
+
+const squareFadeOutKeyframes = css.keyframes({
+  from: { opacity: 1 },
+  to: { opacity: 0 },
+});
+
+const squareAnimation = css.create({
+  pulse: {
+    animationName: [squareFadeInKeyframes, squareScaleKeyframes, squareFadeOutKeyframes],
+    animationDelay: [`${SLIDE_DELAY}s`, `${SLIDE_DELAY}s`, `${FADE_OUT_DELAY}s`],
+    animationDuration: [`${FADE_DURATION}s`, `${SLIDE_DURATION}s`, `${FADE_DURATION}s`],
+    animationTimingFunction: ["ease-out", "ease-in-out", "ease-in"],
+    animationIterationCount: [1, SLIDE_ITERATIONS, 1],
+    animationFillMode: ["both", "none", "forwards"],
   },
 });
 
@@ -104,19 +131,29 @@ export default function LevelGrid({
             }}
           >
             {index === goalCaseIndex && showArrow && (
-              <Animated.View
-                style={[
-                  styles.arrowGoalCaseIndicatorContainer,
-                  arrowSlideAnimation.slide,
-                ]}
-              >
-                <Animated.View style={arrowFadeAnimation.fade}>
-                  <ArrowTriangleLeftFill
-                    color={lighten(mainBlockColor)}
-                    style={styles.arrowGoalCaseIndicator}
-                  />
+              <Fragment>
+                <Animated.View
+                  style={[
+                    styles.caseGoalCaseIndicatorContainer,
+                    { borderColor: lighten(mainBlockColor) },
+                    showGoalArrow && squareAnimation.pulse,
+                  ]}
+                />
+
+                <Animated.View
+                  style={[
+                    styles.arrowGoalCaseIndicatorContainer,
+                    arrowSlideAnimation.slide,
+                  ]}
+                >
+                  <Animated.View style={arrowFadeAnimation.fade}>
+                    <ArrowTriangleLeftFill
+                      color={lighten(mainBlockColor)}
+                      style={styles.arrowGoalCaseIndicator}
+                    />
+                  </Animated.View>
                 </Animated.View>
-              </Animated.View>
+              </Fragment>
             )}
 
             {index === goalCaseIndex && (
@@ -149,6 +186,16 @@ const styles = StyleSheet.create({
   },
   goalCase: {
     borderWidth: 2,
+    borderCurve: "continuous",
+  },
+  caseGoalCaseIndicatorContainer: {
+    zIndex: 1,
+    width: caseSize + 5,
+    height: caseSize + 5,
+    position: "absolute",
+    borderWidth: 3,
+    borderRadius: 10,
+    borderCurve: "continuous",
   },
   arrowGoalCaseIndicatorContainer: {
     top: (caseSize - 4) / 2 - 18 / 2 - 2,
