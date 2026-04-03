@@ -78,6 +78,7 @@ const styles = StyleSheet.create({
     height: 24 - 6,
     backgroundColor: "#F5F7FF",
     boxShadow: "0 4px 0px 0 #D6DBE2",
+    borderCurve: "continuous",
     borderRadius: 6,
   },
 });

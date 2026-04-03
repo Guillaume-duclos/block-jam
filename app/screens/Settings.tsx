@@ -158,12 +158,10 @@ export default function Settings(): JSX.Element {
 
         {/* TUTORIAL */}
         <SectionContainer title={t("tutorial")}>
-          <Fragment>
-            <NavigationLink
-              label={t("seeTutorial")}
-              onPress={() => navigate(Screen.TUTORIAL)}
-            />
-          </Fragment>
+          <NavigationLink
+            label={t("seeTutorial")}
+            onPress={() => navigate(Screen.TUTORIAL)}
+          />
         </SectionContainer>
 
         {/* CGU */}
@@ -258,11 +256,10 @@ const styles = StyleSheet.create({
   },
   languagesContainer: {
     gap: 20,
-    flexWrap: "wrap",
     flexDirection: "row",
-    justifyContent: "space-around",
   },
   languageButtonContainer: {
+    flex: 1,
     alignItems: "center",
   },
   languageButton: {

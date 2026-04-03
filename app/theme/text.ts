@@ -1,12 +1,12 @@
 export const text = {
   title1: {
-    fontSize: 28,
+    fontSize: 34,
     lineHeight: 32,
     fontWeight: "700",
     fontFamily: "Rubik",
   },
   title2: {
-    fontSize: 24,
+    fontSize: 28,
     lineHeight: 28,
     fontWeight: "700",
     fontFamily: "Rubik",
