@@ -90,8 +90,8 @@ const PlaygroundHeader = ({
         icon={Door}
         onConfirm={goBack}
         onCancel={cancelGoBack}
-        title={t("confirmation")}
-        description={t("confirmationDescription")}
+        title={t("exitLevelModal.title")}
+        description={t("exitLevelModal.description")}
         style={styles.modal}
       />
     </Fragment>

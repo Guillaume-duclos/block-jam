@@ -12,7 +12,7 @@ import React, {
 } from "react";
 import { InteractionManager, StyleSheet, View, ViewStyle } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { gridCount } from "../../config/config";
+import { goalCaseIndex, gridCount } from "../../config/config";
 import { caseSize, playgroundSize } from "../../constants/dimension";
 import { BlockType } from "../../enums/blockType.enum";
 import LevelNavigationType from "../../enums/levelNavigationType.enum";
@@ -418,7 +418,13 @@ const LevelPlayground = memo(
                 boxShadow: `0 0 1px 0.5px ${darken(mainColor, 0.35)} inset`,
               }}
             >
-              <LevelGrid color={mainColor} />
+              <LevelGrid
+                color={mainColor}
+                showGoalArrow={
+                  level.scheme?.[goalCaseIndex] !== BlockType.EMPTY &&
+                  level.scheme?.[goalCaseIndex] !== BlockType.WALL
+                }
+              />
 
               <GestureHandlerRootView>
                 {grid.length > 0 && vehiclePositions && renderBlocks()}

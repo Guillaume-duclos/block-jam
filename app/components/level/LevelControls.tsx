@@ -147,8 +147,8 @@ const LevelControls = memo(
           icon={Door}
           onConfirm={confirmLevelNavigation}
           onCancel={cancelLevelNavigation}
-          title={t("confirmation")}
-          description={t("confirmationDescription")}
+          title={t("exitLevelModal.title")}
+          description={t("exitLevelModal.description")}
         />
       </Fragment>
     );

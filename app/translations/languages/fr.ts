@@ -11,18 +11,31 @@ const fr = {
   moves: "Coups",
   previousScores: "Scores précédents",
 
-  // Result modal
-  levelCompleted: "Niveau terminé !",
-  score: "Score",
-  replay: "Rejouer",
-  next: "Suivant",
-
-  // Reset data modal
-  confirmation: "Confirmation",
-  confirmationDescription:
-    "Es-tu sûr de vouloir remettre à zéro tous tes scores ? Cette action est irréversible.",
+  // Modal
   cancel: "Annuler",
   confirm: "Confirmer",
+
+  // Result modal
+  resultLevelModal: {
+    title: "Niveau terminé !",
+    score: "Score",
+    replay: "Rejouer",
+    next: "Suivant",
+  },
+
+  // Reset data modal
+  resetDataModal: {
+    title: "Confirmation",
+    description:
+      "Es-tu sûr de vouloir remettre à zéro tous tes scores ? Cette action est irréversible.",
+  },
+
+  // Exite level modal
+  exitLevelModal: {
+    title: "Confirmation",
+    description:
+      "Es-tu sûr de vouloir quitter la partie ? Votre progression sera perdu.",
+  },
 
   // Settings
   settings: "Paramètres",

@@ -57,19 +57,29 @@ const arrowFadeAnimation = css.create({
 
 type Props = {
   color: string;
+  showGoalArrow: boolean;
   style?: ViewStyle;
 };
 
-export default function LevelGrid({ color, style }: Props): JSX.Element {
+export default function LevelGrid({
+  color,
+  showGoalArrow,
+  style,
+}: Props): JSX.Element {
   const dificultyTheme = useDificultyStore((value) => value.colors);
   const mainBlockColor = dificultyTheme?.mainBlock;
 
-  const [showArrow, setShowArrow] = useState(true);
+  const [showArrow, setShowArrow] = useState(showGoalArrow);
 
   useEffect(() => {
+    if (!showGoalArrow) {
+      return;
+    }
+
     const timer = setTimeout(() => setShowArrow(false), ARROW_HIDE_TIMEOUT);
+
     return () => clearTimeout(timer);
-  }, []);
+  }, [showGoalArrow]);
 
   return (
     <View style={{ ...styles.gridContainer, ...style }}>

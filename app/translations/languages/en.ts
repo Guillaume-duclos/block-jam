@@ -21,8 +21,32 @@ const en = {
   confirmation: "Confirmation",
   confirmationDescription:
     "Are you sure you want to reset all your scores? This action cannot be undone.",
+
+  // Modal
   cancel: "Cancel",
   confirm: "Confirm",
+
+  // Result modal
+  resultLevelModal: {
+    title: "Level completed!",
+    score: "Score",
+    replay: "Play again",
+    next: "Next",
+  },
+
+  // Reset data modal
+  resetDataModal: {
+    title: "Confirmation",
+    description:
+      "Are you sure you want to reset all your scores? This action cannot be undone.",
+  },
+
+  // Exit level modal
+  exitLevelModal: {
+    title: "Confirmation",
+    description:
+      "Are you sure you want to exit the level? Your progress will be lost.",
+  },
 
   // Settings
   settings: "Settings",

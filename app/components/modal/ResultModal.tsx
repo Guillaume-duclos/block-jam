@@ -15,6 +15,7 @@ import { runOnJS } from "react-native-worklets";
 import Star from "../../assets/icons/Star";
 import StarFill from "../../assets/icons/StarFill";
 import StarSemiFill from "../../assets/icons/StarSemiFill";
+import TrophyFill from "../../assets/icons/TrophyFill";
 import { ResultModalAction } from "../../enums/resultModalAction.enum";
 import { darken } from "../../utils/color";
 import { formatScore } from "../../utils/format";
@@ -175,7 +176,11 @@ export default function ResultModal({
             <Animated.View style={animatedModalStyle}>
               <View style={styles.modalBottomBorder} />
               <View style={styles.modal}>
-                <Text style={styles.title}>{t("levelCompleted")}</Text>
+                <TrophyFill
+                  style={styles.icon}
+                  color={darken("#D6F5BC", 0.3)}
+                />
+                <Text style={styles.title}>{t("resultLevelModal.title")}</Text>
                 <View style={styles.starsContainer}>
                   {stars.map((star, index) => (
                     <View key={index} style={styles.starWrapper}>
@@ -193,7 +198,9 @@ export default function ResultModal({
                   ))}
                 </View>
                 <View style={styles.scroreContainer}>
-                  <Text style={styles.scoreLabel}>{t("score")}</Text>
+                  <Text style={styles.scoreLabel}>
+                    {t("resultLevelModal.score")}
+                  </Text>
                   <Text style={styles.scoreValue}>
                     {formatScore((score * 1000).toFixed(0))}
                   </Text>
@@ -204,22 +211,26 @@ export default function ResultModal({
             <View style={styles.submitButtonsContainer}>
               <AnimatedButton
                 onPress={onReplay}
-                style={[styles.submitButton, animatedCancelButtonStyle]}
+                style={animatedCancelButtonStyle}
                 shadowStyle={{ boxShadow: "0 0 14px 0 #878787" }}
                 color="#ECECEC"
                 deep={10}
               >
-                <Text style={styles.submitButtonLabel}>{t("replay")}</Text>
+                <Text style={styles.submitButtonLabel}>
+                  {t("resultLevelModal.replay")}
+                </Text>
               </AnimatedButton>
 
               <AnimatedButton
                 onPress={onNextLevel}
-                style={[styles.submitButton, animatedConfirmButtonStyle]}
+                style={animatedConfirmButtonStyle}
                 shadowStyle={{ boxShadow: "0 0 14px 0 #878787" }}
                 color="#ECECEC"
                 deep={10}
               >
-                <Text style={styles.submitButtonLabel}>{t("next")}</Text>
+                <Text style={styles.submitButtonLabel}>
+                  {t("resultLevelModal.next")}
+                </Text>
               </AnimatedButton>
             </View>
           </View>
@@ -246,7 +257,7 @@ const styles = StyleSheet.create({
     gap: 22,
     borderRadius: 16,
     paddingVertical: 24,
-    paddingHorizontal: 30,
+    paddingHorizontal: 10,
     backgroundColor: "#ECECEC",
   },
   modalBottomBorder: {
@@ -261,8 +272,13 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 16,
     boxShadow: "0 0 14px 0 #878787",
   },
+  icon: {
+    width: 60,
+    height: 60,
+    alignSelf: "center",
+  },
   title: {
-    fontSize: 30,
+    fontSize: 36,
     fontWeight: 800,
     fontFamily: "Rubik",
     textAlign: "center",
@@ -305,15 +321,10 @@ const styles = StyleSheet.create({
     color: darken("#D6F5BC", 0.3),
   },
   submitButtonsContainer: {
-    gap: 10,
     width: "100%",
-    flexDirection: "row",
-  },
-  submitButton: {
-    flex: 1,
   },
   submitButtonLabel: {
-    fontSize: 18,
+    fontSize: 20,
     textTransform: "uppercase",
     fontWeight: 800,
     fontFamily: "Rubik",

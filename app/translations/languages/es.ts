@@ -21,8 +21,32 @@ const es = {
   confirmation: "Confirmación",
   confirmationDescription:
     "¿Estás seguro de que quieres restablecer todas tus puntuaciones? Esta acción es irreversible.",
+
+  // Modal
   cancel: "Cancelar",
   confirm: "Confirmar",
+
+  // Result modal
+  resultLevelModal: {
+    title: "¡Nivel completado!",
+    score: "Puntuación",
+    replay: "Repetir",
+    next: "Siguiente",
+  },
+
+  // Reset data modal
+  resetDataModal: {
+    title: "Confirmación",
+    description:
+      "¿Estás seguro de que quieres restablecer todas tus puntuaciones? Esta acción es irreversible.",
+  },
+
+  // Exit level modal
+  exitLevelModal: {
+    title: "Confirmación",
+    description:
+      "¿Estás seguro de que quieres salir del nivel? Tu progreso se perderá.",
+  },
 
   // Settings
   settings: "Ajustes",

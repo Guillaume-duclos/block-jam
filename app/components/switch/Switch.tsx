@@ -16,18 +16,23 @@ type Props = {
   style?: ViewStyle;
 };
 
+const OFF_POSITION = 0;
+const ON_POSITION = 26;
+
 export default function Switch({
   selected,
   disabled,
   onChange,
   style,
 }: Props): JSX.Element {
-  const progress = useSharedValue(selected ? 26 : 0);
+  const progress = useSharedValue(selected ? ON_POSITION : OFF_POSITION);
 
   const activeColor = darken("#D6F5BC", 0.38);
 
   useEffect(() => {
-    progress.value = withTiming(selected ? 25 : 0, { duration: 180 });
+    progress.value = withTiming(selected ? ON_POSITION : OFF_POSITION, {
+      duration: 180,
+    });
   }, [selected, progress]);
 
   const thumbStyle = useAnimatedStyle(() => ({
@@ -37,7 +42,7 @@ export default function Switch({
   const containerStyle = useAnimatedStyle(() => ({
     backgroundColor: interpolateColor(
       progress.value,
-      [0, 26],
+      [OFF_POSITION, ON_POSITION],
       ["#B1BDD1", activeColor],
     ),
   }));
@@ -64,15 +69,15 @@ const styles = StyleSheet.create({
     borderColor: "#F5F7FF",
     justifyContent: "center",
     borderCurve: "continuous",
-    borderRadius: 32 / 2,
+    borderRadius: 10,
   },
   switch: {
-    top: -3,
-    left: 3,
+    top: -2,
+    left: 2,
     width: 22,
-    height: 24 - 5,
+    height: 24 - 6,
     backgroundColor: "#F5F7FF",
     boxShadow: "0 4px 0px 0 #D6DBE2",
-    borderRadius: 24 / 2,
+    borderRadius: 6,
   },
 });
