@@ -14,7 +14,6 @@ import {
   windowHeight,
   windowWidth,
 } from "../../constants/dimension";
-import { Screen } from "../../enums/screen.enum";
 import { Level, MainLevel } from "../../types/level.type";
 import NavigationProp from "../../types/navigation.type";
 import LevelsMenuHeader from "../header/LevelsMenuHeader";
@@ -87,11 +86,6 @@ const LevelItemsList = memo(({ level }: Props): JSX.Element => {
     [level.levels],
   );
 
-  // Ouvre les paramètres
-  const openSettings = (): void => {
-    navigation.navigate(Screen.SETTINGS);
-  };
-
   const updateActiveIndex = (index: number): void => {
     listRef.current?.scrollToIndex({ index, animated: false });
   };
@@ -108,7 +102,6 @@ const LevelItemsList = memo(({ level }: Props): JSX.Element => {
       <LevelsMenuHeader
         difficulty={level.index}
         levelsCount={level.levels.length}
-        openSettings={openSettings}
       />
 
       {/* LISTE HORIZONTALE DE CHAQUE GRAND NIVEAU */}

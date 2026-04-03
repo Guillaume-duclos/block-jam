@@ -17,11 +17,7 @@ export default function DifficultiesMenu() {
   return (
     <ScrollView style={styles.container}>
       <SafeAreaView style={styles.safeArea}>
-        <DifficultiesMenuHeader
-          difficulty={0}
-          levelsCount={0}
-          openSettings={() => {}}
-        />
+        <DifficultiesMenuHeader difficulty={0} levelsCount={0} />
         {renderDifficulties()}
       </SafeAreaView>
     </ScrollView>

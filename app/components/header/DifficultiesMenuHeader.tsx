@@ -1,27 +1,33 @@
+import { useNavigation } from "@react-navigation/native";
 import React, { JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { StyleSheet, Text, View } from "react-native";
 import Settings from "../../assets/icons/GearShapeFill";
 import { menuHeaderHeight } from "../../constants/dimension";
+import { Screen } from "../../enums/screen.enum";
 import { useLevelStore } from "../../store/level.store";
+import NavigationProp from "../../types/navigation.type";
 import PressableView from "../button/PressableView";
 
 type Props = {
   difficulty: number;
   levelsCount: number;
-  openSettings: () => void;
 };
 
 const DifficultiesMenuHeader = ({
   difficulty,
   levelsCount,
-  openSettings,
 }: Props): JSX.Element => {
+  const navigation = useNavigation<NavigationProp>();
   const { t } = useTranslation();
 
   const completedLevels = useLevelStore((state) =>
     state.getCompletedLevelsByDificulty(difficulty),
   );
+
+  const openSettings = (): void => {
+    navigation.navigate(Screen.SETTINGS);
+  };
 
   return (
     <View style={styles.container}>

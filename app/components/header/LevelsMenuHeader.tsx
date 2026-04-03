@@ -5,6 +5,7 @@ import { StyleSheet, Text, View } from "react-native";
 import ArrowShapeLeftFill from "../../assets/icons/ArrowShapeLeftFill";
 import Settings from "../../assets/icons/GearShapeFill";
 import { menuHeaderHeight } from "../../constants/dimension";
+import { Screen } from "../../enums/screen.enum";
 import { useDificultyStore } from "../../store/dificulty.store";
 import { useLevelStore } from "../../store/level.store";
 import NavigationProp from "../../types/navigation.type";
@@ -13,14 +14,9 @@ import PressableView from "../button/PressableView";
 type Props = {
   difficulty: number;
   levelsCount: number;
-  openSettings: () => void;
 };
 
-const LevelsMenuHeader = ({
-  difficulty,
-  levelsCount,
-  openSettings,
-}: Props): JSX.Element => {
+const LevelsMenuHeader = ({ difficulty, levelsCount }: Props): JSX.Element => {
   const navigation = useNavigation<NavigationProp>();
   const dificultyTheme = useDificultyStore((value) => value.colors);
 
@@ -33,6 +29,11 @@ const LevelsMenuHeader = ({
   // Redirige vers le menu des difficultés
   const goBack = (): void => {
     navigation.goBack();
+  };
+
+  // Ouvre les paramètres
+  const openSettings = (): void => {
+    navigation.navigate(Screen.SETTINGS);
   };
 
   return (
