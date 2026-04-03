@@ -18,6 +18,7 @@ import {
 import Animated, {
   cancelAnimation,
   css,
+  interpolate,
   SharedValue,
   useAnimatedStyle,
   useSharedValue,
@@ -54,6 +55,21 @@ type Props = {
   ) => void;
 };
 
+const arrowBlinkKeyframes = css.keyframes({
+  from: { opacity: 0 },
+  to: { opacity: 1 },
+});
+
+const arrowBlinkAnimation = css.create({
+  blink: {
+    animationName: arrowBlinkKeyframes,
+    animationDuration: "0.6s",
+    animationTimingFunction: "ease-in-out",
+    animationIterationCount: "infinite",
+    animationDirection: "alternate",
+  },
+});
+
 const MovableBlock = memo(
   ({
     index,
@@ -73,10 +89,7 @@ const MovableBlock = memo(
 
     const x: SharedValue<number> = useSharedValue(initialX);
     const y: SharedValue<number> = useSharedValue(initialY);
-    const blockScale: SharedValue<number> = useSharedValue(
-      animatabled ? 0.9 : 1,
-    );
-    const blockOpacity: SharedValue<number> = useSharedValue(
+    const entryProgress: SharedValue<number> = useSharedValue(
       animatabled ? 0 : 1,
     );
     const localPosition: RefObject<number[]> = useRef(position);
@@ -86,27 +99,8 @@ const MovableBlock = memo(
 
     const progress = useSharedValue(0);
 
-    const arrowBlinkKeyframes = css.keyframes({
-      from: { opacity: 0 },
-      to: { opacity: 1 },
-    });
-
-    const arrowBlinkAnimation = css.create({
-      blink: {
-        animationName: arrowBlinkKeyframes,
-        animationDuration: "0.6s",
-        animationTimingFunction: "ease-in-out",
-        animationIterationCount: "infinite",
-        animationDirection: "alternate",
-      },
-    });
-
     const arrowStyle = useAnimatedStyle(() => ({
       opacity: progress.value,
-    }));
-
-    const blockStyle = useAnimatedStyle(() => ({
-      opacity: blockOpacity.value,
     }));
 
     const mainBlock = label === BlockType.MAIN_BLOCK ? mainBlockColor : color;
@@ -123,15 +117,8 @@ const MovableBlock = memo(
 
     useEffect(() => {
       if (animatabled) {
-        const totalDelay = index * 20;
-
-        blockScale.value = withDelay(
-          totalDelay,
-          withSpring(1, { mass: 1, damping: 15, stiffness: 240 }),
-        );
-
-        blockOpacity.value = withDelay(
-          totalDelay,
+        entryProgress.value = withDelay(
+          index * 20,
           withSpring(1, { mass: 1, damping: 15, stiffness: 240 }),
         );
       }
@@ -139,8 +126,7 @@ const MovableBlock = memo(
       return () => {
         cancelAnimation(x);
         cancelAnimation(y);
-        cancelAnimation(blockScale);
-        cancelAnimation(blockOpacity);
+        cancelAnimation(entryProgress);
         cancelAnimation(progress);
       };
     }, []);
@@ -212,10 +198,11 @@ const MovableBlock = memo(
 
     // Le clamping est déjà fait dans onUpdate — x.value et y.value sont toujours dans la plage valide
     const vehiclePosition = useAnimatedStyle(() => ({
+      opacity: entryProgress.value,
       transform: [
         { translateX: x.value },
         { translateY: y.value },
-        { scale: blockScale.value },
+        { scale: interpolate(entryProgress.value, [0, 1], [0.9, 1]) },
       ],
     }));
 
@@ -266,7 +253,6 @@ const MovableBlock = memo(
             styles.blockContainer,
             { boxShadow: `0 1px 3px 0 ${darken(color!, 0.3)}` },
             vehiclePosition,
-            blockStyle,
           ]}
         >
           <View style={styles.blockSubContainer}>
