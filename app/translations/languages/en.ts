@@ -19,7 +19,8 @@ const en = {
 
   // Shared
   confirmation: "Confirmation",
-  confirmationDescription: "Are you sure? This action cannot be undone.",
+  confirmationDescription:
+    "Are you sure you want to reset all your scores? This action cannot be undone.",
   cancel: "Cancel",
   confirm: "Confirm",
 

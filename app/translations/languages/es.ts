@@ -19,7 +19,8 @@ const es = {
 
   // Shared
   confirmation: "Confirmación",
-  confirmationDescription: "¿Estás seguro? Esta acción es irreversible.",
+  confirmationDescription:
+    "¿Estás seguro de que quieres restablecer todas tus puntuaciones? Esta acción es irreversible.",
   cancel: "Cancelar",
   confirm: "Confirmar",
 

@@ -15,22 +15,31 @@ const slideKeyframes = css.keyframes({
 });
 
 const fadeInKeyframes = css.keyframes({
-  from: { opacity: 0, transform: [{ scale: 0.7 }] },
+  from: { opacity: 0, transform: [{ scale: 0.6 }] },
   to: { opacity: 1, transform: [{ scale: 1 }] },
 });
 
 const fadeOutKeyframes = css.keyframes({
   from: { opacity: 1, transform: [{ scale: 1 }] },
-  to: { opacity: 0, transform: [{ scale: 0.7 }] },
+  to: { opacity: 0, transform: [{ scale: 0.6 }] },
 });
+
+const SLIDE_DELAY = 1;
+const SLIDE_DURATION = 1.2;
+const SLIDE_ITERATIONS = 3;
+const FADE_DURATION = 0.2;
+const FADE_OUT_EARLY = 0.35;
+const FADE_OUT_DELAY =
+  SLIDE_DELAY + SLIDE_DURATION * SLIDE_ITERATIONS - FADE_OUT_EARLY;
+const ARROW_HIDE_TIMEOUT = (FADE_OUT_DELAY + FADE_DURATION) * 1000;
 
 const arrowSlideAnimation = css.create({
   slide: {
     animationName: slideKeyframes,
-    animationDelay: "1s",
-    animationDuration: "1.2s",
+    animationDelay: `${SLIDE_DELAY}s`,
+    animationDuration: `${SLIDE_DURATION}s`,
     animationTimingFunction: "ease-in-out",
-    animationIterationCount: "infinite",
+    animationIterationCount: SLIDE_ITERATIONS,
     animationFillMode: "none",
   },
 });
@@ -38,8 +47,8 @@ const arrowSlideAnimation = css.create({
 const arrowFadeAnimation = css.create({
   fade: {
     animationName: [fadeInKeyframes, fadeOutKeyframes],
-    animationDelay: ["1s", "4.7s"],
-    animationDuration: ["0.25s", "0.25s"],
+    animationDelay: [`${SLIDE_DELAY}s`, `${FADE_OUT_DELAY}s`],
+    animationDuration: [`${FADE_DURATION}s`, `${FADE_DURATION}s`],
     animationTimingFunction: ["ease-out", "ease-in"],
     animationIterationCount: [1, 1],
     animationFillMode: ["both", "forwards"],
@@ -58,7 +67,7 @@ export default function LevelGrid({ color, style }: Props): JSX.Element {
   const [showArrow, setShowArrow] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => setShowArrow(false), 5000);
+    const timer = setTimeout(() => setShowArrow(false), ARROW_HIDE_TIMEOUT);
     return () => clearTimeout(timer);
   }, []);
 

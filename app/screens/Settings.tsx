@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Checkmark from "../assets/icons/Checkmark";
+import Trash from "../assets/icons/Trash";
 import Button from "../components/button/Button";
 import NavigationLink from "../components/button/NavigationLink";
 import ScreenHeader from "../components/header/ScreenHeader";
@@ -184,12 +185,18 @@ export default function Settings(): JSX.Element {
         {__DEV__ && (
           <SectionContainer title={t("devMode")}>
             <Fragment>
-              <NavigationLink label={t("logScoreData")} onPress={logScoreData} />
+              <NavigationLink
+                label={t("logScoreData")}
+                onPress={logScoreData}
+              />
               <NavigationLink
                 label={t("removeScoreData")}
                 onPress={removeScoreData}
               />
-              <NavigationLink label={t("removeAllData")} onPress={removeAllData} />
+              <NavigationLink
+                label={t("removeAllData")}
+                onPress={removeAllData}
+              />
             </Fragment>
           </SectionContainer>
         )}
@@ -223,6 +230,7 @@ export default function Settings(): JSX.Element {
       {/* RESET DATA MODAL */}
       <ModalValidation
         isOpen={showResetDataModal}
+        icon={Trash}
         onConfirm={removeLevelsData}
         onCancel={hiddeResetDataModal}
         title={t("confirmation")}

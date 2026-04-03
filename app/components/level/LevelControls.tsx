@@ -5,6 +5,7 @@ import ArrowShapeTurnUpLeft from "../../assets/icons/ArrowShapeTurnUpLeft";
 import ArrowTriangleHead2ClockwiseRotate90 from "../../assets/icons/ArrowTriangleHead2ClockwiseRotate90";
 import ArrowTriangleLeft from "../../assets/icons/ArrowTriangleLeft";
 import ArrowTriangleRight from "../../assets/icons/ArrowTriangleRight";
+import Door from "../../assets/icons/Door";
 import data from "../../data/levels";
 import LevelNavigationType from "../../enums/levelNavigationType.enum";
 import Radius from "../../enums/radius.enum";
@@ -143,6 +144,7 @@ const LevelControls = memo(
         {/* MODAL */}
         <ModalValidation
           isOpen={!!showConfirmationModal}
+          icon={Door}
           onConfirm={confirmLevelNavigation}
           onCancel={cancelLevelNavigation}
           title={t("confirmation")}

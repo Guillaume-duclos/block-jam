@@ -3,6 +3,7 @@ import React, { Fragment, JSX, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { StyleSheet, Text, View } from "react-native";
 import ArrowShapeLeftFill from "../../assets/icons/ArrowShapeLeftFill";
+import Door from "../../assets/icons/Door";
 import Settings from "../../assets/icons/GearShapeFill";
 import { Screen } from "../../enums/screen.enum";
 import { useDificultyStore } from "../../store/dificulty.store";
@@ -86,6 +87,7 @@ const PlaygroundHeader = ({
       {/* MODAL */}
       <ModalValidation
         isOpen={showConfirmationModal}
+        icon={Door}
         onConfirm={goBack}
         onCancel={cancelGoBack}
         title={t("confirmation")}

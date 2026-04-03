@@ -17,9 +17,10 @@ const fr = {
   replay: "Rejouer",
   next: "Suivant",
 
-  // Shared
+  // Reset data modal
   confirmation: "Confirmation",
-  confirmationDescription: "Es-tu sûr ? Cette action est irréversible.",
+  confirmationDescription:
+    "Es-tu sûr de vouloir remettre à zéro tous tes scores ? Cette action est irréversible.",
   cancel: "Annuler",
   confirm: "Confirmer",
 

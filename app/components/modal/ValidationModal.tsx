@@ -19,6 +19,7 @@ const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
 
 type Props = {
   isOpen: boolean;
+  icon: React.ComponentType<{ style?: ViewStyle; color?: string }>;
   title: string;
   description: string;
   onCancel: () => void;
@@ -28,6 +29,7 @@ type Props = {
 
 export default function ValidationModal({
   isOpen,
+  icon: Icon,
   title,
   description,
   onConfirm,
@@ -121,15 +123,14 @@ export default function ValidationModal({
         <Animated.View style={animatedModalStyle}>
           <View style={styles.modalBottomBorder} />
           <View style={styles.modal}>
+            <Icon style={styles.icon} color={darken("#D6F5BC", 0.3)} />
             <Text style={styles.title}>{title}</Text>
             <Text style={styles.description}>{description}</Text>
           </View>
         </Animated.View>
 
-        <View style={styles.submitButtonsContainer}>
-          <Animated.View
-            style={[styles.submitButton, animatedCancelButtonStyle]}
-          >
+        <View>
+          <Animated.View style={animatedCancelButtonStyle}>
             <Button
               onPress={decline}
               shadowStyle={{ boxShadow: "0 0 10px 0 #686868" }}
@@ -147,9 +148,7 @@ export default function ValidationModal({
             </Button>
           </Animated.View>
 
-          <Animated.View
-            style={[styles.submitButton, animatedConfirmButtonStyle]}
-          >
+          <Animated.View style={animatedConfirmButtonStyle}>
             <Button
               onPress={confirm}
               shadowStyle={{ boxShadow: "0 0 10px 0 #686868" }}
@@ -197,31 +196,28 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 16,
     boxShadow: "0 0 10px 0 #686868",
   },
+  icon: {
+    width: 60,
+    height: 60,
+    alignSelf: "center",
+  },
   title: {
-    fontSize: 30,
+    fontSize: 36,
     fontWeight: 700,
     fontFamily: "Rubik",
     textAlign: "center",
     color: darken("#D6F5BC", 0.3),
   },
   description: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 500,
     fontFamily: "Rubik",
     textAlign: "center",
-    lineHeight: 22,
+    lineHeight: 24,
     color: darken("#D6F5BC", 0.3),
   },
-  submitButtonsContainer: {
-    gap: 10,
-    width: "100%",
-    flexDirection: "row",
-  },
-  submitButton: {
-    flex: 1,
-  },
   submitButtonLabel: {
-    fontSize: 18,
+    fontSize: 20,
     textTransform: "uppercase",
     fontWeight: 600,
     fontFamily: "Rubik",
