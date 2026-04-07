@@ -1,15 +1,17 @@
 import React, { JSX } from "react";
-import { ScrollView, StyleSheet } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import DifficultyViewer from "../components/difficulty/DifficultyViewer";
+import DifficultyCard from "../components/difficulty/DifficultyCard";
 import DifficultiesMenuHeader from "../components/header/DifficultiesMenuHeader";
 import difficulties from "../data/difficulties";
 
 export default function DifficultiesMenu() {
-  const renderDifficulties = (): any => {
+  const renderDifficulties = (): JSX.Element[] => {
     return difficulties.map(
       (difficulty, index): JSX.Element => (
-        <DifficultyViewer key={index} difficultyIndex={index} />
+        <View key={index} style={styles.cardWrapper}>
+          <DifficultyCard difficultyIndex={index} />
+        </View>
       ),
     );
   };
@@ -18,7 +20,7 @@ export default function DifficultiesMenu() {
     <ScrollView style={styles.container}>
       <SafeAreaView style={styles.safeArea}>
         <DifficultiesMenuHeader difficulty={0} levelsCount={0} />
-        {renderDifficulties()}
+        <View style={styles.cardWrapperContainer}>{renderDifficulties()}</View>
       </SafeAreaView>
     </ScrollView>
   );
@@ -26,9 +28,19 @@ export default function DifficultiesMenu() {
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 34,
+    paddingHorizontal: 10,
   },
   safeArea: {
-    gap: 50,
+    gap: 20,
+  },
+  cardWrapperContainer: {
+    rowGap: 40,
+    paddingBottom: 30,
+    flexDirection: "row",
+    flexWrap: "wrap",
+  },
+  cardWrapper: {
+    width: "50%",
+    paddingHorizontal: 10,
   },
 });

@@ -13,7 +13,7 @@ export default function Tutorial(): JSX.Element {
 
   const markScreenAsSeen = (): void => {
     setStorageItem(StorageKey.TUTORIAL_SCREEN_VIEWED, true);
-    navigation.navigate(Screen.MENU);
+    navigation.navigate(Screen.DIFFICULTIES_MENU);
   };
 
   return (

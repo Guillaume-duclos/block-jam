@@ -144,10 +144,6 @@ export default function Settings(): JSX.Element {
               selected={isHapticActive}
               onChange={changeHapticActive}
             />
-
-            <Button onPress={displayResetDataModal}>
-              <Text style={styles.buttonLabel}>{t("resetLevelData")}</Text>
-            </Button>
           </Fragment>
         </SectionContainer>
 
@@ -178,6 +174,10 @@ export default function Settings(): JSX.Element {
             />
           </Fragment>
         </SectionContainer>
+
+        <Button onPress={displayResetDataModal}>
+          <Text style={styles.buttonLabel}>{t("resetLevelData")}</Text>
+        </Button>
 
         {/* DEV MODE */}
         {__DEV__ && (

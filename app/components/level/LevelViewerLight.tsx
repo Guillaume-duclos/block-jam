@@ -1,5 +1,3 @@
-import { useNavigation } from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import {
   BlurMask,
   Canvas,
@@ -10,36 +8,16 @@ import {
   Skia,
   vec,
 } from "@shopify/react-native-skia";
-import React, { JSX, memo, useCallback, useMemo } from "react";
+import React, { JSX, memo, useMemo } from "react";
 import { StyleSheet, View, ViewStyle } from "react-native";
-import {
-  Gesture,
-  GestureDetector,
-  TapGesture,
-} from "react-native-gesture-handler";
-import {
-  useDerivedValue,
-  useSharedValue,
-  withTiming,
-} from "react-native-reanimated";
-import { runOnJS } from "react-native-worklets";
 import { gridCount } from "../../config/config";
+import { windowWidth } from "../../constants/dimension";
 import { BlockType } from "../../enums/blockType.enum";
 import { Orientation } from "../../enums/orientation.enum";
-import { Screen } from "../../enums/screen.enum";
-import { usePreventDoublePress } from "../../hooks/usePreventDoublePress";
-import { useFocusContext } from "../../providers/FocusProvider";
-import { useDificultyStore } from "../../store/dificulty.store";
-import { useLevelStore } from "../../store/level.store";
 import DificultyColors from "../../types/dificultyColors.type";
-import RootStackParamList from "../../types/rootStackParamList.type";
 import { darken } from "../../utils/color";
-import LevelViewerIndicator from "./LevelViewerIndicator";
-import LevelViewerStars from "./LevelViewerStars";
 
 type Props = {
-  levelIndex: number;
-  difficultyIndex: number;
   scheme: string;
   locked?: boolean;
   colors: DificultyColors;
@@ -52,31 +30,10 @@ type BlockData = {
   orientation?: Orientation;
 };
 
-type levelItemNavigationProp = NativeStackNavigationProp<RootStackParamList>;
+const playgroundSize = windowWidth / 2 - 120;
 
-const LevelViewer = memo(
-  ({
-    levelIndex,
-    difficultyIndex,
-    scheme,
-    locked,
-    colors,
-    style,
-  }: Props): JSX.Element => {
-    const navigation = useNavigation<levelItemNavigationProp>();
-
-    const isFocused = useFocusContext();
-
-    const translateY = useSharedValue(0);
-
-    const canPress = usePreventDoublePress();
-
-    const setDificultyColors = useDificultyStore((value) => value.setColors);
-
-    const score = useLevelStore(
-      (state) => state.getScore(difficultyIndex, levelIndex)?.score,
-    );
-
+const LevelViewerLight = memo(
+  ({ scheme, locked, colors, style }: Props): JSX.Element => {
     const vehiclePositions = useMemo((): BlockData[] => {
       let positions: BlockData[] = [];
 
@@ -109,8 +66,7 @@ const LevelViewer = memo(
       return positions;
     }, [scheme]);
 
-    const playgroundSize = 72;
-    const playgroundGridSize = 72 - 8;
+    const playgroundGridSize = playgroundSize - 8;
     const caseSize = (playgroundGridSize - 6) / 6;
     const gridOffsetX = 4 + 2;
     const gridOffsetY = 4 + 2;
@@ -235,131 +191,84 @@ const LevelViewer = memo(
       );
     }, [vehiclePositions]);
 
-    // Redirection vers le niveau
-    const navigateToPlayground = useCallback((): void => {
-      setDificultyColors(colors);
-
-      const canNavigate = canPress();
-
-      if (canNavigate) {
-        navigation.push(Screen.PLAYGROUND, {
-          levelIndex,
-          difficultyIndex,
-        });
-      }
-    }, [colors, levelIndex, difficultyIndex]);
-
-    const panGesture: TapGesture = Gesture.Tap()
-      .maxDuration(Number.MAX_SAFE_INTEGER)
-      .onBegin(() => {
-        "worklet";
-        translateY.value = withTiming(3, { duration: 50 });
-      })
-      .onEnd(() => {
-        "worklet";
-        translateY.value = withTiming(0, { duration: 80 });
-        runOnJS(navigateToPlayground)();
-      })
-      .onTouchesCancelled(() => {
-        "worklet";
-        translateY.value = withTiming(0, { duration: 50 });
-      });
-
-    const translate = useDerivedValue(() => {
-      return [{ translateY: translateY.value }];
-    });
-
     return (
       <View style={{ ...styles.container, ...style }}>
-        <GestureDetector gesture={panGesture}>
-          <Canvas
-            style={{
-              ...styles.playgroundContainer,
-              boxShadow: `0 6px 10px ${darken(colors.primary, 0.34)}`,
-            }}
-          >
+        <Canvas
+          style={{
+            ...styles.playgroundContainer,
+            // boxShadow: `0 6px 10px ${darken(colors.primary, 0.34)}`,
+          }}
+        >
+          <RoundedRect
+            x={0}
+            y={7}
+            r={10}
+            width={playgroundSize}
+            height={playgroundSize}
+            color={darken(colors.frame, 0.16)}
+          />
+
+          <Group>
             <RoundedRect
               x={0}
-              y={7}
+              y={0}
               r={10}
               width={playgroundSize}
               height={playgroundSize}
-              color={darken(colors.frame, 0.16)}
-            />
-
-            <Group transform={translate}>
+              color={darken(colors.frame, 0.1)}
+            >
               <RoundedRect
-                x={0}
-                y={0}
-                r={10}
-                width={playgroundSize}
-                height={playgroundSize}
-                color={darken(colors.frame, 0.1)}
-              >
-                <RoundedRect
-                  x={4}
-                  y={4}
-                  r={6}
-                  width={playgroundGridSize}
-                  height={playgroundGridSize}
-                  color={darken(colors.primary, 0.2)}
-                />
+                x={4}
+                y={4}
+                r={6}
+                width={playgroundGridSize}
+                height={playgroundGridSize}
+                color={darken(colors.primary, 0.2)}
+              />
 
-                <Group>
-                  {/* GRILLES */}
-                  <Group transform={[{ translateX: 4 }, { translateY: 4 }]}>
-                    {[...Array(36)].map((_, index: number) => {
-                      const col = index % 6;
-                      const row = Math.floor(index / 6);
+              <Group>
+                {/* GRILLES */}
+                <Group transform={[{ translateX: 4 }, { translateY: 4 }]}>
+                  {[...Array(36)].map((_, index: number) => {
+                    const col = index % 6;
+                    const row = Math.floor(index / 6);
 
-                      return (
-                        <RoundedRect
-                          key={index}
-                          x={row * caseSize + 4}
-                          y={col * caseSize + 4}
-                          r={blockRadius}
-                          width={caseSize - gap}
-                          height={caseSize - gap}
-                          style="stroke"
-                          strokeWidth={0.5}
-                          strokeJoin="round"
-                          color={darken(colors.primary, 0.3)}
-                        />
-                      );
-                    })}
-                  </Group>
-
-                  {/* BLOCS */}
-                  {blocks}
-
-                  {/* FILTRE BLUR */}
-                  {locked && <BlurMask blur={5} />}
+                    return (
+                      <RoundedRect
+                        key={index}
+                        x={row * caseSize + 4}
+                        y={col * caseSize + 4}
+                        r={blockRadius}
+                        width={caseSize - gap}
+                        height={caseSize - gap}
+                        style="stroke"
+                        strokeWidth={0.5}
+                        strokeJoin="round"
+                        color={darken(colors.primary, 0.3)}
+                      />
+                    );
+                  })}
                 </Group>
 
-                {locked && (
-                  <ImageSVG
-                    svg={lockFill}
-                    x={playgroundSize / 2 - 11}
-                    y={playgroundSize / 2 - 11}
-                    width={22}
-                    height={22}
-                  />
-                )}
-              </RoundedRect>
+                {/* BLOCS */}
+                {blocks}
 
-              {/* NUMÉRO DU NIVEAU */}
-              <LevelViewerIndicator
-                levelIndex={levelIndex}
-                score={score}
-                isFocused={isFocused}
-                colors={colors}
-              />
-            </Group>
-          </Canvas>
-        </GestureDetector>
+                {/* FILTRE BLUR */}
+                {locked && <BlurMask blur={5} />}
+              </Group>
 
-        {/* SCORE DU NIVEAU */}
-        <LevelViewerStars score={score} isFocused={isFocused} colors={colors} />
+              {locked && (
+                <ImageSVG
+                  svg={lockFill}
+                  x={playgroundSize}
+                  y={playgroundSize / 2 - 11}
+                  width={22}
+                  height={22}
+                />
+              )}
+            </RoundedRect>
+          </Group>
+        </Canvas>
       </View>
     );
   },
@@ -367,17 +276,14 @@ const LevelViewer = memo(
 
 const styles = StyleSheet.create({
   container: {
-    height: 72 + 7 + 18 + 16,
+    height: playgroundSize + 9,
+    borderWidth: 0,
   },
   playgroundContainer: {
-    width: 72,
-    height: 72 + 7,
+    width: playgroundSize,
+    height: playgroundSize + 9,
     borderRadius: 10,
-  },
-  starsContainer: {
-    flex: 1,
-    width: 72,
   },
 });
 
-export default LevelViewer;
+export default LevelViewerLight;

@@ -73,9 +73,21 @@ const squareFadeOutKeyframes = css.keyframes({
 
 const squareAnimation = css.create({
   pulse: {
-    animationName: [squareFadeInKeyframes, squareScaleKeyframes, squareFadeOutKeyframes],
-    animationDelay: [`${SLIDE_DELAY}s`, `${SLIDE_DELAY}s`, `${FADE_OUT_DELAY}s`],
-    animationDuration: [`${FADE_DURATION}s`, `${SLIDE_DURATION}s`, `${FADE_DURATION}s`],
+    animationName: [
+      squareFadeInKeyframes,
+      squareScaleKeyframes,
+      squareFadeOutKeyframes,
+    ],
+    animationDelay: [
+      `${SLIDE_DELAY}s`,
+      `${SLIDE_DELAY}s`,
+      `${FADE_OUT_DELAY}s`,
+    ],
+    animationDuration: [
+      `${FADE_DURATION}s`,
+      `${SLIDE_DURATION}s`,
+      `${FADE_DURATION}s`,
+    ],
     animationTimingFunction: ["ease-out", "ease-in-out", "ease-in"],
     animationIterationCount: [1, SLIDE_ITERATIONS, 1],
     animationFillMode: ["both", "none", "forwards"],

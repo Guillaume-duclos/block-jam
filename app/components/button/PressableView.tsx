@@ -50,7 +50,12 @@ export default function PressableView({
     })
     .onEnd(() => {
       "worklet";
+      progress.value = withTiming(1, { duration: 100 });
       runOnJS(onPress)();
+    })
+    .onTouchesCancelled(() => {
+      "worklet";
+      progress.value = withTiming(1, { duration: 100 });
     });
 
   return (

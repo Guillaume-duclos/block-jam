@@ -18,12 +18,11 @@ import {
 import Animated, {
   cancelAnimation,
   css,
-  interpolate,
+  Easing,
   SharedValue,
   useAnimatedStyle,
   useSharedValue,
   withDelay,
-  withSpring,
   withTiming,
 } from "react-native-reanimated";
 import ArrowTriangleDownFill from "../../assets/icons/ArrowTriangleDownFill";
@@ -103,9 +102,27 @@ const MovableBlock = memo(
       opacity: progress.value,
     }));
 
-    const mainBlock = label === BlockType.MAIN_BLOCK ? mainBlockColor : color;
-    const secondBlockColor = darken(mainBlock!, 0.08);
-    const arrowColor = darken(mainBlock!, 0.2);
+    const mainBlock = useMemo(
+      () => (label === BlockType.MAIN_BLOCK ? mainBlockColor : color),
+      [label, mainBlockColor, color],
+    );
+    const secondBlockColor = useMemo(
+      () => darken(mainBlock!, 0.08),
+      [mainBlock],
+    );
+    const bottomBorderColor = useMemo(
+      () => darken(mainBlock!, 0.12),
+      [mainBlock],
+    );
+    const arrowColor = useMemo(() => darken(mainBlock!, 0.2), [mainBlock]);
+    const gradientColors = useMemo(
+      () => [secondBlockColor, mainBlock!] as [string, string],
+      [secondBlockColor, mainBlock],
+    );
+    const shadowStyle = useMemo(
+      () => ({ boxShadow: `0 1px 3px 0 ${darken(color!, 0.3)}` }),
+      [color],
+    );
 
     // Les dimensions ne changent jamais durant la vie du composant
     const dimensions = useMemo(() => {
@@ -119,7 +136,7 @@ const MovableBlock = memo(
       if (animatabled) {
         entryProgress.value = withDelay(
           index * 20,
-          withSpring(1, { mass: 1, damping: 15, stiffness: 240 }),
+          withTiming(1, { duration: 600, easing: Easing.out(Easing.back(1.7)) }),
         );
       }
 
@@ -202,7 +219,7 @@ const MovableBlock = memo(
       transform: [
         { translateX: x.value },
         { translateY: y.value },
-        { scale: interpolate(entryProgress.value, [0, 1], [0.9, 1]) },
+        { scale: 0.9 + entryProgress.value * 0.1 },
       ],
     }));
 
@@ -251,20 +268,20 @@ const MovableBlock = memo(
           style={[
             dimensions,
             styles.blockContainer,
-            { boxShadow: `0 1px 3px 0 ${darken(color!, 0.3)}` },
+            shadowStyle,
             vehiclePosition,
           ]}
         >
           <View style={styles.blockSubContainer}>
             <View
-              style={{
-                ...styles.blockBottomBorder,
-                backgroundColor: darken(mainBlock!, 0.12),
-              }}
+              style={[
+                styles.blockBottomBorder,
+                { backgroundColor: bottomBorderColor },
+              ]}
             />
 
             <LinearGradient
-              colors={[secondBlockColor, mainBlock!]}
+              colors={gradientColors}
               style={{
                 ...styles.block,
                 ...(label === BlockType.MAIN_BLOCK && styles.mainBlock),

@@ -58,6 +58,9 @@ const Navigation = () => {
         <Stack.Screen
           name={Screen.DIFFICULTIES_MENU}
           component={DifficultiesMenu}
+          options={{
+            gestureEnabled: false,
+          }}
         />
         <Stack.Screen
           name={Screen.LEVELS_MENU}
