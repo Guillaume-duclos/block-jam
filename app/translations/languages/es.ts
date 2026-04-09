@@ -70,6 +70,7 @@ const es = {
   appVersion: "Versión de la app",
   buildVersion: "Versión del build",
   author: "Autor",
+  data: "Datos",
 
   // Tutorial
   goToMenu: "Ir al menú",

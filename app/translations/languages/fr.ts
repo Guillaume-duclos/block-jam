@@ -59,6 +59,7 @@ const fr = {
   appVersion: "Version de l'app",
   buildVersion: "Version du build",
   author: "Auteur",
+  data: "Données",
 
   // Tutorial
   goToMenu: "Aller au menu",

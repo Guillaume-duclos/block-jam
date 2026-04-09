@@ -7,6 +7,9 @@ import Animated, {
   withSequence,
   withTiming,
 } from "react-native-reanimated";
+import ArrowCounterClockWise from "../../assets/icons/ArrowCounterClockWise";
+import FlagPatternCheckered from "../../assets/icons/FlagPatternCheckered";
+import TrophyFillHeavy from "../../assets/icons/TrophyFillHeavy";
 import { useDificultyStore } from "../../store/dificulty.store";
 import { useLevelStore } from "../../store/level.store";
 import { darken } from "../../utils/color";
@@ -25,7 +28,7 @@ const LevelScore = memo(
     const mainColor = dificultyTheme?.primary!;
 
     const score = useLevelStore((state) =>
-      state.getScore(difficultyIndex, levelIndex)
+      state.getScore(difficultyIndex, levelIndex),
     );
 
     const count = useLevelStore((value) => value.count);
@@ -34,7 +37,7 @@ const LevelScore = memo(
       if (count > 0) {
         scale.value = withSequence(
           withTiming(1.05, { duration: 50 }),
-          withTiming(1, { duration: 50 })
+          withTiming(1, { duration: 50 }),
         );
       }
     }, [count]);
@@ -55,55 +58,79 @@ const LevelScore = memo(
             </Text>
 
             <Animated.View style={[animatedStyle, { borderWidth: 0 }]}>
-              <Text style={{ ...styles.count, color: darken(mainColor, 0.33) }}>
-                {count}
+              <Text
+                numberOfLines={1}
+                adjustsFontSizeToFit
+                minimumFontScale={0.5}
+                style={{ ...styles.count, color: darken(mainColor, 0.33) }}
+              >
+                {/* {count} */}000
               </Text>
             </Animated.View>
           </View>
 
           {/* PREVIOUS SCORES */}
-          <View
-            style={{
-              ...styles.scoreContainer,
-              ...styles.previousScoreContainer,
-            }}
-          >
-            <Text
-              adjustsFontSizeToFit
-              numberOfLines={2}
-              minimumFontScale={0.5}
-              style={{ ...styles.scoreTitle, color: darken(mainColor, 0.28) }}
+          <View style={styles.scoreHistoricContainer}>
+            <View
+              style={{
+                gap: 6,
+                flexDirection: "row",
+                alignItems: "center",
+                borderWidth: 0,
+              }}
             >
-              {t("previousScores")}
-            </Text>
-
-            <View style={styles.previousScoreLabelContainer}>
+              <ArrowCounterClockWise
+                color={darken(mainColor, 0.28)}
+                style={{ width: 28, height: 28 }}
+              />
               <Text
                 numberOfLines={1}
                 adjustsFontSizeToFit
-                style={{
-                  ...styles.previousScoreLabel,
-                  color: darken(mainColor, 0.33),
-                }}
+                minimumFontScale={0.5}
+                style={{ ...styles.scoreLabel, color: darken(mainColor, 0.28) }}
               >
-                {t("moves")} : {score?.count || "--"}
+                Précédent : <Text style={{ fontSize: 32 }}>52</Text>
               </Text>
+            </View>
+
+            <View
+              style={{ flexDirection: "row", alignItems: "center", gap: 6 }}
+            >
+              <TrophyFillHeavy
+                color={darken(mainColor, 0.28)}
+                style={{ width: 28, height: 28 }}
+              />
               <Text
                 numberOfLines={1}
                 adjustsFontSizeToFit
-                style={{
-                  ...styles.previousScoreLabel,
-                  color: darken(mainColor, 0.33),
-                }}
+                minimumFontScale={0.5}
+                style={{ ...styles.scoreLabel, color: darken(mainColor, 0.28) }}
               >
-                {t("time")} : {score?.time || "--:--"}
+                Meilleur : <Text style={{ fontSize: 32 }}>43</Text>
+              </Text>
+            </View>
+
+            <View
+              style={{ flexDirection: "row", alignItems: "center", gap: 6 }}
+            >
+              <FlagPatternCheckered
+                color={darken(mainColor, 0.28)}
+                style={{ width: 28, height: 28 }}
+              />
+              <Text
+                numberOfLines={1}
+                adjustsFontSizeToFit
+                minimumFontScale={0.5}
+                style={{ ...styles.scoreLabel, color: darken(mainColor, 0.28) }}
+              >
+                Minimum : <Text style={{ fontSize: 32 }}>32</Text>
               </Text>
             </View>
           </View>
         </View>
       </View>
     );
-  }
+  },
 );
 
 const styles = StyleSheet.create({
@@ -118,9 +145,16 @@ const styles = StyleSheet.create({
     borderWidth: 0,
   },
   scoreContainer: {
-    width: "48%",
+    flex: 1,
+    maxWidth: "49%",
     justifyContent: "space-between",
-    borderWidth: 0,
+    borderWidth: 0.5,
+  },
+  scoreHistoricContainer: {
+    gap: 18,
+    flex: 1,
+    justifyContent: "center",
+    borderWidth: 0.5,
   },
   previousScoreContainer: {
     gap: 6,
@@ -132,6 +166,16 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
     fontFamily: "Rubik",
     borderWidth: 0,
+  },
+  scoreLabel: {
+    flex: 1,
+    fontSize: 26,
+    fontWeight: 700,
+    textTransform: "uppercase",
+    fontFamily: "Rubik",
+    borderWidth: 0,
+    top: 3,
+    textAlign: "right",
   },
   count: {
     height: 110,

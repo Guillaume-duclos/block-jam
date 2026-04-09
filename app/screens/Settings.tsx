@@ -175,9 +175,12 @@ export default function Settings(): JSX.Element {
           </Fragment>
         </SectionContainer>
 
-        <Button onPress={displayResetDataModal}>
-          <Text style={styles.buttonLabel}>{t("resetLevelData")}</Text>
-        </Button>
+        {/* DATA */}
+        <SectionContainer title={t("data")}>
+          <Button onPress={displayResetDataModal}>
+            <Text style={styles.buttonLabel}>{t("resetLevelData")}</Text>
+          </Button>
+        </SectionContainer>
 
         {/* DEV MODE */}
         {__DEV__ && (

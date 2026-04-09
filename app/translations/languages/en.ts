@@ -70,6 +70,7 @@ const en = {
   appVersion: "App version",
   buildVersion: "Build version",
   author: "Author",
+  data: "Data",
 
   // Tutorial
   goToMenu: "Go to menu",
