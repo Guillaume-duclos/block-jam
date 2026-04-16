@@ -41,7 +41,7 @@ const DifficultiesMenuHeader = ({
 
       <View style={styles.headerSettingsButtonContainer}>
         <PressableView onPress={openSettings}>
-          <Settings color="#FFFFFF" />
+          <Settings color="#000" />
         </PressableView>
       </View>
     </View>
@@ -62,14 +62,14 @@ const styles = StyleSheet.create({
     fontWeight: 700,
     fontFamily: "Rubik",
     textAlign: "center",
-    color: "#FFFFFF",
+    color: "#000",
   },
   headerProgression: {
     fontSize: 17,
     fontWeight: 600,
     fontFamily: "Rubik",
     textAlign: "center",
-    color: "#FFFFFF",
+    color: "#000",
     lineHeight: 27,
   },
   headerProgressionCount: {

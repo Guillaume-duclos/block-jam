@@ -8,7 +8,7 @@ import LevelControls from "../components/level/LevelControls";
 import LevelPlayground, {
   LevelPlaygroundRef,
 } from "../components/level/LevelPlayground";
-import LevelScore from "../components/level/LevelScore";
+import LevelScore2 from "../components/level/LevelScore2";
 import data from "../data/levels";
 import LevelNavigationType from "../enums/levelNavigationType.enum";
 import { Screen } from "../enums/screen.enum";
@@ -19,7 +19,6 @@ import { darken } from "../utils/color";
 type playGroundRouteProp = RouteProp<RootStackParamList, Screen.PLAYGROUND>;
 
 const PlayGround = (): JSX.Element => {
-
   const insets = useSafeAreaInsets();
   const route = useRoute<playGroundRouteProp>();
 
@@ -67,7 +66,10 @@ const PlayGround = (): JSX.Element => {
         />
 
         {/* LEVEL SCORES */}
-        <LevelScore levelIndex={levelIndex} difficultyIndex={difficultyIndex} />
+        <LevelScore2
+          levelIndex={activeLevelIndex}
+          difficultyIndex={difficultyIndex}
+        />
 
         {/* LEVEL PLAYGROUND */}
         <LevelPlayground

@@ -10,7 +10,9 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { runOnJS } from "react-native-worklets";
+import difficulties from "../../data/difficulties";
 import { Screen } from "../../enums/screen.enum";
+import { useLevelStore } from "../../store/level.store";
 import RootStackParamList from "../../types/rootStackParamList.type";
 import { darken } from "../../utils/color";
 import ProgressBar from "../ProgressBar";
@@ -39,6 +41,14 @@ const DifficultyCard = memo(
     const { t } = useTranslation();
 
     const progress = useSharedValue(0);
+
+    const levelsCount = difficulties[difficultyIndex].levelCount;
+
+    const completedLevels = useLevelStore((state) =>
+      state.getCompletedLevelsByDificulty(difficultyIndex),
+    );
+
+    const progression = ((completedLevels || 0) * 100) / levelsCount;
 
     const buttonStyle = useAnimatedStyle(() => ({
       transform: [{ translateY: progress.value }],
@@ -138,10 +148,11 @@ const DifficultyCard = memo(
             <Text style={styles.difficulty}>Difficulté 1</Text>
             <View>
               <Text style={styles.progression}>
-                <Text style={styles.progressionCount}>122</Text>/200
+                <Text style={styles.progressionCount}>{completedLevels}</Text>/
+                {levelsCount}
               </Text>
 
-              <ProgressBar progression={20} />
+              <ProgressBar progression={progression} />
 
               <Text style={styles.completedLevel}>niveaux complétés</Text>
             </View>

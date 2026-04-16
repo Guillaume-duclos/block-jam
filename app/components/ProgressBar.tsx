@@ -1,4 +1,4 @@
-import React, { JSX } from "react";
+import React, { JSX, useEffect } from "react";
 import { StyleSheet, View, ViewStyle } from "react-native";
 import Animated, {
   Easing,
@@ -23,10 +23,12 @@ export default function ProgressBar({
     width: `${width.value}%`,
   }));
 
-  width.value = withTiming(progression, {
-    duration: 1000,
-    easing: Easing.bezier(0.59, 0.27, 0.45, 0.94),
-  });
+  useEffect(() => {
+    width.value = withTiming(progression, {
+      duration: 1000,
+      easing: Easing.bezier(0.59, 0.27, 0.45, 0.94),
+    });
+  }, [progression]);
 
   return (
     <View style={{ ...styles.container, ...style }}>

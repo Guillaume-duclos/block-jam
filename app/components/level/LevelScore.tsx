@@ -8,8 +8,8 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import ArrowCounterClockWise from "../../assets/icons/ArrowCounterClockWise";
-import FlagPatternCheckered from "../../assets/icons/FlagPatternCheckered";
 import TrophyFillHeavy from "../../assets/icons/TrophyFillHeavy";
+import levels from "../../data/levels";
 import { useDificultyStore } from "../../store/dificulty.store";
 import { useLevelStore } from "../../store/level.store";
 import { darken } from "../../utils/color";
@@ -32,6 +32,7 @@ const LevelScore = memo(
     );
 
     const count = useLevelStore((value) => value.count);
+    const minMoves = levels[difficultyIndex].levels[levelIndex].minimumMoves;
 
     useEffect(() => {
       if (count > 0) {
@@ -48,82 +49,107 @@ const LevelScore = memo(
 
     return (
       <View style={styles.container}>
-        <View style={styles.scoresSubContainer}>
+        <View style={styles.subContainer}>
           {/* CURRENT COUNT */}
-          <View style={{ ...styles.scoreContainer }}>
+          {/* <View style={{ ...styles.countContainer }}>
             <Text
-              style={{ ...styles.scoreTitle, color: darken(mainColor, 0.28) }}
+              style={{ ...styles.countLabel, color: darken(mainColor, 0.28) }}
             >
               {t("moves")}
             </Text>
 
-            <Animated.View style={[animatedStyle, { borderWidth: 0 }]}>
+            <Animated.View style={[animatedStyle, { flexShrink: 1 }]}>
               <Text
                 numberOfLines={1}
                 adjustsFontSizeToFit
                 minimumFontScale={0.5}
                 style={{ ...styles.count, color: darken(mainColor, 0.33) }}
               >
-                {/* {count} */}000
+                {count}
               </Text>
             </Animated.View>
-          </View>
+          </View> */}
 
           {/* PREVIOUS SCORES */}
           <View style={styles.scoreHistoricContainer}>
             <View
               style={{
-                gap: 6,
-                flexDirection: "row",
-                alignItems: "center",
+                ...styles.scoreLabelContainer,
+                // backgroundColor: darken(mainColor, 0.28),
+                borderColor: darken(mainColor, 0.28),
                 borderWidth: 0,
+                flex: 2,
+              }}
+            >
+              <Text
+                // numberOfLines={1}
+                // adjustsFontSizeToFit
+                // minimumFontScale={0.5}
+                style={{
+                  ...styles.scoreLabel,
+                  color: darken(mainColor, 0.28),
+                  fontWeight: 800,
+                  fontSize: 30,
+                  borderWidth: 0,
+                }}
+              >
+                Coups
+              </Text>
+
+              <Animated.View style={[animatedStyle, { top: 4 }]}>
+                <Text
+                  numberOfLines={1}
+                  adjustsFontSizeToFit
+                  minimumFontScale={0.5}
+                  style={{
+                    ...styles.scoreCount,
+                    color: darken(mainColor, 0.28),
+                    fontSize: 80,
+                    transform: [{ scale: 1.3 }],
+                    borderWidth: 0,
+                  }}
+                >
+                  {count}
+                </Text>
+              </Animated.View>
+            </View>
+
+            <View
+              style={{
+                ...styles.scoreLabelContainer,
+                backgroundColor: darken(mainColor, 0.28),
               }}
             >
               <ArrowCounterClockWise
-                color={darken(mainColor, 0.28)}
-                style={{ width: 28, height: 28 }}
+                color="white"
+                style={{ width: 36, height: 36 }}
               />
+
+              <Text style={styles.scoreCount}>{score?.count || "--"}</Text>
+
               <Text
-                numberOfLines={1}
-                adjustsFontSizeToFit
-                minimumFontScale={0.5}
-                style={{ ...styles.scoreLabel, color: darken(mainColor, 0.28) }}
+                numberOfLines={2}
+                style={{ ...styles.scoreLabel, color: "white" }}
               >
-                Précédent : <Text style={{ fontSize: 32 }}>52</Text>
+                Coups Précédent
               </Text>
             </View>
 
             <View
-              style={{ flexDirection: "row", alignItems: "center", gap: 6 }}
+              style={{
+                ...styles.scoreLabelContainer,
+                backgroundColor: darken(mainColor, 0.28),
+              }}
             >
               <TrophyFillHeavy
-                color={darken(mainColor, 0.28)}
-                style={{ width: 28, height: 28 }}
+                color="white"
+                style={{ width: 35, height: 35 }}
               />
-              <Text
-                numberOfLines={1}
-                adjustsFontSizeToFit
-                minimumFontScale={0.5}
-                style={{ ...styles.scoreLabel, color: darken(mainColor, 0.28) }}
-              >
-                Meilleur : <Text style={{ fontSize: 32 }}>43</Text>
-              </Text>
-            </View>
 
-            <View
-              style={{ flexDirection: "row", alignItems: "center", gap: 6 }}
-            >
-              <FlagPatternCheckered
-                color={darken(mainColor, 0.28)}
-                style={{ width: 28, height: 28 }}
-              />
-              <Text
-                numberOfLines={1}
-                adjustsFontSizeToFit
-                minimumFontScale={0.5}
-                style={{ ...styles.scoreLabel, color: darken(mainColor, 0.28) }}
-              >
-                Minimum : <Text style={{ fontSize: 32 }}>32</Text>
+              <Text style={styles.scoreCount}>{minMoves}</Text>
+
+              <Text style={{ ...styles.scoreLabel, color: "white" }}>
+                {"Meilleur\nscore"}
               </Text>
             </View>
           </View>
@@ -137,69 +163,70 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: "center",
   },
-  scoresSubContainer: {
-    width: "100%",
-    justifyContent: "space-between",
-    paddingHorizontal: 20,
+  subContainer: {
+    gap: 20,
+    height: 160,
     flexDirection: "row",
+    justifyContent: "space-between",
+    // alignItems: "baseline",
+    paddingHorizontal: 20,
     borderWidth: 0,
   },
-  scoreContainer: {
-    flex: 1,
-    maxWidth: "49%",
-    justifyContent: "space-between",
+  countContainer: {
+    // alignItems: "baseline",
+    // justifyContent: "center",
+    borderWidth: 0,
+  },
+  countLabel: {
+    fontSize: 30,
+    fontWeight: 700,
+    textAlign: "center",
+    textTransform: "uppercase",
+    fontFamily: "Rubik",
+    borderWidth: 0,
+  },
+  count: {
+    // flex: 1,
+    // height: 120,
+    fontSize: 120,
+    fontWeight: 600,
+    // lineHeight: 150,
+    textAlign: "center",
+    fontFamily: "Rubik",
+    textTransform: "uppercase",
+    // fontVariant: ["tabular-nums"],
     borderWidth: 0.5,
   },
   scoreHistoricContainer: {
-    gap: 18,
     flex: 1,
-    justifyContent: "center",
-    borderWidth: 0.5,
-  },
-  previousScoreContainer: {
-    gap: 6,
+    gap: 10,
+    flexWrap: "wrap",
+    flexDirection: "row",
     justifyContent: "space-between",
+    borderWidth: 0,
   },
-  scoreTitle: {
+  scoreLabelContainer: {
+    flex: 1,
+    paddingVertical: 12,
+    paddingHorizontal: 10,
+    alignItems: "center",
+    justifyContent: "space-between",
+    borderCurve: "continuous",
+    borderRadius: 16,
+  },
+  scoreCount: {
     fontSize: 30,
     fontWeight: 700,
-    textTransform: "uppercase",
     fontFamily: "Rubik",
-    borderWidth: 0,
+    color: "white",
   },
   scoreLabel: {
-    flex: 1,
-    fontSize: 26,
-    fontWeight: 700,
-    textTransform: "uppercase",
-    fontFamily: "Rubik",
-    borderWidth: 0,
-    top: 3,
-    textAlign: "right",
-  },
-  count: {
-    height: 110,
-    fontSize: 120,
+    // flex: 1,
+    fontSize: 12,
     fontWeight: 600,
-    fontFamily: "Rubik",
+    textAlign: "center",
     textTransform: "uppercase",
-    marginBottom: 1,
-    borderWidth: 0,
-    borderColor: "red",
-    lineHeight: 134,
-  },
-  previousScoreLabelContainer: {
-    fontSize: 30,
-    fontWeight: 800,
     fontFamily: "Rubik",
-    textTransform: "uppercase",
-    borderWidth: 0,
-  },
-  previousScoreLabel: {
-    fontSize: 30,
-    fontWeight: 800,
-    fontFamily: "Rubik",
-    textTransform: "uppercase",
     borderWidth: 0,
   },
 });
