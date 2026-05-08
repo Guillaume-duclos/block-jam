@@ -24,7 +24,7 @@ const ScreenHeader = ({
         onPress={onPressBack}
         style={{ ...styles.button, ...styles.backButton }}
       >
-        <ArrowShapeLeftFill color="#FFFFFF" />
+        <ArrowShapeLeftFill color="#607889" />
       </PressableView>
     )}
 
@@ -33,7 +33,7 @@ const ScreenHeader = ({
         onPress={onPressExit}
         style={{ ...styles.button, ...styles.exitButton }}
       >
-        <XMark color="#FFFFFF" />
+        <XMark color="#607889" />
       </PressableView>
     )}
   </View>
@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
   },
   title: {
     textAlign: "center",
-    color: "#FFFFFF",
+    color: "#607889",
     ...text.title1,
   },
   button: {

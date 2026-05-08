@@ -1,25 +1,32 @@
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import React, { JSX, memo } from "react";
+import React, { JSX, memo, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { StyleSheet, Text, View, ViewStyle } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
+  cancelAnimation,
+  Easing,
   useAnimatedStyle,
   useSharedValue,
+  withRepeat,
   withTiming,
 } from "react-native-reanimated";
-import { runOnJS } from "react-native-worklets";
+import Flame from "../../assets/icons/Flame";
+import TrophyFill from "../../assets/icons/TrophyFill";
 import difficulties from "../../data/difficulties";
 import { Screen } from "../../enums/screen.enum";
 import { useLevelStore } from "../../store/level.store";
 import RootStackParamList from "../../types/rootStackParamList.type";
 import { darken } from "../../utils/color";
-import ProgressBar from "../ProgressBar";
+import Button from "../button/Button";
+import CircularProgressBar from "../CircularProgressBar";
 import LevelViewerLight from "../level/LevelViewerLight";
+import ProgressBar from "../LinearProgressBar";
 
 type Props = {
   difficultyIndex: number;
+  isActive?: boolean;
   disabled?: boolean;
   color?: string;
   style?: ViewStyle | ViewStyle[];
@@ -28,9 +35,33 @@ type Props = {
 
 type levelItemNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
+// Taille d'un item (72) + gap (16)
+const ITEM_STEP = 72 + 16;
+const ROW_SCHEMES_1 = [
+  "oooJBBxDDJKLoHAAKLoHEEKMooIFFMGGIooo",
+  "BBoLooIooLCCIJAAMNIJDDMNEEKooxGGKoxo",
+  "IBBxoxIEELooAAKLoNJoKFFNJoGGMoHHooMo",
+  "ooxCCoDDoKooAAoKMNHIEEMNHIJLFFGGJLoo",
+  "oBBCCoooKxEEAAKoMNIJFFMNIJoLGGHHoLoo",
+];
+const ROW_SCHEMES_2 = [
+  "oBBJLMoGHJLMoGHAAMCCIoooFoIKDDFEEKoo",
+  "HBBLoxHoJLDDAAJoMNoIEEMNoIKFFNGGKooo",
+  "oooxxooDDoMoAAJLMoHIJLEEHIKFFNGGKooN",
+  "oBBBoxooJDDMAAJKLMIEEKLoIooKFFxoHHoo",
+  "BBooLxooxKLoAAoKMoHIEEMNHIJFFNGGJooo",
+];
+
+const SCORE_COLORS = ["#CD7F32", "#ABABAB", "#C9A22A"];
+
+// Largeur d'un set = n items × step - 1 gap (dernier item n'a pas de gap après)
+const ROW_WIDTH = ROW_SCHEMES_1.length * ITEM_STEP;
+const MARQUEE_DURATION = 40000;
+
 const DifficultyCard = memo(
   ({
     difficultyIndex,
+    isActive = false,
     disabled = false,
     color = "#F5F7FF",
     style,
@@ -41,6 +72,8 @@ const DifficultyCard = memo(
     const { t } = useTranslation();
 
     const progress = useSharedValue(0);
+    const translateX1 = useSharedValue(0);
+    const translateX2 = useSharedValue(-ROW_WIDTH / 2);
 
     const levelsCount = difficulties[difficultyIndex].levelCount;
 
@@ -48,15 +81,84 @@ const DifficultyCard = memo(
       state.getCompletedLevelsByDificulty(difficultyIndex),
     );
 
+    const bronzeCount = useLevelStore(
+      (state) =>
+        state.scores.filter(
+          (score) => score.difficulty === difficultyIndex && score.score < 0.33,
+        ).length,
+    );
+
+    const silverCount = useLevelStore(
+      (state) =>
+        state.scores.filter(
+          (score) =>
+            score.difficulty === difficultyIndex &&
+            score.score >= 0.33 &&
+            score.score < 0.66,
+        ).length,
+    );
+
+    const goldCount = useLevelStore(
+      (state) =>
+        state.scores.filter(
+          (score) =>
+            score.difficulty === difficultyIndex && score.score >= 0.66,
+        ).length,
+    );
+    const scoreCounts = [bronzeCount, silverCount, goldCount];
+
     const progression = ((completedLevels || 0) * 100) / levelsCount;
+
+    const difficultyColors = difficulties[difficultyIndex].colors;
+
+    useEffect(() => {
+      if (isActive) {
+        translateX1.value = 0;
+        translateX2.value = -ROW_WIDTH / 2;
+        translateX1.value = withRepeat(
+          withTiming(-ROW_WIDTH, {
+            duration: MARQUEE_DURATION,
+            easing: Easing.linear,
+          }),
+          -1,
+          false,
+        );
+        translateX2.value = withRepeat(
+          withTiming(-ROW_WIDTH / 2 - ROW_WIDTH, {
+            duration: MARQUEE_DURATION,
+            easing: Easing.linear,
+          }),
+          -1,
+          false,
+        );
+      } else {
+        cancelAnimation(translateX1);
+        cancelAnimation(translateX2);
+      }
+
+      return () => {
+        cancelAnimation(translateX1);
+        cancelAnimation(translateX2);
+      };
+    }, [isActive]);
+
+    const marqueeStyle1 = useAnimatedStyle(() => ({
+      transform: [{ translateX: translateX1.value }],
+    }));
+
+    const marqueeStyle2 = useAnimatedStyle(() => ({
+      transform: [{ translateX: translateX2.value }],
+    }));
 
     const buttonStyle = useAnimatedStyle(() => ({
       transform: [{ translateY: progress.value }],
     }));
 
-    const redirectToLevel = (): void => {
+    const redirectToLevelsMenu = (): void => {
       navigation.navigate(Screen.LEVELS_MENU, { difficultyIndex });
     };
+
+    const redirectToNextLevel = (): void => {};
 
     const tapGesture = Gesture.Tap()
       .enabled(!disabled)
@@ -79,8 +181,16 @@ const DifficultyCard = memo(
       })
       .onEnd(() => {
         "worklet";
-        runOnJS(redirectToLevel)();
       });
+
+    const renderRow = (schemes: string[]) =>
+      [...schemes, ...schemes, ...schemes].map((scheme, index) => (
+        <LevelViewerLight
+          key={index}
+          scheme={scheme}
+          colors={difficultyColors}
+        />
+      ));
 
     return (
       <GestureDetector gesture={tapGesture}>
@@ -93,7 +203,7 @@ const DifficultyCard = memo(
           <View
             style={{
               ...styles.blockBottomBorder,
-              backgroundColor: darken(color, 0.12),
+              backgroundColor: darken(color, 0.15),
               height: "50%",
             }}
           />
@@ -101,65 +211,79 @@ const DifficultyCard = memo(
             style={[
               styles.block,
               contentContainerStyle,
-              { backgroundColor: color },
+              { backgroundColor: darken(color, 0) },
               buttonStyle,
             ]}
           >
-            <View style={styles.levelViewerContainer}>
-              <LevelViewerLight
-                style={styles.levelViewer3}
-                scheme="BBBoxoooJDDMAAJoLMIoEELoIooKFFxooKHH"
-                colors={{
-                  primary: "#D6F5BC",
-                  secondary: "#F5F7FF",
-                  mainBlock: "#DA6C6C",
-                  fixedBlock: "#939EB0",
-                  frame: "#F5F7FF",
-                  white: "#FFFFFF",
-                }}
-              />
-
-              <LevelViewerLight
-                style={styles.levelViewer2}
-                scheme="BBBoxoooJDDMAAJoLMIoEELoIooKFFxooKHH"
-                colors={{
-                  primary: "#D6F5BC",
-                  secondary: "#F5F7FF",
-                  mainBlock: "#DA6C6C",
-                  fixedBlock: "#939EB0",
-                  frame: "#F5F7FF",
-                  white: "#FFFFFF",
-                }}
-              />
-
-              <LevelViewerLight
-                style={styles.levelViewer1}
-                scheme="BBBoxoooJDDMAAJoLMIoEELoIooKFFxooKHH"
-                colors={{
-                  primary: "#D6F5BC",
-                  secondary: "#F5F7FF",
-                  mainBlock: "#DA6C6C",
-                  fixedBlock: "#939EB0",
-                  frame: "#F5F7FF",
-                  white: "#FFFFFF",
-                }}
-              />
+            {/* DIFFICLTÉES */}
+            <View style={styles.difficultyIconsContainer}>
+              <View style={styles.difficultyBadge}>
+                <Flame color={darken("#D6F5BC")} />
+              </View>
+              <View style={styles.difficultyBadge}>
+                <Flame color={darken("#D6F5BC")} />
+              </View>
+              <View style={styles.difficultyBadge}>
+                <Flame color={darken("#D6F5BC")} />
+              </View>
             </View>
-            <Text style={styles.difficulty}>Difficulté 1</Text>
-            <View>
+
+            {/* NUMÉRO DU NIVEAU */}
+            <Text style={styles.difficultyNumber}>{difficultyIndex + 1}</Text>
+
+            {/* LIST ANIMÉ DES NIVEAUX */}
+            <View style={styles.marqueeContainer}>
+              <View style={styles.marqueeRow}>
+                <Animated.View style={[styles.marqueeTrack, marqueeStyle1]}>
+                  {renderRow(ROW_SCHEMES_1)}
+                </Animated.View>
+              </View>
+
+              <View style={styles.marqueeRow}>
+                <Animated.View style={[styles.marqueeTrack, marqueeStyle2]}>
+                  {renderRow(ROW_SCHEMES_2)}
+                </Animated.View>
+              </View>
+            </View>
+
+            {/* PROGRESSION DES NIVEAUX TERMINÉS */}
+            <View style={styles.progressionContainer}>
               <Text style={styles.progression}>
                 <Text style={styles.progressionCount}>{completedLevels}</Text>/
-                {levelsCount}
+                {levelsCount} complétés
               </Text>
-
               <ProgressBar progression={progression} />
-
-              <Text style={styles.completedLevel}>niveaux complétés</Text>
             </View>
 
-            {/* <Button onPress={() => {}} deep={0}>
-              <Text>Commencer</Text>
-            </Button> */}
+            {/* STATISTIQUES DES SCORES */}
+            <View style={styles.statsContainer}>
+              <Text style={styles.statsTitle}>Statistiques des cores :</Text>
+              <View style={styles.statsProgressionContainer}>
+                {SCORE_COLORS.map((scoreColor, index) => (
+                  <View key={scoreColor} style={styles.statsProgression}>
+                    <CircularProgressBar
+                      progression={(scoreCounts[index] / levelsCount) * 100}
+                      color={scoreColor}
+                    >
+                      <TrophyFill color={scoreColor} />
+                    </CircularProgressBar>
+                    <Text style={[styles.statsNumber, { color: scoreColor }]}>
+                      {scoreCounts[index]}
+                    </Text>
+                  </View>
+                ))}
+              </View>
+            </View>
+
+            {/* BOUTONS DE NAVIGATION */}
+            <View style={styles.buttonsContainer}>
+              <Button onPress={redirectToLevelsMenu} deep={8}>
+                <Text>Voir les niveaux</Text>
+              </Button>
+              <Button onPress={redirectToNextLevel} deep={8}>
+                <Text>Continuer</Text>
+              </Button>
+            </View>
           </Animated.View>
         </View>
       </GestureDetector>
@@ -175,10 +299,12 @@ const styles = StyleSheet.create({
     gap: 10,
     width: "100%",
     justifyContent: "center",
-    paddingTop: 20,
-    paddingBottom: 16,
-    paddingHorizontal: 16,
+    paddingVertical: 20,
+    paddingHorizontal: 20,
     borderRadius: 16,
+    overflow: "hidden",
+    borderWidth: 10,
+    borderColor: darken("#F5F7FF", 0.05),
   },
   blockBottomBorder: {
     left: 0,
@@ -187,48 +313,91 @@ const styles = StyleSheet.create({
     position: "absolute",
     borderBottomLeftRadius: 14,
     borderBottomRightRadius: 14,
+    boxShadow: `0 6px 20px ${darken("#D6F5BC", 0.4)}`,
   },
-  difficulty: {
-    fontSize: 26,
-    fontWeight: 700,
+  difficultyNumber: {
+    fontSize: 340,
+    lineHeight: 340,
+    fontWeight: "500",
     fontFamily: "Rubik",
     color: darken("#D6F5BC"),
-    textAlign: "center",
+    position: "absolute",
+    opacity: 0.3,
+    left: 10,
+    top: 0,
+  },
+  difficultyIconsContainer: {
+    gap: 8,
+    top: -5,
+    right: -5,
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    borderWidth: 0,
+  },
+  difficultyBadge: {
+    width: 34,
+    height: 34,
+    borderRadius: 17,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: darken("#F5F7FF", 0.05),
+    boxShadow: `0 4px 0 ${darken("#F5F7FF", 0.15)}`,
+  },
+  marqueeContainer: {
+    marginTop: 30,
+    marginHorizontal: -20,
+  },
+  marqueeRow: {
+    overflow: "hidden",
+    paddingBottom: 16,
+    borderWidth: 0,
+  },
+  marqueeTrack: {
+    gap: 16,
+    flexDirection: "row",
+    paddingBottom: 3,
+    borderWidth: 0,
+  },
+  progressionContainer: {
+    borderWidth: 0,
   },
   progression: {
-    fontSize: 22,
-    fontWeight: 700,
+    fontSize: 30,
+    fontWeight: 800,
     fontFamily: "Rubik",
     color: darken("#D6F5BC"),
   },
   progressionCount: {
-    fontSize: 34,
+    fontSize: 42,
     fontWeight: 800,
   },
-  completedLevel: {
-    fontSize: 12,
-    fontWeight: 700,
-    fontFamily: "Rubik",
-    textTransform: "uppercase",
-    color: darken("#D6F5BC"),
-    marginTop: 4,
-  },
-  levelViewerContainer: {
+  statsContainer: {
+    gap: 10,
+    marginTop: 6,
     borderWidth: 0,
-    alignSelf: "center",
   },
-  levelViewer1: {
-    marginTop: 20,
+  statsTitle: {
+    fontSize: 16,
+    fontWeight: 600,
+    fontFamily: "Rubik",
+    color: darken("#D6F5BC"),
   },
-  levelViewer2: {
-    top: 6,
-    position: "absolute",
-    transform: [{ scale: 0.9 }],
+  statsProgressionContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
-  levelViewer3: {
-    top: -7,
-    position: "absolute",
-    transform: [{ scale: 0.8 }],
+  statsProgression: {
+    gap: 3,
+    alignItems: "center",
+  },
+  statsNumber: {
+    fontSize: 18,
+    fontWeight: 600,
+    fontFamily: "Rubik",
+    color: darken("#D6F5BC"),
+  },
+  buttonsContainer: {
+    flexDirection: "row",
   },
 });
 

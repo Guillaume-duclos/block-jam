@@ -13,7 +13,7 @@ type Props = {
   style?: ViewStyle;
 };
 
-export default function ProgressBar({
+export default function LinearProgressBar({
   progression,
   style,
 }: Props): JSX.Element {
@@ -40,14 +40,14 @@ export default function ProgressBar({
 const styles = StyleSheet.create({
   container: {
     width: "100%",
-    height: 10,
-    borderRadius: 5,
-    backgroundColor: "#CECECE",
+    height: 14,
+    borderRadius: 7,
+    backgroundColor: darken("#F5F7FF", 0.1),
     overflow: "hidden",
   },
   progress: {
     height: "100%",
-    borderRadius: 5,
+    borderRadius: 7,
     backgroundColor: darken("#D6F5BC"),
   },
 });

@@ -19,6 +19,7 @@ import { StorageKey } from "../enums/storageKey.enum";
 import { useLevelStore } from "../store/level.store";
 import { text } from "../theme/text";
 import NavigationProps from "../types/navigation.type";
+import { darken } from "../utils/color";
 import {
   getStorageBoolean,
   getStorageString,
@@ -77,13 +78,17 @@ export default function Settings(): JSX.Element {
               onPress={() => changeLanguage(language)}
               contentContainerStyle={styles.languageButton}
               disabled={language === savedLanguage}
+              borderColor={darken("#F5F7FF", 0.15)}
             >
               <Icon style={{ width: 50, height: 50 }} />
             </Button>
 
             {language === savedLanguage && (
               <View style={styles.selectedLanguageIndicator}>
-                <Checkmark style={styles.selectedLanguageIndicatorIcon} />
+                <Checkmark
+                  color="#FFFFFF"
+                  style={styles.selectedLanguageIndicatorIcon}
+                />
               </View>
             )}
           </View>
@@ -177,7 +182,7 @@ export default function Settings(): JSX.Element {
 
         {/* DATA */}
         <SectionContainer title={t("data")}>
-          <Button onPress={displayResetDataModal}>
+          <Button onPress={displayResetDataModal} color="#FC644F">
             <Text style={styles.buttonLabel}>{t("resetLevelData")}</Text>
           </Button>
         </SectionContainer>
@@ -203,7 +208,7 @@ export default function Settings(): JSX.Element {
         )}
 
         {/* CRÉDITS */}
-        <SectionContainer title={t("credits")}>
+        <SectionContainer title={t("credits")} showDivider={false}>
           <View style={styles.creditsContainer}>
             <View style={styles.appIcon} />
             <View style={styles.appInformations}>
@@ -248,14 +253,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   scrollView: {
-    gap: 46,
-    padding: 20,
+    paddingHorizontal: 20,
   },
   section: {
     gap: 28,
   },
   buttonLabel: {
     ...text.paragraph,
+    color: "#FFFFFF",
   },
   languagesContainer: {
     gap: 20,
@@ -269,11 +274,11 @@ const styles = StyleSheet.create({
     width: 52,
     overflow: "hidden",
     paddingHorizontal: 0,
-    borderColor: "#FFFFFF",
+    borderColor: darken("#F5F7FF", 0.1),
     borderWidth: 3,
   },
   languageName: {
-    color: "#FFFFFF",
+    color: "#607889",
     textAlign: "center",
     ...text.legend,
   },
@@ -286,8 +291,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     position: "absolute",
     borderRadius: "50%",
-    backgroundColor: "#FFFFFF",
-    boxShadow: "0 2px 0px 0 #D6DBE2",
+    backgroundColor: "#70B843",
+    boxShadow: `0 2px 0px 0 ${darken("#70B843", 0.25)}`,
   },
   selectedLanguageIndicatorIcon: {
     width: 11,
@@ -311,7 +316,7 @@ const styles = StyleSheet.create({
     borderWidth: 0,
   },
   appInformationsText: {
-    color: "#FFFFFF",
+    color: "#607889",
     ...text.legend,
   },
   appInformationsVersion: {

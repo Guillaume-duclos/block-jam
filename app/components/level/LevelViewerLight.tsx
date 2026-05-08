@@ -11,7 +11,6 @@ import {
 import React, { JSX, memo, useMemo } from "react";
 import { StyleSheet, View, ViewStyle } from "react-native";
 import { gridCount } from "../../config/config";
-import { windowWidth } from "../../constants/dimension";
 import { BlockType } from "../../enums/blockType.enum";
 import { Orientation } from "../../enums/orientation.enum";
 import DificultyColors from "../../types/dificultyColors.type";
@@ -30,7 +29,7 @@ type BlockData = {
   orientation?: Orientation;
 };
 
-const playgroundSize = windowWidth / 2 - 120;
+const playgroundSize = 72;
 
 const LevelViewerLight = memo(
   ({ scheme, locked, colors, style }: Props): JSX.Element => {
@@ -196,7 +195,7 @@ const LevelViewerLight = memo(
         <Canvas
           style={{
             ...styles.playgroundContainer,
-            // boxShadow: `0 6px 10px ${darken(colors.primary, 0.34)}`,
+            boxShadow: `0 3px 8px ${"#00000020"}`,
           }}
         >
           <RoundedRect
@@ -276,12 +275,11 @@ const LevelViewerLight = memo(
 
 const styles = StyleSheet.create({
   container: {
-    height: playgroundSize + 9,
-    borderWidth: 0,
+    height: playgroundSize + 7,
   },
   playgroundContainer: {
     width: playgroundSize,
-    height: playgroundSize + 9,
+    height: playgroundSize + 7,
     borderRadius: 10,
   },
 });

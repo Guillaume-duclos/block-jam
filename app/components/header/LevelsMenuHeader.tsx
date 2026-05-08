@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { StyleSheet, Text, View } from "react-native";
 import ArrowShapeLeftFill from "../../assets/icons/ArrowShapeLeftFill";
 import Settings from "../../assets/icons/GearShapeFill";
-import { menuHeaderHeight } from "../../constants/dimension";
+import { difficultyMenuHeaderHeight } from "../../constants/dimension";
 import { Screen } from "../../enums/screen.enum";
 import { useDificultyStore } from "../../store/dificulty.store";
 import { useLevelStore } from "../../store/level.store";
@@ -63,7 +63,7 @@ const LevelsMenuHeader = ({ difficulty, levelsCount }: Props): JSX.Element => {
 
 const styles = StyleSheet.create({
   container: {
-    height: menuHeaderHeight,
+    height: difficultyMenuHeaderHeight,
     width: "100%",
     flexDirection: "row",
     alignItems: "center",

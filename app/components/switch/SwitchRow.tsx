@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
   },
   label: {
     flex: 1,
-    color: "#FFFFFF",
+    color: "#607889",
     ...text.title3,
   },
 });

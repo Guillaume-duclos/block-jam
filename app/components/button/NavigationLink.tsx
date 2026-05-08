@@ -13,7 +13,7 @@ const NavigationLink = ({ label, onPress }: Props): JSX.Element => (
   <PressableView minimumScale={0.98} onPress={onPress} style={styles.container}>
     <Fragment>
       <Text style={styles.label}>{label}</Text>
-      <ArrowTriangleRightFill color="#FFFFFF" style={styles.icon} />
+      <ArrowTriangleRightFill color={"#71899B"} style={styles.icon} />
     </Fragment>
   </PressableView>
 );
@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
   },
   label: {
     flex: 1,
-    color: "#FFFFFF",
+    color: "#71899B",
     ...text.title3,
   },
   icon: {

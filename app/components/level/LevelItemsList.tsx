@@ -1,4 +1,3 @@
-import { useNavigation } from "@react-navigation/native";
 import { FlashList, FlashListRef } from "@shopify/flash-list";
 import React, { JSX, memo, useMemo, useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
@@ -8,14 +7,13 @@ import {
 } from "react-native-safe-area-context";
 import {
   menuFooterHeight,
-  menuHeaderHeight,
+  levelMenuHeaderHeight,
   menuLevelHeight,
   menuVerticalPadding,
   windowHeight,
   windowWidth,
 } from "../../constants/dimension";
 import { Level, MainLevel } from "../../types/level.type";
-import NavigationProp from "../../types/navigation.type";
 import LevelsMenuHeader from "../header/LevelsMenuHeader";
 import PaginationIndicator from "../PaginationIndicator";
 import LevelItem from "./LevelItem";
@@ -28,8 +26,6 @@ const LevelItemsList = memo(({ level }: Props): JSX.Element => {
   const [activeViewIndex, setActiveViewIndex] = useState(0);
 
   const insets = useSafeAreaInsets();
-
-  const navigation = useNavigation<NavigationProp>();
 
   const { height } = useSafeAreaFrame();
 
@@ -55,7 +51,7 @@ const LevelItemsList = memo(({ level }: Props): JSX.Element => {
     height -
     (insets.top +
       insets.bottom +
-      menuHeaderHeight +
+      levelMenuHeaderHeight +
       menuFooterHeight +
       menuVerticalPadding * 2);
 

@@ -7,11 +7,11 @@ import { useTheme } from "../providers/ThemeContext";
 interface Props {
   levels: any;
   activeViewIndex: number;
-  updateActiveIndex: (index: number) => void;
+  vertical?: boolean;
 }
 
 const PaginationIndicator = memo(
-  ({ levels, activeViewIndex }: Props): JSX.Element => {
+  ({ levels, activeViewIndex, vertical = false }: Props): JSX.Element => {
     const animatedIndex = useSharedValue(activeViewIndex);
 
     const colors = useTheme();
@@ -24,20 +24,22 @@ const PaginationIndicator = memo(
       });
     }, [activeViewIndex]);
 
-    return (
-      <View style={styles.container}>
-        {levels.map((_: any, index: number) => (
-          <View
-            key={`dot-${index}`}
-            style={{
-              ...styles.dot,
-              backgroundColor: colors.theme.white,
-              opacity: activeViewIndex === index ? 1 : 0.4,
-            }}
-          />
-        ))}
-      </View>
-    );
+    const dots = levels.map((_: any, index: number) => (
+      <View
+        key={`dot-${index}`}
+        style={{
+          ...styles.dot,
+          backgroundColor: colors.theme.white,
+          opacity: activeViewIndex === index ? 1 : 0.4,
+        }}
+      />
+    ));
+
+    if (vertical) {
+      return <View style={styles.verticalContainer}>{dots}</View>;
+    }
+
+    return <View style={styles.container}>{dots}</View>;
   },
 );
 
@@ -50,8 +52,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   verticalContainer: {
+    gap: 16,
     right: 8,
-    width: 12,
     height: windowHeight,
     flexDirection: "column",
     justifyContent: "center",
@@ -64,23 +66,6 @@ const styles = StyleSheet.create({
     width: 12,
     height: 12,
     borderRadius: 3,
-  },
-  verticalDot: {
-    right: 3,
-    width: 16,
-    height: 20,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  verticalDotLabel: {
-    top: 6.5,
-    width: "100%",
-    height: "100%",
-    fontSize: 12,
-    fontWeight: 700,
-    fontFamily: "Rubik",
-    textAlign: "center",
-    position: "absolute",
   },
 });
 

@@ -1,8 +1,10 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { useFonts } from "expo-font";
+import { StatusBar } from "expo-status-bar";
 import React from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { StatusBarType } from "./enums/statusBarType.enum";
 import Navigation from "./navigation/Navigation";
 import { ThemeProvider } from "./providers/ThemeContext";
 import "./translations/translation";
@@ -20,6 +22,7 @@ export default function App() {
       <SafeAreaProvider>
         <NavigationContainer>
           <GestureHandlerRootView>
+            <StatusBar style={StatusBarType.LIGHT} />
             <Navigation />
           </GestureHandlerRootView>
         </NavigationContainer>

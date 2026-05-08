@@ -13,7 +13,6 @@ import Settings from "../screens/Settings";
 import TermsOfUse from "../screens/TermsOfUse";
 import Tutorial from "../screens/Tutorial";
 import RootStackParamList from "../types/rootStackParamList.type";
-import { darken } from "../utils/color";
 import { getStorageBoolean } from "../utils/storage";
 
 const Navigation = () => {
@@ -22,6 +21,7 @@ const Navigation = () => {
   const screenOptions: NativeStackNavigationOptions = {
     headerShown: false,
     orientation: "portrait",
+    contentStyle: { backgroundColor: "#F5F9FC" },
   };
 
   const turialScreenViewed = getStorageBoolean(
@@ -38,7 +38,7 @@ const Navigation = () => {
         screenOptions={{
           headerShown: false,
           presentation: "card",
-          contentStyle: { backgroundColor: darken("#D6F5BC", 0.3) },
+          contentStyle: { backgroundColor: "#F5F9FC" },
         }}
       >
         <Stack.Screen name={Screen.SETTINGS_MENU} component={Settings} />

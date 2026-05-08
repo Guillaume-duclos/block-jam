@@ -1,6 +1,7 @@
 const fr = {
   // Menu
   dificulty: "Difficulté",
+  dificulties: "Difficultés",
   completed: "complété",
 
   // Playground

@@ -27,7 +27,7 @@ export default function Switch({
 }: Props): JSX.Element {
   const progress = useSharedValue(selected ? ON_POSITION : OFF_POSITION);
 
-  const activeColor = darken("#D6F5BC", 0.38);
+  const activeColor = "#70B843";
 
   useEffect(() => {
     progress.value = withTiming(selected ? ON_POSITION : OFF_POSITION, {
@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
     width: 58,
     height: 32,
     borderWidth: 3,
-    borderColor: "#F5F7FF",
+    borderColor: darken("#F5F7FF", 0.1),
     justifyContent: "center",
     borderCurve: "continuous",
     borderRadius: 10,

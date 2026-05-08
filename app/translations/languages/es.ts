@@ -1,6 +1,7 @@
 const es = {
   // Menu
   dificulty: "Dificultad",
+  dificulties: "Dificultades",
   completed: "completado",
 
   // Playground
