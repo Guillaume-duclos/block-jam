@@ -21,8 +21,8 @@ type Props = {
 export default function CircularProgressBar({
   progression,
   color = darken("#D6F5BC"),
-  size = 60,
-  strokeWidth = 8,
+  size = 72,
+  strokeWidth = 9,
   children,
   style,
 }: Props): JSX.Element {
@@ -37,10 +37,10 @@ export default function CircularProgressBar({
 
   const oval = useMemo(
     () => ({
-      x: strokeWidth / 2,
-      y: strokeWidth / 2,
-      width: size - strokeWidth,
-      height: size - strokeWidth,
+      x: strokeWidth / 2 + 1,
+      y: strokeWidth / 2 + 1,
+      width: size - strokeWidth - 2,
+      height: size - strokeWidth - 2,
     }),
     [size, strokeWidth],
   );

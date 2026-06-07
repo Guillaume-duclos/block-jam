@@ -12,7 +12,6 @@ import Animated, {
   withRepeat,
   withTiming,
 } from "react-native-reanimated";
-import Flame from "../../assets/icons/Flame";
 import TrophyFill from "../../assets/icons/TrophyFill";
 import difficulties from "../../data/difficulties";
 import { Screen } from "../../enums/screen.enum";
@@ -215,36 +214,29 @@ const DifficultyCard = memo(
               buttonStyle,
             ]}
           >
-            {/* DIFFICLTÉES */}
-            <View style={styles.difficultyIconsContainer}>
-              <View style={styles.difficultyBadge}>
-                <Flame color={darken("#D6F5BC")} />
-              </View>
-              <View style={styles.difficultyBadge}>
-                <Flame color={darken("#D6F5BC")} />
-              </View>
-              <View style={styles.difficultyBadge}>
-                <Flame color={darken("#D6F5BC")} />
-              </View>
-            </View>
-
-            {/* NUMÉRO DU NIVEAU */}
-            <Text style={styles.difficultyNumber}>{difficultyIndex + 1}</Text>
-
-            {/* LIST ANIMÉ DES NIVEAUX */}
-            <View style={styles.marqueeContainer}>
-              <View style={styles.marqueeRow}>
-                <Animated.View style={[styles.marqueeTrack, marqueeStyle1]}>
-                  {renderRow(ROW_SCHEMES_1)}
-                </Animated.View>
-              </View>
-
-              <View style={styles.marqueeRow}>
-                <Animated.View style={[styles.marqueeTrack, marqueeStyle2]}>
-                  {renderRow(ROW_SCHEMES_2)}
-                </Animated.View>
-              </View>
-            </View>
+            <Text
+              style={{
+                fontSize: 14,
+                fontWeight: "700",
+                fontFamily: "Rubik",
+                color: darken("#D6F5BC"),
+                textTransform: "uppercase",
+              }}
+            >
+              Difficulté
+            </Text>
+            <Text
+              style={{
+                fontSize: 38,
+                fontWeight: "800",
+                fontFamily: "Rubik",
+                color: darken("#D6F5BC"),
+                textTransform: "uppercase",
+                top: -6,
+              }}
+            >
+              Découverte
+            </Text>
 
             {/* PROGRESSION DES NIVEAUX TERMINÉS */}
             <View style={styles.progressionContainer}>
@@ -265,7 +257,10 @@ const DifficultyCard = memo(
                       progression={(scoreCounts[index] / levelsCount) * 100}
                       color={scoreColor}
                     >
-                      <TrophyFill color={scoreColor} />
+                      <TrophyFill
+                        color={scoreColor}
+                        style={styles.trophyIcon}
+                      />
                     </CircularProgressBar>
                     <Text style={[styles.statsNumber, { color: scoreColor }]}>
                       {scoreCounts[index]}
@@ -277,11 +272,20 @@ const DifficultyCard = memo(
 
             {/* BOUTONS DE NAVIGATION */}
             <View style={styles.buttonsContainer}>
-              <Button onPress={redirectToLevelsMenu} deep={8}>
-                <Text>Voir les niveaux</Text>
+              <Button
+                onPress={redirectToLevelsMenu}
+                color={darken("#D6F5BC")}
+                deep={8}
+              >
+                <Text style={styles.buttonText}>Voir tous les niveaux</Text>
               </Button>
-              <Button onPress={redirectToNextLevel} deep={8}>
-                <Text>Continuer</Text>
+
+              <Button
+                onPress={redirectToNextLevel}
+                color={darken("#D6F5BC")}
+                deep={8}
+              >
+                <Text style={styles.buttonText}>Continuer</Text>
               </Button>
             </View>
           </Animated.View>
@@ -298,9 +302,10 @@ const styles = StyleSheet.create({
   block: {
     gap: 10,
     width: "100%",
-    justifyContent: "center",
-    paddingVertical: 20,
+    paddingTop: 20,
+    paddingBottom: 10,
     paddingHorizontal: 20,
+    justifyContent: "center",
     borderRadius: 16,
     overflow: "hidden",
     borderWidth: 10,
@@ -359,26 +364,26 @@ const styles = StyleSheet.create({
     borderWidth: 0,
   },
   progressionContainer: {
-    borderWidth: 0,
+    gap: 2,
   },
   progression: {
-    fontSize: 30,
+    fontSize: 24,
     fontWeight: 800,
     fontFamily: "Rubik",
     color: darken("#D6F5BC"),
   },
   progressionCount: {
-    fontSize: 42,
+    fontSize: 32,
     fontWeight: 800,
   },
   statsContainer: {
     gap: 10,
-    marginTop: 6,
+    marginTop: 10,
     borderWidth: 0,
   },
   statsTitle: {
-    fontSize: 16,
-    fontWeight: 600,
+    fontSize: 24,
+    fontWeight: 800,
     fontFamily: "Rubik",
     color: darken("#D6F5BC"),
   },
@@ -390,14 +395,25 @@ const styles = StyleSheet.create({
     gap: 3,
     alignItems: "center",
   },
+  trophyIcon: {
+    width: 26,
+    height: 26,
+  },
   statsNumber: {
-    fontSize: 18,
-    fontWeight: 600,
+    fontSize: 22,
+    fontWeight: 700,
     fontFamily: "Rubik",
     color: darken("#D6F5BC"),
   },
   buttonsContainer: {
-    flexDirection: "row",
+    marginTop: 20,
+    // flexDirection: "row",
+  },
+  buttonText: {
+    fontSize: 22,
+    fontWeight: 600,
+    fontFamily: "Rubik",
+    color: "#FFFFFF",
   },
 });
 

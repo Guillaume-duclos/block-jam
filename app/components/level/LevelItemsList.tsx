@@ -6,8 +6,8 @@ import {
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
 import {
-  menuFooterHeight,
   levelMenuHeaderHeight,
+  menuFooterHeight,
   menuLevelHeight,
   menuVerticalPadding,
   windowHeight,
@@ -125,6 +125,7 @@ const LevelItemsList = memo(({ level }: Props): JSX.Element => {
         levels={data}
         activeViewIndex={activeViewIndex}
         updateActiveIndex={updateActiveIndex}
+        pressColor={level.colors.primary}
       />
     </View>
   );
