@@ -52,7 +52,7 @@ export type LevelPlaygroundRef = {
   undo: () => void;
 };
 
-const LevelPlayground = memo(
+const LevelPlaygroundTutorial = memo(
   ({
     ref,
     level,
@@ -485,4 +485,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LevelPlayground;
+export default LevelPlaygroundTutorial;

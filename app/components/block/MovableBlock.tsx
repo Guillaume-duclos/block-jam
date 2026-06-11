@@ -1,4 +1,5 @@
 import * as Haptics from "expo-haptics";
+import { ImpactFeedbackStyle } from "expo-haptics";
 import { LinearGradient } from "expo-linear-gradient";
 import React, {
   JSX,
@@ -46,6 +47,7 @@ type Props = {
   initialX: number;
   initialY: number;
   hapticEnable?: boolean;
+  hapticStyle?: ImpactFeedbackStyle;
   animatabled?: boolean;
   updatePosition: (
     label: string,
@@ -79,6 +81,7 @@ const MovableBlock = memo(
     initialX,
     initialY,
     hapticEnable,
+    hapticStyle = ImpactFeedbackStyle.Medium,
     animatabled,
     updatePosition,
   }: Props): JSX.Element => {
@@ -209,7 +212,7 @@ const MovableBlock = memo(
       }
 
       if (hapticEnable) {
-        Haptics.selectionAsync();
+        Haptics.impactAsync(hapticStyle);
       }
     };
 

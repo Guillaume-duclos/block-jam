@@ -42,6 +42,7 @@ const fr = {
   settings: "Paramètres",
   gameplay: "Jeu",
   activeFeedback: "Retour haptique",
+  feedbackIntensity: "Intensité du retour haptique",
   resetLevelData: "Réinitialiser les données",
   language: "Langue",
   english: "Anglais",

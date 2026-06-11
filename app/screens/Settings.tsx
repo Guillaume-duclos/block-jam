@@ -11,6 +11,7 @@ import NavigationLink from "../components/button/NavigationLink";
 import ScreenHeader from "../components/header/ScreenHeader";
 import ModalValidation from "../components/modal/ValidationModal";
 import SectionContainer from "../components/SectionContainer";
+import SliderRow from "../components/slider/SliderRow";
 import SwitchRow from "../components/switch/SwitchRow";
 import { languages } from "../constants/languages";
 import { Language } from "../enums/language.enum";
@@ -39,8 +40,19 @@ export default function Settings(): JSX.Element {
 
   const savedLanguage = getStorageString(StorageKey.LANGUAGE) || Language.EN;
   const savedHaptic = getStorageBoolean(StorageKey.ALLOW_DRAG_HAPTIC_FEEDBACK);
+  const savedIntensity = getStorageString(
+    StorageKey.DRAG_HAPTIC_FEEDBACK_INTENSITY,
+  );
 
-  const [isHapticActive, setIsHapticActive] = useState<boolean>(!!savedHaptic);
+  const [isHapticActive, setIsHapticActive] = useState<boolean>(
+    savedHaptic ?? true,
+  );
+  const parsedIntensity = Number(savedIntensity);
+  const [hapticIntensity, setHapticIntensity] = useState<number>(
+    savedIntensity !== null && Number.isFinite(parsedIntensity)
+      ? parsedIntensity
+      : 0,
+  );
   const [showResetDataModal, setShowResetDataModal] = useState<boolean>(false);
 
   const appVersion = Application.nativeApplicationVersion;
@@ -60,6 +72,11 @@ export default function Settings(): JSX.Element {
   const changeHapticActive = (): void => {
     setIsHapticActive(!isHapticActive);
     setStorageItem(StorageKey.ALLOW_DRAG_HAPTIC_FEEDBACK, !isHapticActive);
+  };
+
+  const changeHapticIntensity = (value: number): void => {
+    setHapticIntensity(value);
+    setStorageItem(StorageKey.DRAG_HAPTIC_FEEDBACK_INTENSITY, String(value));
   };
 
   const navigate = (screen: Screen): void => {
@@ -148,6 +165,12 @@ export default function Settings(): JSX.Element {
               label={t("activeFeedback")}
               selected={isHapticActive}
               onChange={changeHapticActive}
+            />
+            <SliderRow
+              label={t("feedbackIntensity")}
+              value={hapticIntensity}
+              onChange={changeHapticIntensity}
+              style={{ opacity: isHapticActive ? 1 : 0.4 }}
             />
           </Fragment>
         </SectionContainer>

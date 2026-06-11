@@ -53,6 +53,7 @@ const es = {
   settings: "Ajustes",
   gameplay: "Juego",
   activeFeedback: "Vibración activa",
+  feedbackIntensity: "Intensidad de vibración",
   resetLevelData: "Resetear datos",
   language: "Idioma",
   english: "Inglés",

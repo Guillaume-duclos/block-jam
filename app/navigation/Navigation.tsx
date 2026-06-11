@@ -30,7 +30,7 @@ const Navigation = () => {
 
   const initialRouteName = turialScreenViewed
     ? Screen.DIFFICULTIES_MENU
-    : Screen.TUTORIAL;
+    : Screen.DIFFICULTIES_MENU;
 
   function SettingsStack() {
     return (
@@ -58,23 +58,17 @@ const Navigation = () => {
         <Stack.Screen
           name={Screen.DIFFICULTIES_MENU}
           component={DifficultiesMenu}
-          options={{
-            gestureEnabled: false,
-          }}
+          options={{ gestureEnabled: false }}
         />
         <Stack.Screen
           name={Screen.LEVELS_MENU}
           component={LevelsMenu}
-          options={{
-            gestureEnabled: false,
-          }}
+          options={{ gestureEnabled: false }}
         />
         <Stack.Screen
           name={Screen.PLAYGROUND}
           component={PlayGround}
-          options={{
-            gestureEnabled: false,
-          }}
+          options={{ gestureEnabled: false }}
         />
         <Stack.Screen
           name={Screen.SETTINGS}

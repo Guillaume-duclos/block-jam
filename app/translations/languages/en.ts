@@ -53,6 +53,7 @@ const en = {
   settings: "Settings",
   gameplay: "Game play",
   activeFeedback: "Active feedback",
+  feedbackIntensity: "Feedback intensity",
   resetLevelData: "Reset level data",
   language: "Language",
   english: "English",

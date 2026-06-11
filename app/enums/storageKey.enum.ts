@@ -5,4 +5,5 @@ export enum StorageKey {
   PLAYGROUND_DIRECTION = "playgroundDirection",
   TUTORIAL_SCREEN_VIEWED = "tutorialScreenViewed",
   ALLOW_DRAG_HAPTIC_FEEDBACK = "allowDragHapticFeedback",
+  DRAG_HAPTIC_FEEDBACK_INTENSITY = "dragHapticFeedbackIntensity",
 }
