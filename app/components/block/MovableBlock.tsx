@@ -26,6 +26,10 @@ import Animated, {
   withDelay,
   withTiming,
 } from "react-native-reanimated";
+import ArrowShapeDownFill from "../../assets/icons/ArrowShapeDownFill";
+import ArrowShapeLeftFill from "../../assets/icons/ArrowShapeLeftFill";
+import ArrowShapeRightFill from "../../assets/icons/ArrowShapeRightFill";
+import ArrowShapeUpFill from "../../assets/icons/ArrowShapeUpFill";
 import ArrowTriangleDownFill from "../../assets/icons/ArrowTriangleDownFill";
 import ArrowTriangleLeftFill from "../../assets/icons/ArrowTriangleLeftFill";
 import ArrowTriangleRightFill from "../../assets/icons/ArrowTriangleRightFill";
@@ -33,9 +37,12 @@ import ArrowTriangleUpFill from "../../assets/icons/ArrowTriangleUpFill";
 import { animationDuration, gridCount } from "../../config/config";
 import { caseSize } from "../../constants/dimension";
 import { BlockType } from "../../enums/blockType.enum";
+import { Direction } from "../../enums/direction";
 import { Orientation } from "../../enums/orientation.enum";
+import { StorageKey } from "../../enums/storageKey.enum";
 import { useDificultyStore } from "../../store/dificulty.store";
 import { darken } from "../../utils/color";
+import { getStorageBoolean } from "../../utils/storage";
 
 type Props = {
   ref?: Ref<View> | undefined;
@@ -49,6 +56,7 @@ type Props = {
   hapticEnable?: boolean;
   hapticStyle?: ImpactFeedbackStyle;
   animatabled?: boolean;
+  arrowDirection?: Direction;
   updatePosition: (
     label: string,
     position: number[],
@@ -81,6 +89,7 @@ const MovableBlock = memo(
     initialX,
     initialY,
     hapticEnable,
+    arrowDirection,
     hapticStyle = ImpactFeedbackStyle.Medium,
     animatabled,
     updatePosition,
@@ -88,6 +97,7 @@ const MovableBlock = memo(
     const dificultyTheme = useDificultyStore((value) => value.colors);
     const mainBlockColor = dificultyTheme?.mainBlock;
     const color = dificultyTheme?.secondary;
+    const zoomOnTouch = getStorageBoolean(StorageKey.ZOOM_ON_TOUCH) ?? true;
 
     const x: SharedValue<number> = useSharedValue(initialX);
     const y: SharedValue<number> = useSharedValue(initialY);
@@ -100,6 +110,7 @@ const MovableBlock = memo(
     const startY = useRef<number>(0);
 
     const progress = useSharedValue(0);
+    const touchScale = useSharedValue(1);
 
     const arrowStyle = useAnimatedStyle(() => ({
       opacity: progress.value,
@@ -109,19 +120,24 @@ const MovableBlock = memo(
       () => (label === BlockType.MAIN_BLOCK ? mainBlockColor : color),
       [label, mainBlockColor, color],
     );
+
     const secondBlockColor = useMemo(
       () => darken(mainBlock!, 0.08),
       [mainBlock],
     );
+
     const bottomBorderColor = useMemo(
       () => darken(mainBlock!, 0.12),
       [mainBlock],
     );
+
     const arrowColor = useMemo(() => darken(mainBlock!, 0.2), [mainBlock]);
+
     const gradientColors = useMemo(
       () => [secondBlockColor, mainBlock!] as [string, string],
       [secondBlockColor, mainBlock],
     );
+
     const shadowStyle = useMemo(
       () => ({ boxShadow: `0 1px 3px 0 ${darken(color!, 0.3)}` }),
       [color],
@@ -132,6 +148,7 @@ const MovableBlock = memo(
       if (orientation === Orientation.HORIZONTAL) {
         return { width: caseSize * position.length - 5, height: caseSize - 5 };
       }
+
       return { width: caseSize - 5, height: caseSize * position.length - 5 };
     }, [orientation, position.length]);
 
@@ -139,7 +156,10 @@ const MovableBlock = memo(
       if (animatabled) {
         entryProgress.value = withDelay(
           index * 20,
-          withTiming(1, { duration: 600, easing: Easing.out(Easing.back(1.7)) }),
+          withTiming(1, {
+            duration: 600,
+            easing: Easing.out(Easing.back(1.7)),
+          }),
         );
       }
 
@@ -148,6 +168,7 @@ const MovableBlock = memo(
         cancelAnimation(y);
         cancelAnimation(entryProgress);
         cancelAnimation(progress);
+        cancelAnimation(touchScale);
       };
     }, []);
 
@@ -222,7 +243,7 @@ const MovableBlock = memo(
       transform: [
         { translateX: x.value },
         { translateY: y.value },
-        { scale: 0.9 + entryProgress.value * 0.1 },
+        { scale: (0.9 + entryProgress.value * 0.1) * touchScale.value },
       ],
     }));
 
@@ -239,6 +260,12 @@ const MovableBlock = memo(
 
     // Gestion des événements lorsque l'utilisateur déplace un bloc
     const panGesture: PanGesture = Gesture.Pan()
+      .onTouchesDown(() => {
+        if (zoomOnTouch) touchScale.value = withTiming(1.05, { duration: 80 });
+      })
+      .onTouchesUp(() => {
+        if (zoomOnTouch) touchScale.value = withTiming(1, { duration: 120 });
+      })
       .onStart(() => {
         startX.current = x.value;
         startY.current = y.value;
@@ -292,49 +319,77 @@ const MovableBlock = memo(
             />
 
             {orientation === Orientation.HORIZONTAL && (
-              <Animated.View
-                style={[
-                  styles.arrowContainer,
-                  styles.arrowHorizontalContainer,
-                  arrowStyle,
-                ]}
-              >
-                <Animated.View style={arrowBlinkAnimation.blink}>
-                  <ArrowTriangleLeftFill
-                    style={styles.arrow}
-                    color={arrowColor}
-                  />
+              <>
+                {arrowDirection && (
+                  <View style={styles.directionArrowContainer}>
+                    {arrowDirection === Direction.LEFT && (
+                      <ArrowShapeLeftFill color="#000" />
+                    )}
+
+                    {arrowDirection === Direction.RIGHT && (
+                      <ArrowShapeRightFill color="#000" />
+                    )}
+                  </View>
+                )}
+
+                <Animated.View
+                  style={[
+                    styles.arrowContainer,
+                    styles.arrowHorizontalContainer,
+                    arrowStyle,
+                  ]}
+                >
+                  <Animated.View style={arrowBlinkAnimation.blink}>
+                    <ArrowTriangleLeftFill
+                      style={styles.arrow}
+                      color={arrowColor}
+                    />
+                  </Animated.View>
+                  <Animated.View style={arrowBlinkAnimation.blink}>
+                    <ArrowTriangleRightFill
+                      style={styles.arrow}
+                      color={arrowColor}
+                    />
+                  </Animated.View>
                 </Animated.View>
-                <Animated.View style={arrowBlinkAnimation.blink}>
-                  <ArrowTriangleRightFill
-                    style={styles.arrow}
-                    color={arrowColor}
-                  />
-                </Animated.View>
-              </Animated.View>
+              </>
             )}
 
             {orientation === Orientation.VERTICAL && (
-              <Animated.View
-                style={[
-                  styles.arrowContainer,
-                  styles.arrowVerticaleContainer,
-                  arrowStyle,
-                ]}
-              >
-                <Animated.View style={arrowBlinkAnimation.blink}>
-                  <ArrowTriangleUpFill
-                    style={styles.arrow}
-                    color={arrowColor}
-                  />
+              <>
+                {arrowDirection && (
+                  <View style={styles.directionArrowContainer}>
+                    {arrowDirection === Direction.UP && (
+                      <ArrowShapeUpFill color="#000" />
+                    )}
+
+                    {arrowDirection === Direction.DOWN && (
+                      <ArrowShapeDownFill color="#000" />
+                    )}
+                  </View>
+                )}
+
+                <Animated.View
+                  style={[
+                    styles.arrowContainer,
+                    styles.arrowVerticaleContainer,
+                    arrowStyle,
+                  ]}
+                >
+                  <Animated.View style={arrowBlinkAnimation.blink}>
+                    <ArrowTriangleUpFill
+                      style={styles.arrow}
+                      color={arrowColor}
+                    />
+                  </Animated.View>
+                  <Animated.View style={arrowBlinkAnimation.blink}>
+                    <ArrowTriangleDownFill
+                      style={styles.arrow}
+                      color={arrowColor}
+                    />
+                  </Animated.View>
                 </Animated.View>
-                <Animated.View style={arrowBlinkAnimation.blink}>
-                  <ArrowTriangleDownFill
-                    style={styles.arrow}
-                    color={arrowColor}
-                  />
-                </Animated.View>
-              </Animated.View>
+              </>
             )}
           </View>
         </Animated.View>
@@ -370,6 +425,15 @@ const styles = StyleSheet.create({
   },
   mainBlock: {
     backgroundColor: "#DA6C6C",
+  },
+  directionArrowContainer: {
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 5,
+    alignItems: "center",
+    justifyContent: "center",
+    position: "absolute",
   },
   arrowContainer: {
     width: "100%",

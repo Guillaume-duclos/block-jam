@@ -19,7 +19,7 @@ const SliderRow = ({ label, value, onChange, style }: Props): JSX.Element => (
 
 const styles = StyleSheet.create({
   container: {
-    gap: 20,
+    gap: 30,
     width: "100%",
     alignItems: "center",
     flexDirection: "row",

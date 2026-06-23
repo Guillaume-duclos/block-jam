@@ -6,4 +6,5 @@ export enum StorageKey {
   TUTORIAL_SCREEN_VIEWED = "tutorialScreenViewed",
   ALLOW_DRAG_HAPTIC_FEEDBACK = "allowDragHapticFeedback",
   DRAG_HAPTIC_FEEDBACK_INTENSITY = "dragHapticFeedbackIntensity",
+  ZOOM_ON_TOUCH = "zoomOnTouch",
 }

@@ -21,7 +21,7 @@ const Navigation = () => {
   const screenOptions: NativeStackNavigationOptions = {
     headerShown: false,
     orientation: "portrait",
-    contentStyle: { backgroundColor: "#F5F9FC" },
+    contentStyle: { backgroundColor: "#FFF" },
   };
 
   const turialScreenViewed = getStorageBoolean(
@@ -29,8 +29,8 @@ const Navigation = () => {
   );
 
   const initialRouteName = turialScreenViewed
-    ? Screen.DIFFICULTIES_MENU
-    : Screen.DIFFICULTIES_MENU;
+    ? Screen.TUTORIAL
+    : Screen.TUTORIAL;
 
   function SettingsStack() {
     return (

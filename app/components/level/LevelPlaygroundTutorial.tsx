@@ -1,13 +1,10 @@
 import { useFocusEffect } from "@react-navigation/native";
 import { ImpactFeedbackStyle } from "expo-haptics";
 import React, {
-  Fragment,
   JSX,
   memo,
-  RefObject,
   useCallback,
   useEffect,
-  useImperativeHandle,
   useRef,
   useState,
 } from "react";
@@ -15,15 +12,19 @@ import { InteractionManager, StyleSheet, View, ViewStyle } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { goalCaseIndex, gridCount } from "../../config/config";
 import { caseSize, playgroundSize } from "../../constants/dimension";
+import {
+  finalGridPosition,
+  tutorialFirstBlocFinalGridPosition,
+  tutorialSecondBlocFinalGridPosition,
+} from "../../constants/positions";
 import { BlockType } from "../../enums/blockType.enum";
-import LevelNavigationType from "../../enums/levelNavigationType.enum";
+import { Direction } from "../../enums/direction";
 import { Orientation } from "../../enums/orientation.enum";
 import { StorageKey } from "../../enums/storageKey.enum";
 import useGrid from "../../hooks/useGrid.hook";
 import { useDificultyStore } from "../../store/dificulty.store";
 import { useLevelStore } from "../../store/level.store";
 import ElementData from "../../types/elementData.type";
-import HistoryPosition from "../../types/historyPosition.type";
 import { Level } from "../../types/level.type";
 import Score from "../../types/score.type";
 import { darken } from "../../utils/color";
@@ -35,30 +36,22 @@ import {
 } from "../../utils/storage";
 import FixedBlock from "../block/FixedBlock";
 import MovableBlock from "../block/MovableBlock";
-import ResultModal from "../modal/ResultModal";
 import LevelGrid from "./LevelGrid";
 
 type Props = {
-  ref: RefObject<LevelPlaygroundRef | null>;
   level: Partial<Level>;
   levelIndex: number;
   difficultyIndex: number;
-  navigateToNextLevel: (levelNavigationType: LevelNavigationType) => void;
+  onStepChange?: (step: number) => void;
   style?: ViewStyle;
-};
-
-export type LevelPlaygroundRef = {
-  reset: () => void;
-  undo: () => void;
 };
 
 const LevelPlaygroundTutorial = memo(
   ({
-    ref,
     level,
     levelIndex,
     difficultyIndex,
-    navigateToNextLevel,
+    onStepChange,
     style,
   }: Props): JSX.Element | undefined => {
     const grid: number[] = useGrid();
@@ -69,58 +62,38 @@ const LevelPlaygroundTutorial = memo(
     const addNewScore = useLevelStore((value) => value.addNewScore);
     const incrementCount = useLevelStore((value) => value.incrementCount);
     const resetLevelData = useLevelStore((value) => value.resetLevelData);
-    const setIsResetEnabled = useLevelStore((value) => value.setIsResetEnabled);
-    const setIsUndoEnabled = useLevelStore((value) => value.setIsUndoEnabled);
 
     const [hapticEnable, setHapticEnable] = useState<boolean>(false);
-    const [hapticStyle, setHapticStyle] = useState<ImpactFeedbackStyle>(ImpactFeedbackStyle.Medium);
-    const [resultModal, setResultModal] = useState<number | undefined>();
+    const [hapticStyle, setHapticStyle] = useState<ImpactFeedbackStyle>(
+      ImpactFeedbackStyle.Medium,
+    );
     const [vehiclePositions, setVehiclePositions] = useState<ElementData[]>([]);
+    const [step, setStep] = useState(0);
 
-    const historic = useRef<HistoryPosition[]>([]);
     const isAnimatabled = useRef<boolean>(true);
     const levelVersion = useRef<number>(0);
-
-    useImperativeHandle(
-      ref,
-      () => ({
-        reset() {
-          computeBlockPositions();
-          historic.current = [];
-          resetLevelData();
-        },
-
-        undo() {
-          const lastPosition = historic.current.at(-1);
-          const newHistoric = historic.current.slice(0, -1);
-
-          historic.current = newHistoric;
-
-          if (lastPosition) {
-            updateBlockPosition(
-              lastPosition.label,
-              lastPosition.previousPosition,
-            );
-          }
-
-          if (!newHistoric.length) {
-            setIsUndoEnabled(false);
-          }
-        },
-      }),
-      [historic.current],
-    );
 
     useFocusEffect(
       useCallback(() => {
         const hapticEnable = getStorageBoolean(
           StorageKey.ALLOW_DRAG_HAPTIC_FEEDBACK,
         );
+
         setHapticEnable(hapticEnable ?? true);
 
-        const storedIntensity = getStorageString(StorageKey.DRAG_HAPTIC_FEEDBACK_INTENSITY);
-        const intensityIndex = storedIntensity !== null ? Number(storedIntensity) : 0;
-        const styles = [ImpactFeedbackStyle.Light, ImpactFeedbackStyle.Medium, ImpactFeedbackStyle.Heavy];
+        const storedIntensity = getStorageString(
+          StorageKey.DRAG_HAPTIC_FEEDBACK_INTENSITY,
+        );
+
+        const intensityIndex =
+          storedIntensity !== null ? Number(storedIntensity) : 0;
+
+        const styles = [
+          ImpactFeedbackStyle.Light,
+          ImpactFeedbackStyle.Medium,
+          ImpactFeedbackStyle.Heavy,
+        ];
+
         setHapticStyle(styles[intensityIndex] ?? ImpactFeedbackStyle.Light);
       }, []),
     );
@@ -204,13 +177,6 @@ const LevelPlaygroundTutorial = memo(
     ): void => {
       const index = vehiclePositions.findIndex((p) => p.label === label);
 
-      if (addToHistory) {
-        historic.current = [
-          ...historic.current,
-          { previousPosition: [...vehiclePositions[index].position], label },
-        ];
-      }
-
       // Crée un nouveau tableau sans muter le state
       const withUpdatedPosition = vehiclePositions.map((p, i) =>
         i === index ? { ...p, position } : p,
@@ -227,13 +193,33 @@ const LevelPlaygroundTutorial = memo(
 
       setVehiclePositions(newPositions);
 
+      const firstBloc = newPositions.find(
+        (p) => p.label === BlockType.TUTORIAL_FIRST_BLOC,
+      );
+      const secondBloc = newPositions.find(
+        (p) => p.label === BlockType.TUTORIAL_SECOND_BLOC,
+      );
+      const mainBloc = newPositions.find(
+        (p) => p.label === BlockType.MAIN_BLOCK,
+      );
+
+      let newStep = 0;
+      if (mainBloc?.position[1] === finalGridPosition) newStep = 3;
+      else if (
+        firstBloc?.position[0] === tutorialFirstBlocFinalGridPosition &&
+        secondBloc?.position[0] === tutorialSecondBlocFinalGridPosition
+      )
+        newStep = 2;
+      else if (firstBloc?.position[0] === tutorialFirstBlocFinalGridPosition)
+        newStep = 1;
+
+      setStep(newStep);
+      onStepChange?.(newStep);
+
       // N'incrémente le compteur que pour les vrais mouvements, pas les undos
       if (addToHistory) {
         incrementCount();
       }
-
-      setIsUndoEnabled(true);
-      setIsResetEnabled(true);
 
       if (label === BlockType.MAIN_BLOCK && position[1] === 17) {
         saveLevelScore();
@@ -331,7 +317,6 @@ const LevelPlaygroundTutorial = memo(
         if (previousScore < ratio) {
           levelScores[existingIndex] = newLevelScore;
         } else {
-          setResultModal(newLevelScore.score);
           return;
         }
       } else {
@@ -340,21 +325,15 @@ const LevelPlaygroundTutorial = memo(
 
       addNewScore(newLevelScore);
       setStorageObject(StorageKey.LEVEL_SCORE, levelScores);
-      setResultModal(newLevelScore.score);
     };
 
-    // Rejoue le niveau
-    const replay = (): void => {
-      ref.current?.reset();
-      setResultModal(undefined);
-    };
+    const stepConfig = [
+      { label: BlockType.TUTORIAL_FIRST_BLOC, direction: Direction.LEFT },
+      { label: BlockType.TUTORIAL_SECOND_BLOC, direction: Direction.DOWN },
+      { label: BlockType.MAIN_BLOCK, direction: Direction.RIGHT },
+    ];
 
-    // Affiche le niveau suivant
-    const nextLevel = (): void => {
-      ref.current?.reset();
-      setResultModal(undefined);
-      navigateToNextLevel(LevelNavigationType.NEXT);
-    };
+    const currentStepConfig = stepConfig[step];
 
     // Rend les blocs
     const renderBlocks = (): JSX.Element[] => {
@@ -362,6 +341,10 @@ const LevelPlaygroundTutorial = memo(
         if (data.label !== BlockType.EMPTY && data.label !== BlockType.WALL) {
           const col = data.position[0] % gridCount;
           const row = Math.floor(data.position[0] / gridCount);
+          const arrowDirection =
+            data.label === currentStepConfig?.label
+              ? currentStepConfig.direction
+              : undefined;
 
           return (
             <MovableBlock
@@ -377,6 +360,7 @@ const LevelPlaygroundTutorial = memo(
               hapticStyle={hapticStyle}
               animatabled={isAnimatabled.current}
               updatePosition={updateBlockPosition}
+              arrowDirection={arrowDirection}
             />
           );
         } else if (data.label === BlockType.WALL) {
@@ -402,52 +386,42 @@ const LevelPlaygroundTutorial = memo(
     };
 
     return (
-      <Fragment>
-        {/* PLAYGROUND */}
-        <View style={{ ...styles.container, ...style }}>
+      <View style={{ ...styles.container, ...style }}>
+        <View
+          style={{
+            ...styles.playgroundContainer,
+            boxShadow: `0 20px 16px 0 ${darken(mainColor, 0.3)}`,
+          }}
+        >
           <View
             style={{
-              ...styles.playgroundContainer,
-              boxShadow: `0 20px 16px 0 ${darken(mainColor, 0.3)}`,
+              ...styles.gridBottomBorder,
+              backgroundColor: darken(frameColor, 0.16),
+            }}
+          />
+
+          <View
+            style={{
+              ...styles.gridContainer,
+              borderColor: frameColor,
+              backgroundColor: darken(mainColor, 0),
+              boxShadow: `0 0 1px 0.5px ${darken(mainColor, 0.35)} inset`,
             }}
           >
-            <View
-              style={{
-                ...styles.gridBottomBorder,
-                backgroundColor: darken(frameColor, 0.16),
-              }}
+            <LevelGrid
+              color={mainColor}
+              showGoalArrow={
+                level.scheme?.[goalCaseIndex] !== BlockType.EMPTY &&
+                level.scheme?.[goalCaseIndex] !== BlockType.WALL
+              }
             />
 
-            <View
-              style={{
-                ...styles.gridContainer,
-                borderColor: frameColor,
-                backgroundColor: darken(mainColor, 0.2),
-                boxShadow: `0 0 1px 0.5px ${darken(mainColor, 0.35)} inset`,
-              }}
-            >
-              <LevelGrid
-                color={mainColor}
-                showGoalArrow={
-                  level.scheme?.[goalCaseIndex] !== BlockType.EMPTY &&
-                  level.scheme?.[goalCaseIndex] !== BlockType.WALL
-                }
-              />
-
-              <GestureHandlerRootView>
-                {grid.length > 0 && vehiclePositions && renderBlocks()}
-              </GestureHandlerRootView>
-            </View>
+            <GestureHandlerRootView>
+              {grid.length > 0 && vehiclePositions && renderBlocks()}
+            </GestureHandlerRootView>
           </View>
         </View>
-
-        {/* RESULT MODAL */}
-        <ResultModal
-          score={resultModal}
-          replay={replay}
-          nextLevel={nextLevel}
-        />
-      </Fragment>
+      </View>
     );
   },
 );
@@ -479,9 +453,6 @@ const styles = StyleSheet.create({
     height: 30,
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
-  },
-  modal: {
-    zIndex: 1,
   },
 });
 

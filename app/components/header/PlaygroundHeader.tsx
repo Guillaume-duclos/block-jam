@@ -63,7 +63,10 @@ const PlaygroundHeader = ({
       {/* HEADER */}
       <View style={styles.header}>
         <PressableView onPress={confirmGoBack}>
-          <ArrowShapeLeftFill color={dificultyTheme.white} />
+          <ArrowShapeLeftFill
+            color={dificultyTheme.white}
+            style={styles.backButton}
+          />
         </PressableView>
 
         <View style={{ alignItems: "center" }}>
@@ -80,7 +83,10 @@ const PlaygroundHeader = ({
         </View>
 
         <PressableView onPress={openSettings}>
-          <Settings color={dificultyTheme.white} />
+          <Settings
+            color={dificultyTheme.white}
+            style={styles.settingsButton}
+          />
         </PressableView>
       </View>
 
@@ -105,6 +111,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: 16,
+  },
+  backButton: {
+    width: 32,
+    height: 32,
+  },
+  settingsButton: {
+    width: 32,
+    height: 32,
   },
   headerDificulty: {
     fontSize: 26,

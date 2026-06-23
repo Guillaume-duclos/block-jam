@@ -37,7 +37,7 @@ const DifficultiesMenuHeader = ({
 
       <View style={styles.headerSettingsButtonContainer}>
         <PressableView onPress={openSettings}>
-          <Settings color="#FFFFFF" />
+          <Settings color="#FFFFFF" style={styles.settingsButton} />
         </PressableView>
       </View>
     </View>
@@ -76,6 +76,10 @@ const styles = StyleSheet.create({
     height: "100%",
     position: "absolute",
     justifyContent: "center",
+  },
+  settingsButton: {
+    width: 32,
+    height: 32,
   },
 });
 

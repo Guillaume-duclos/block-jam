@@ -17,7 +17,7 @@ type Props = {
 };
 
 const OFF_POSITION = 0;
-const ON_POSITION = 26;
+const ON_POSITION = 34;
 
 export default function Switch({
   selected,
@@ -63,7 +63,7 @@ export default function Switch({
 
 const styles = StyleSheet.create({
   container: {
-    width: 58,
+    width: 80,
     height: 32,
     borderWidth: 3,
     borderColor: darken("#F5F7FF", 0.1),
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
   switch: {
     top: -2,
     left: 2,
-    width: 22,
+    width: 36,
     height: 24 - 6,
     backgroundColor: "#F5F7FF",
     boxShadow: "0 4px 0px 0 #D6DBE2",

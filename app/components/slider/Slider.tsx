@@ -2,6 +2,7 @@ import * as Haptics from "expo-haptics";
 import React, { JSX, useEffect, useRef, useState } from "react";
 import { LayoutChangeEvent, StyleSheet, View, ViewStyle } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import Grab from "../../assets/icons/Grab";
 import { darken } from "../../utils/color";
 
 const HAPTIC_STYLES = [
@@ -18,7 +19,7 @@ type Props = {
   style?: ViewStyle;
 };
 
-const THUMB_WIDTH = 22;
+const THUMB_WIDTH = 40;
 const THUMB_HEIGHT = 18;
 const PADDING = 2;
 const BORDER_WIDTH = 3;
@@ -40,6 +41,7 @@ export default function Slider({
   const currentPosition = useRef(0);
   const startPosition = useRef(0);
   const lastStep = useRef(value);
+  const lastHapticTime = useRef(0);
 
   const getTravel = (): number =>
     containerWidth.current - 2 * BORDER_WIDTH - THUMB_WIDTH - 2 * PADDING;
@@ -84,11 +86,18 @@ export default function Slider({
 
       if (step !== lastStep.current) {
         lastStep.current = step;
+
         setDisplayStep(step);
 
-        Haptics.impactAsync(
-          HAPTIC_STYLES[step] ?? Haptics.ImpactFeedbackStyle.Medium,
-        );
+        const now = Date.now();
+
+        if (now - lastHapticTime.current >= 100) {
+          lastHapticTime.current = now;
+
+          Haptics.impactAsync(
+            HAPTIC_STYLES[step] ?? Haptics.ImpactFeedbackStyle.Medium,
+          );
+        }
       }
     })
     .onEnd((event) => {
@@ -118,9 +127,9 @@ export default function Slider({
               />
             ))}
           </View>
-          <View
-            style={[styles.thumb, { transform: [{ translateX: thumbX }] }]}
-          />
+          <View style={[styles.thumb, { transform: [{ translateX: thumbX }] }]}>
+            <Grab color="#D6DBE2" style={styles.thumbGrab} />
+          </View>
         </View>
       </View>
     </GestureDetector>
@@ -163,7 +172,7 @@ const styles = StyleSheet.create({
     width: DOT_WIDTH,
     height: DOT_HEIGHT,
     borderRadius: 1.5,
-    backgroundColor: darken("#B1BDD1", 0.15),
+    backgroundColor: darken("#B1BDD1", 0.1),
   },
   dotActive: {
     backgroundColor: darken("#70B843", 0.2),
@@ -177,5 +186,10 @@ const styles = StyleSheet.create({
     boxShadow: "0 4px 0px 0 #D6DBE2",
     borderCurve: "continuous",
     borderRadius: 6,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  thumbGrab: {
+    width: 14,
   },
 });

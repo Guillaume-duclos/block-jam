@@ -35,4 +35,4 @@ export const text = {
     fontWeight: "400",
     fontFamily: "GoogleSansCode",
   },
-};
+} as const;

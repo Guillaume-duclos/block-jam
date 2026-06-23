@@ -1,4 +1,4 @@
-import React, { Fragment, JSX, memo, RefObject, useState } from "react";
+import React, { JSX, memo, RefObject, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { StyleSheet, View } from "react-native";
 import ArrowShapeTurnUpLeft from "../../assets/icons/ArrowShapeTurnUpLeft";
@@ -80,48 +80,32 @@ const LevelControlsTutorial = memo(
     };
 
     return (
-      <Fragment>
-        {/* BUTTONS CONTROLS */}
-        <View style={styles.footerButtonsContainer}>
-          <Button
-            onPress={reset}
-            style={styles.gamePlayButton}
-            disabled={!isResetEnabled}
-            color={dificultyTheme.frame}
-            radius={Radius.ROUND}
-          >
-            <ArrowTriangleHead2ClockwiseRotate90
-              color={darken(dificultyTheme.frame, 0.3)}
-            />
-          </Button>
+      <View style={styles.footerButtonsContainer}>
+        <Button
+          onPress={reset}
+          style={styles.gamePlayButton}
+          disabled={!isResetEnabled}
+          color={dificultyTheme.frame}
+          radius={Radius.ROUND}
+        >
+          <ArrowTriangleHead2ClockwiseRotate90
+            color={darken(dificultyTheme.frame, 0.3)}
+          />
+        </Button>
 
-          <Button
-            onPress={undo}
-            style={styles.gamePlayButton}
-            disabled={!isUndoEnabled}
-            color={dificultyTheme.frame}
-            radius={Radius.ROUND}
-          >
-            <ArrowShapeTurnUpLeft
-              style={{ top: -1, left: -1 }}
-              color={darken(dificultyTheme.frame, 0.3)}
-            />
-          </Button>
-
-          <Button
-            onPress={undo}
-            style={styles.gamePlayButton}
-            disabled={!isUndoEnabled}
-            color={dificultyTheme.frame}
-            radius={Radius.ROUND}
-          >
-            <ArrowShapeTurnUpLeft
-              style={{ top: -1, left: -1 }}
-              color={darken(dificultyTheme.frame, 0.3)}
-            />
-          </Button>
-        </View>
-      </Fragment>
+        <Button
+          onPress={undo}
+          style={styles.gamePlayButton}
+          disabled={!isUndoEnabled}
+          color={dificultyTheme.frame}
+          radius={Radius.ROUND}
+        >
+          <ArrowShapeTurnUpLeft
+            style={{ top: -1, left: -1 }}
+            color={darken(dificultyTheme.frame, 0.3)}
+          />
+        </Button>
+      </View>
     );
   },
 );
@@ -134,9 +118,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingHorizontal: 16,
   },
-  footerButton: {
-    width: 64 - 10,
-  },
   gamePlayButtonsContainer: {
     gap: 8,
     flex: 1,
@@ -144,7 +125,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   gamePlayButton: {
-    flex: 1,
+    width: "35%",
   },
   button: {
     padding: 10,

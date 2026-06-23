@@ -43,9 +43,13 @@ export default function Settings(): JSX.Element {
   const savedIntensity = getStorageString(
     StorageKey.DRAG_HAPTIC_FEEDBACK_INTENSITY,
   );
+  const savedZoomOnTouch = getStorageString(StorageKey.ZOOM_ON_TOUCH);
 
   const [isHapticActive, setIsHapticActive] = useState<boolean>(
     savedHaptic ?? true,
+  );
+  const [isZoomOnTouchActive, setIsZoomOnTouchActive] = useState<boolean>(
+    savedZoomOnTouch ?? true,
   );
   const parsedIntensity = Number(savedIntensity);
   const [hapticIntensity, setHapticIntensity] = useState<number>(
@@ -77,6 +81,11 @@ export default function Settings(): JSX.Element {
   const changeHapticIntensity = (value: number): void => {
     setHapticIntensity(value);
     setStorageItem(StorageKey.DRAG_HAPTIC_FEEDBACK_INTENSITY, String(value));
+  };
+
+  const changeZoomOnTouchActive = (): void => {
+    setIsZoomOnTouchActive(!isZoomOnTouchActive);
+    setStorageItem(StorageKey.ZOOM_ON_TOUCH, !isZoomOnTouchActive);
   };
 
   const navigate = (screen: Screen): void => {
@@ -171,6 +180,11 @@ export default function Settings(): JSX.Element {
               value={hapticIntensity}
               onChange={changeHapticIntensity}
               style={{ opacity: isHapticActive ? 1 : 0.4 }}
+            />
+            <SwitchRow
+              label={t("zoomOnTouch")}
+              selected={isZoomOnTouchActive}
+              onChange={changeZoomOnTouchActive}
             />
           </Fragment>
         </SectionContainer>

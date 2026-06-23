@@ -110,6 +110,7 @@ const LevelControls = memo(
             >
               <ArrowTriangleHead2ClockwiseRotate90
                 color={darken(dificultyTheme.frame, 0.3)}
+                style={styles.resetButton}
               />
             </Button>
 
@@ -121,8 +122,8 @@ const LevelControls = memo(
               radius={Radius.ROUND}
             >
               <ArrowShapeTurnUpLeft
-                style={{ top: -1, left: -1 }}
                 color={darken(dificultyTheme.frame, 0.3)}
+                style={styles.undoButton}
               />
             </Button>
           </View>
@@ -183,6 +184,16 @@ const styles = StyleSheet.create({
   },
   rightFooterButtonIcon: {
     right: -2,
+  },
+  resetButton: {
+    width: 29,
+    height: 29,
+  },
+  undoButton: {
+    top: -1,
+    left: -1,
+    width: 28,
+    height: 28,
   },
 });
 

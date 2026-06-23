@@ -12,7 +12,7 @@ const levels = [
     levels: [
       {
         minimumMoves: 3,
-        scheme: "ooBBoooooDooAAoDoooooooooCCCoooooooo",
+        scheme: "oBBDoooooDooAAoDoooooooooCCCoooooooo",
       },
       {
         minimumMoves: 2,

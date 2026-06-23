@@ -54,6 +54,7 @@ const en = {
   gameplay: "Game play",
   activeFeedback: "Active feedback",
   feedbackIntensity: "Feedback intensity",
+  zoomOnTouch: "Zoom on touch",
   resetLevelData: "Reset level data",
   language: "Language",
   english: "English",

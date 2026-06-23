@@ -33,7 +33,7 @@ const ScreenHeader = ({
         onPress={onPressExit}
         style={{ ...styles.button, ...styles.exitButton }}
       >
-        <XMark color="#607889" />
+        <XMark color="#607889" style={styles.exitButtonIcon} />
       </PressableView>
     )}
   </View>
@@ -60,6 +60,10 @@ const styles = StyleSheet.create({
   exitButton: {
     top: 3,
     right: 20,
+  },
+  exitButtonIcon: {
+    width: 22,
+    height: 22,
   },
 });
 

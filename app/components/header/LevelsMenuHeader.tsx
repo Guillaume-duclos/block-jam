@@ -3,7 +3,7 @@ import React, { JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { StyleSheet, Text, View } from "react-native";
 import ArrowShapeLeftFill from "../../assets/icons/ArrowShapeLeftFill";
-import Settings from "../../assets/icons/GearShapeFill";
+import GearShapeFill from "../../assets/icons/GearShapeFill";
 import { difficultyMenuHeaderHeight } from "../../constants/dimension";
 import { Screen } from "../../enums/screen.enum";
 import { useDificultyStore } from "../../store/dificulty.store";
@@ -39,7 +39,10 @@ const LevelsMenuHeader = ({ difficulty, levelsCount }: Props): JSX.Element => {
   return (
     <View style={styles.container}>
       <PressableView onPress={goBack}>
-        <ArrowShapeLeftFill color={dificultyTheme?.white ?? "#FFFFFF"} />
+        <ArrowShapeLeftFill
+          color={dificultyTheme?.white ?? "#FFFFFF"}
+          style={styles.backButton}
+        />
       </PressableView>
 
       <View style={styles.contentContainer}>
@@ -54,7 +57,7 @@ const LevelsMenuHeader = ({ difficulty, levelsCount }: Props): JSX.Element => {
 
       <View style={styles.headerSettingsButtonContainer}>
         <PressableView onPress={openSettings}>
-          <Settings color="#FFFFFF" />
+          <GearShapeFill color="#FFFFFF" style={styles.settingsButton} />
         </PressableView>
       </View>
     </View>
@@ -69,6 +72,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: 16,
+  },
+  backButton: {
+    width: 32,
+    height: 32,
+  },
+  settingsButton: {
+    width: 32,
+    height: 32,
   },
   contentContainer: {
     flex: 1,
