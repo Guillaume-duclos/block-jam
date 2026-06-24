@@ -10,7 +10,13 @@
     "ios": {
       "bundleIdentifier": "com.anonymous.blockjam"
     },
+    "splash": {
+      "image": "./app/assets/images/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#9ED098"
+    },
     "plugins": [
+      "expo-splash-screen",
       "expo-localization",
       [
         "expo-font",

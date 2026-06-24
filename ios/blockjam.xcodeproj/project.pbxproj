@@ -7,37 +7,37 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0DD4E0EE17CD8212165455E9 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C91518C030D5F20EC9F4884C /* ExpoModulesProvider.swift */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
-		184E35E6B75A41A2AD8D9469 /* GoogleSansCodeVariable.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C9121E84FC614A94B7E24203 /* GoogleSansCodeVariable.ttf */; };
+		32D07BF591E7467A96CE46C8 /* GoogleSansCodeVariable.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2DEFBE07B82E4FE0B23F4D29 /* GoogleSansCodeVariable.ttf */; };
 		3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */; };
-		502EC573CCC75BFC375601D8 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4E0914DC0D330F092C7037C /* ExpoModulesProvider.swift */; };
-		97340DC92B724AE0872D6B20 /* RubikItalicVariable.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1C66EECA28F04CF9AD3EEDD3 /* RubikItalicVariable.ttf */; };
+		52053B2CDC7DEF05748AE5F4 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = D51370F95CF4D5CE5C4923CE /* PrivacyInfo.xcprivacy */; };
+		96A161D96B8A403C91A91EDB /* GoogleSansCodeItalicVariable.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 310D0644A83A4A5785C18649 /* GoogleSansCodeItalicVariable.ttf */; };
+		9CBE3064909089BF61808483 /* libPods-blockjam.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F85327D3D39C31BFD4C684E9 /* libPods-blockjam.a */; };
+		B609C614645545909B5C8492 /* RubikItalicVariable.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 98F9FF09E2B34030BB186622 /* RubikItalicVariable.ttf */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
-		C8B7E7D056A4877787654631 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 1DC9E2A4FBB29E89B7B86EFD /* PrivacyInfo.xcprivacy */; };
-		F015037DE5E54FBBB05911CA /* GoogleSansCodeItalicVariable.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 60A4C3AE700D4D9F8CFFBBD1 /* GoogleSansCodeItalicVariable.ttf */; };
 		F11748422D0307B40044C1D9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F11748412D0307B40044C1D9 /* AppDelegate.swift */; };
-		F69B4DFC1358513B366D2A49 /* libPods-blockjam.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4015898019F5113296594FD5 /* libPods-blockjam.a */; };
-		F88BD41C11494AFCB230E1B1 /* RubikVariable.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 73757568BCAE4C9491744947 /* RubikVariable.ttf */; };
+		F30557A9FC2A40AA98DFC4C9 /* RubikVariable.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9C27F58A24A943208A89424B /* RubikVariable.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		13B07F961A680F5B00A75B9A /* blockjam.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = blockjam.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = blockjam/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = blockjam/Info.plist; sourceTree = "<group>"; };
-		1C66EECA28F04CF9AD3EEDD3 /* RubikItalicVariable.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = RubikItalicVariable.ttf; path = ../app/assets/fonts/Rubik/RubikItalicVariable.ttf; sourceTree = "<group>"; };
-		1DC9E2A4FBB29E89B7B86EFD /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = blockjam/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
-		4015898019F5113296594FD5 /* libPods-blockjam.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-blockjam.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		45B1328ABD10B9C3A91A649F /* Pods-blockjam.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-blockjam.release.xcconfig"; path = "Target Support Files/Pods-blockjam/Pods-blockjam.release.xcconfig"; sourceTree = "<group>"; };
-		60A4C3AE700D4D9F8CFFBBD1 /* GoogleSansCodeItalicVariable.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = GoogleSansCodeItalicVariable.ttf; path = ../app/assets/fonts/GoogleSansCode/GoogleSansCodeItalicVariable.ttf; sourceTree = "<group>"; };
-		73757568BCAE4C9491744947 /* RubikVariable.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = RubikVariable.ttf; path = ../app/assets/fonts/Rubik/RubikVariable.ttf; sourceTree = "<group>"; };
-		740B5BA295FC3C88B06C84D3 /* Pods-blockjam.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-blockjam.debug.xcconfig"; path = "Target Support Files/Pods-blockjam/Pods-blockjam.debug.xcconfig"; sourceTree = "<group>"; };
+		2DEFBE07B82E4FE0B23F4D29 /* GoogleSansCodeVariable.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = GoogleSansCodeVariable.ttf; path = ../app/assets/fonts/GoogleSansCode/GoogleSansCodeVariable.ttf; sourceTree = "<group>"; };
+		310D0644A83A4A5785C18649 /* GoogleSansCodeItalicVariable.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = GoogleSansCodeItalicVariable.ttf; path = ../app/assets/fonts/GoogleSansCode/GoogleSansCodeItalicVariable.ttf; sourceTree = "<group>"; };
+		98F9FF09E2B34030BB186622 /* RubikItalicVariable.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = RubikItalicVariable.ttf; path = ../app/assets/fonts/Rubik/RubikItalicVariable.ttf; sourceTree = "<group>"; };
+		9C27F58A24A943208A89424B /* RubikVariable.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = RubikVariable.ttf; path = ../app/assets/fonts/Rubik/RubikVariable.ttf; sourceTree = "<group>"; };
+		A938B046359D49C13BD28511 /* Pods-blockjam.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-blockjam.debug.xcconfig"; path = "Target Support Files/Pods-blockjam/Pods-blockjam.debug.xcconfig"; sourceTree = "<group>"; };
 		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = blockjam/SplashScreen.storyboard; sourceTree = "<group>"; };
+		B3F5A05111669A6C1717E8FD /* Pods-blockjam.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-blockjam.release.xcconfig"; path = "Target Support Files/Pods-blockjam/Pods-blockjam.release.xcconfig"; sourceTree = "<group>"; };
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
-		C4E0914DC0D330F092C7037C /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-blockjam/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
-		C9121E84FC614A94B7E24203 /* GoogleSansCodeVariable.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = GoogleSansCodeVariable.ttf; path = ../app/assets/fonts/GoogleSansCode/GoogleSansCodeVariable.ttf; sourceTree = "<group>"; };
+		C91518C030D5F20EC9F4884C /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-blockjam/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
+		D51370F95CF4D5CE5C4923CE /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = blockjam/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		F11748412D0307B40044C1D9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = blockjam/AppDelegate.swift; sourceTree = "<group>"; };
 		F11748442D0722820044C1D9 /* blockjam-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "blockjam-Bridging-Header.h"; path = "blockjam/blockjam-Bridging-Header.h"; sourceTree = "<group>"; };
+		F85327D3D39C31BFD4C684E9 /* libPods-blockjam.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-blockjam.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -45,7 +45,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F69B4DFC1358513B366D2A49 /* libPods-blockjam.a in Frameworks */,
+				9CBE3064909089BF61808483 /* libPods-blockjam.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -61,35 +61,29 @@
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */,
-				1DC9E2A4FBB29E89B7B86EFD /* PrivacyInfo.xcprivacy */,
+				D51370F95CF4D5CE5C4923CE /* PrivacyInfo.xcprivacy */,
 			);
 			name = blockjam;
 			sourceTree = "<group>";
 		};
-		2B41839E04079EE408EE747E /* Pods */ = {
+		24E96D5D81E8464996B5AE33 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				740B5BA295FC3C88B06C84D3 /* Pods-blockjam.debug.xcconfig */,
-				45B1328ABD10B9C3A91A649F /* Pods-blockjam.release.xcconfig */,
+				98F9FF09E2B34030BB186622 /* RubikItalicVariable.ttf */,
+				9C27F58A24A943208A89424B /* RubikVariable.ttf */,
+				2DEFBE07B82E4FE0B23F4D29 /* GoogleSansCodeVariable.ttf */,
+				310D0644A83A4A5785C18649 /* GoogleSansCodeItalicVariable.ttf */,
 			);
-			path = Pods;
+			name = Resources;
 			sourceTree = "<group>";
 		};
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				4015898019F5113296594FD5 /* libPods-blockjam.a */,
+				F85327D3D39C31BFD4C684E9 /* libPods-blockjam.a */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		3EFA405E0BAC45DC90C98032 /* ExpoModulesProviders */ = {
-			isa = PBXGroup;
-			children = (
-				D29BF42655E4039EF6B868BA /* blockjam */,
-			);
-			name = ExpoModulesProviders;
 			sourceTree = "<group>";
 		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
@@ -106,9 +100,9 @@
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
-				8C5BD0D6AB8F4AF6B5CE03C1 /* Resources */,
-				2B41839E04079EE408EE747E /* Pods */,
-				3EFA405E0BAC45DC90C98032 /* ExpoModulesProviders */,
+				24E96D5D81E8464996B5AE33 /* Resources */,
+				B54F91D5D2DB7BA88EA38FC9 /* Pods */,
+				DD3DEB3C80B1C1AFE1CC0C1B /* ExpoModulesProviders */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -123,15 +117,21 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		8C5BD0D6AB8F4AF6B5CE03C1 /* Resources */ = {
+		8BBC0DAB2C61B8508D06F11D /* blockjam */ = {
 			isa = PBXGroup;
 			children = (
-				1C66EECA28F04CF9AD3EEDD3 /* RubikItalicVariable.ttf */,
-				73757568BCAE4C9491744947 /* RubikVariable.ttf */,
-				C9121E84FC614A94B7E24203 /* GoogleSansCodeVariable.ttf */,
-				60A4C3AE700D4D9F8CFFBBD1 /* GoogleSansCodeItalicVariable.ttf */,
+				C91518C030D5F20EC9F4884C /* ExpoModulesProvider.swift */,
 			);
-			name = Resources;
+			name = blockjam;
+			sourceTree = "<group>";
+		};
+		B54F91D5D2DB7BA88EA38FC9 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				A938B046359D49C13BD28511 /* Pods-blockjam.debug.xcconfig */,
+				B3F5A05111669A6C1717E8FD /* Pods-blockjam.release.xcconfig */,
+			);
+			path = Pods;
 			sourceTree = "<group>";
 		};
 		BB2F792B24A3F905000567C9 /* Supporting */ = {
@@ -143,12 +143,12 @@
 			path = blockjam/Supporting;
 			sourceTree = "<group>";
 		};
-		D29BF42655E4039EF6B868BA /* blockjam */ = {
+		DD3DEB3C80B1C1AFE1CC0C1B /* ExpoModulesProviders */ = {
 			isa = PBXGroup;
 			children = (
-				C4E0914DC0D330F092C7037C /* ExpoModulesProvider.swift */,
+				8BBC0DAB2C61B8508D06F11D /* blockjam */,
 			);
-			name = blockjam;
+			name = ExpoModulesProviders;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -158,14 +158,14 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "blockjam" */;
 			buildPhases = (
-				55FD1805C8FF8919986261E2 /* [CP] Check Pods Manifest.lock */,
-				CCD3C90862F9EFC1FE9B702A /* [Expo] Configure project */,
+				EF3DC205B8CE7E58203740B0 /* [CP] Check Pods Manifest.lock */,
+				5D79E1B4C465ABB21316176E /* [Expo] Configure project */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				694D63C41B46B37BF7971AF7 /* [CP] Embed Pods Frameworks */,
-				1EF2C6E393ED255F6ACE5CA3 /* [CP] Copy Pods Resources */,
+				2F95BDDFDA10DB1A083F31AE /* [CP] Embed Pods Frameworks */,
+				07B67D637F7E3EB4F96AD381 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -182,7 +182,8 @@
 		83CBB9F71A601CBA00E9B192 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1130;
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 2650;
 				TargetAttributes = {
 					13B07F861A680F5B00A75B9A = {
 						LastSwiftMigration = 1250;
@@ -215,11 +216,11 @@
 				BB2F792D24A3F905000567C9 /* Expo.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */,
-				97340DC92B724AE0872D6B20 /* RubikItalicVariable.ttf in Resources */,
-				F88BD41C11494AFCB230E1B1 /* RubikVariable.ttf in Resources */,
-				184E35E6B75A41A2AD8D9469 /* GoogleSansCodeVariable.ttf in Resources */,
-				F015037DE5E54FBBB05911CA /* GoogleSansCodeItalicVariable.ttf in Resources */,
-				C8B7E7D056A4877787654631 /* PrivacyInfo.xcprivacy in Resources */,
+				B609C614645545909B5C8492 /* RubikItalicVariable.ttf in Resources */,
+				F30557A9FC2A40AA98DFC4C9 /* RubikVariable.ttf in Resources */,
+				32D07BF591E7467A96CE46C8 /* GoogleSansCodeVariable.ttf in Resources */,
+				96A161D96B8A403C91A91EDB /* GoogleSansCodeItalicVariable.ttf in Resources */,
+				52053B2CDC7DEF05748AE5F4 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -241,7 +242,7 @@
 			shellPath = /bin/sh;
 			shellScript = "if [[ -f \"$PODS_ROOT/../.xcode.env\" ]]; then\n  source \"$PODS_ROOT/../.xcode.env\"\nfi\nif [[ -f \"$PODS_ROOT/../.xcode.env.local\" ]]; then\n  source \"$PODS_ROOT/../.xcode.env.local\"\nfi\n\n# The project root by default is one level up from the ios directory\nexport PROJECT_ROOT=\"$PROJECT_DIR\"/..\n\nif [[ \"$CONFIGURATION\" = *Debug* ]]; then\n  export SKIP_BUNDLING=1\nfi\nif [[ -z \"$ENTRY_FILE\" ]]; then\n  # Set the entry JS file using the bundler's entry resolution.\n  export ENTRY_FILE=\"$(\"$NODE_BINARY\" -e \"require('expo/scripts/resolveAppEntry')\" \"$PROJECT_ROOT\" ios absolute | tail -n 1)\"\nfi\n\nif [[ -z \"$CLI_PATH\" ]]; then\n  # Use Expo CLI\n  export CLI_PATH=\"$(\"$NODE_BINARY\" --print \"require.resolve('@expo/cli', { paths: [require.resolve('expo/package.json')] })\")\"\nfi\nif [[ -z \"$BUNDLE_COMMAND\" ]]; then\n  # Default Expo CLI command for bundling\n  export BUNDLE_COMMAND=\"export:embed\"\nfi\n\n# Source .xcode.env.updates if it exists to allow\n# SKIP_BUNDLING to be unset if needed\nif [[ -f \"$PODS_ROOT/../.xcode.env.updates\" ]]; then\n  source \"$PODS_ROOT/../.xcode.env.updates\"\nfi\n# Source local changes to allow overrides\n# if needed\nif [[ -f \"$PODS_ROOT/../.xcode.env.local\" ]]; then\n  source \"$PODS_ROOT/../.xcode.env.local\"\nfi\n\n`\"$NODE_BINARY\" --print \"require('path').dirname(require.resolve('react-native/package.json')) + '/scripts/react-native-xcode.sh'\"`\n\n";
 		};
-		1EF2C6E393ED255F6ACE5CA3 /* [CP] Copy Pods Resources */ = {
+		07B67D637F7E3EB4F96AD381 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -279,7 +280,44 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-blockjam/Pods-blockjam-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		55FD1805C8FF8919986261E2 /* [CP] Check Pods Manifest.lock */ = {
+		2F95BDDFDA10DB1A083F31AE /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-blockjam/Pods-blockjam-frameworks.sh",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/hermes-engine/Pre-built/hermes.framework/hermes",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/hermes.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-blockjam/Pods-blockjam-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		5D79E1B4C465ABB21316176E /* [Expo] Configure project */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "[Expo] Configure project";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# This script configures Expo modules and generates the modules provider file.\nbash -l -c \"./Pods/Target\\ Support\\ Files/Pods-blockjam/expo-configure-project.sh\"\n";
+		};
+		EF3DC205B8CE7E58203740B0 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -301,43 +339,6 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		694D63C41B46B37BF7971AF7 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-blockjam/Pods-blockjam-frameworks.sh",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/hermes-engine/Pre-built/hermes.framework/hermes",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/hermes.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-blockjam/Pods-blockjam-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		CCD3C90862F9EFC1FE9B702A /* [Expo] Configure project */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "[Expo] Configure project";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# This script configures Expo modules and generates the modules provider file.\nbash -l -c \"./Pods/Target\\ Support\\ Files/Pods-blockjam/expo-configure-project.sh\"\n";
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -346,7 +347,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F11748422D0307B40044C1D9 /* AppDelegate.swift in Sources */,
-				502EC573CCC75BFC375601D8 /* ExpoModulesProvider.swift in Sources */,
+				0DD4E0EE17CD8212165455E9 /* ExpoModulesProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -355,17 +356,17 @@
 /* Begin XCBuildConfiguration section */
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 740B5BA295FC3C88B06C84D3 /* Pods-blockjam.debug.xcconfig */;
+			baseConfigurationReference = A938B046359D49C13BD28511 /* Pods-blockjam.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = blockjam/blockjam.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 8W3NN8582V;
 				ENABLE_BITCODE = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					"FB_SONARKIT_ENABLED=1",
+					"FMT_ENFORCE_COMPILE_STRING=0",
 				);
 				INFOPLIST_FILE = blockjam/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
@@ -392,13 +393,12 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 45B1328ABD10B9C3A91A649F /* Pods-blockjam.release.xcconfig */;
+			baseConfigurationReference = B3F5A05111669A6C1717E8FD /* Pods-blockjam.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = blockjam/blockjam.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 8W3NN8582V;
 				INFOPLIST_FILE = blockjam/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -444,6 +444,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -451,8 +452,10 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = 8W3NN8582V;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -476,9 +479,13 @@
 				LIBRARY_SEARCH_PATHS = "$(SDKROOT)/usr/lib/swift\"$(inherited)\"";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				OTHER_LDFLAGS = "$(inherited)  ";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					" ",
+				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEBUG";
 				USE_HERMES = true;
 			};
@@ -507,6 +514,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -514,8 +522,10 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
+				DEVELOPMENT_TEAM = 8W3NN8582V;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -531,9 +541,14 @@
 				);
 				LIBRARY_SEARCH_PATHS = "$(SDKROOT)/usr/lib/swift\"$(inherited)\"";
 				MTL_ENABLE_DEBUG_INFO = NO;
-				OTHER_LDFLAGS = "$(inherited)  ";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					" ",
+				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
 				USE_HERMES = true;
 				VALIDATE_PRODUCT = YES;
 			};
