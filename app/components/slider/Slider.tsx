@@ -1,5 +1,5 @@
 import * as Haptics from "expo-haptics";
-import React, { JSX, useEffect, useRef, useState } from "react";
+import { JSX, useEffect, useRef, useState } from "react";
 import { LayoutChangeEvent, StyleSheet, View, ViewStyle } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Grab from "../../assets/icons/Grab";
@@ -140,10 +140,9 @@ const DOT_PADDING = PADDING + THUMB_WIDTH / 2 - DOT_WIDTH / 2;
 
 const styles = StyleSheet.create({
   wrapper: {
-    flex: 1,
+    minWidth: 150,
   },
   container: {
-    flex: 1,
     height: 32,
     borderWidth: BORDER_WIDTH,
     borderColor: darken("#F5F7FF", 0.1),

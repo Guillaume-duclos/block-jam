@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import * as Application from "expo-application";
-import React, { Fragment, JSX, useState } from "react";
+import { Fragment, JSX, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -24,7 +24,6 @@ import { darken } from "../utils/color";
 import {
   getStorageBoolean,
   getStorageString,
-  removeAllStorage,
   removeStorageItem,
   setStorageItem,
 } from "../utils/storage";
@@ -144,17 +143,9 @@ export default function Settings(): JSX.Element {
     hiddeResetDataModal();
   };
 
-  const logScoreData = (): void => {
-    const score = getStorageString(StorageKey.LEVEL_SCORE);
-  };
-
   const removeScoreData = (): void => {
     removeStorageItem(StorageKey.LEVEL_SCORE);
     resetScores();
-  };
-
-  const removeAllData = (): void => {
-    removeAllStorage();
   };
 
   return (
@@ -223,26 +214,6 @@ export default function Settings(): JSX.Element {
             <Text style={styles.buttonLabel}>{t("resetLevelData")}</Text>
           </Button>
         </SectionContainer>
-
-        {/* DEV MODE */}
-        {__DEV__ && (
-          <SectionContainer title={t("devMode")}>
-            <Fragment>
-              <NavigationLink
-                label={t("logScoreData")}
-                onPress={logScoreData}
-              />
-              <NavigationLink
-                label={t("removeScoreData")}
-                onPress={removeScoreData}
-              />
-              <NavigationLink
-                label={t("removeAllData")}
-                onPress={removeAllData}
-              />
-            </Fragment>
-          </SectionContainer>
-        )}
 
         {/* CRÉDITS */}
         <SectionContainer title={t("credits")} showDivider={false}>

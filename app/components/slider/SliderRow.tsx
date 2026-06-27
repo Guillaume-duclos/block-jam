@@ -1,4 +1,4 @@
-import React, { JSX } from "react";
+import { JSX } from "react";
 import { StyleSheet, Text, View, ViewStyle } from "react-native";
 import { text } from "../../theme/text";
 import Slider from "./Slider";
@@ -26,8 +26,9 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   label: {
-    color: "#607889",
+    flex: 1,
     ...text.title3,
+    color: "#607889",
   },
 });
 

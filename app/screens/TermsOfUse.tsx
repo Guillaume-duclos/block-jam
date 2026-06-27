@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { JSX } from "react";
+import { JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -52,11 +52,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   subTitle: {
-    color: "#FFFFFF",
+    color: "#607889",
     ...text.title2,
   },
   paragraph: {
-    color: "#FFFFFF",
+    color: "#607889",
     marginTop: 10,
     ...text.paragraph,
   },

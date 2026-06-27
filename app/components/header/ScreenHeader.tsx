@@ -1,4 +1,4 @@
-import React, { JSX } from "react";
+import { JSX } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import ArrowShapeLeftFill from "../../assets/icons/ArrowShapeLeftFill";
 import XMark from "../../assets/icons/XMark";
@@ -24,7 +24,7 @@ const ScreenHeader = ({
         onPress={onPressBack}
         style={{ ...styles.button, ...styles.backButton }}
       >
-        <ArrowShapeLeftFill color="#607889" />
+        <ArrowShapeLeftFill color="#607889" style={styles.backButtonIcon} />
       </PressableView>
     )}
 
@@ -44,6 +44,7 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingBottom: 16,
     paddingHorizontal: 68,
+    borderWidth: 0,
   },
   title: {
     textAlign: "center",
@@ -54,8 +55,12 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   backButton: {
-    top: 1,
+    top: 3,
     left: 20,
+  },
+  backButtonIcon: {
+    width: 27,
+    height: 25,
   },
   exitButton: {
     top: 3,

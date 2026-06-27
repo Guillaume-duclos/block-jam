@@ -60,14 +60,5 @@ target 'blockjam' do
       :mac_catalyst_enabled => false,
       :ccache_enabled => ccache_enabled?(podfile_properties),
     )
-
-    # Fix fmt/consteval compilation errors
-    installer.pods_project.targets.each do |target|
-      if target.name == 'fmt'
-        target.build_configurations.each do |config|
-          config.build_settings['OTHER_CPLUSPLUSFLAGS'] = '$(inherited) -DFMT_CONSTEVAL='
-        end
-      end
-    end
   end
 end

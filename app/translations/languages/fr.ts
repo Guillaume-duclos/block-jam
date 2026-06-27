@@ -43,6 +43,7 @@ const fr = {
   gameplay: "Jeu",
   activeFeedback: "Retour haptique",
   feedbackIntensity: "Intensité du retour haptique",
+  zoomOnTouch: "Zoom au toucher",
   resetLevelData: "Réinitialiser les données",
   language: "Langue",
   english: "Anglais",

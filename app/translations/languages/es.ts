@@ -54,6 +54,7 @@ const es = {
   gameplay: "Juego",
   activeFeedback: "Vibración activa",
   feedbackIntensity: "Intensidad de vibración",
+  zoomOnTouch: "Zoom al tocar",
   resetLevelData: "Resetear datos",
   language: "Idioma",
   english: "Inglés",
