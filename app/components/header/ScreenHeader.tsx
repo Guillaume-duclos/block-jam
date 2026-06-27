@@ -44,7 +44,6 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingBottom: 16,
     paddingHorizontal: 68,
-    borderWidth: 0,
   },
   title: {
     textAlign: "center",
@@ -59,11 +58,11 @@ const styles = StyleSheet.create({
     left: 20,
   },
   backButtonIcon: {
-    width: 27,
-    height: 25,
+    width: 28,
+    height: 26,
   },
   exitButton: {
-    top: 3,
+    top: 5,
     right: 20,
   },
   exitButtonIcon: {

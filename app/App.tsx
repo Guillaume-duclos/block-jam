@@ -1,8 +1,6 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { useFonts } from "expo-font";
-import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import Navigation from "./navigation/Navigation";
@@ -22,24 +20,15 @@ export default function App() {
   }
 
   return (
-    <View style={styles.container}>
-      <ThemeProvider>
-        <SafeAreaProvider>
-          <NavigationContainer>
-            <GestureHandlerRootView>
-              <StatusBar />
-              <Navigation />
-            </GestureHandlerRootView>
-          </NavigationContainer>
-        </SafeAreaProvider>
-      </ThemeProvider>
-    </View>
+    <ThemeProvider>
+      <SafeAreaProvider>
+        <NavigationContainer>
+          <GestureHandlerRootView>
+            <StatusBar />
+            <Navigation />
+          </GestureHandlerRootView>
+        </NavigationContainer>
+      </SafeAreaProvider>
+    </ThemeProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#F5F9FC",
-  },
-});
