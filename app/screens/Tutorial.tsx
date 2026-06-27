@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { JSX, useLayoutEffect, useState } from "react";
+import { JSX, useCallback, useLayoutEffect, useRef, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Button from "../components/button/Button";
@@ -11,16 +11,26 @@ import { useStatusBarColor } from "../hooks/useStatusBarColor";
 import { useDificultyStore } from "../store/dificulty.store";
 import NavigationProp from "../types/navigation.type";
 
-export default function Tutorial(): JSX.Element {
+type Props = { onMount?: () => void };
+
+export default function Tutorial({ onMount }: Props): JSX.Element {
   const navigation = useNavigation<NavigationProp>();
   const insets = useSafeAreaInsets();
-
   const setColors = useDificultyStore((score) => score.setColors);
+
+  const onMountCalled = useRef(false);
 
   const [step, setStep] = useState(0);
   const [ready, setReady] = useState(false);
 
   useStatusBarColor();
+
+  const onLayout = useCallback(() => {
+    if (!onMountCalled.current) {
+      onMountCalled.current = true;
+      onMount?.();
+    }
+  }, [onMount]);
 
   useLayoutEffect(() => {
     setColors({ ...levels[0].colors, primary: "#a2d29e" });
@@ -32,9 +42,9 @@ export default function Tutorial(): JSX.Element {
     navigation.navigate(Screen.DIFFICULTIES_MENU);
   };
 
-
   return (
     <View
+      onLayout={onLayout}
       style={{
         ...styles.container,
         paddingTop: insets.top + 10,
@@ -82,10 +92,7 @@ export default function Tutorial(): JSX.Element {
 
           {/* BUTTONS CONTROLS */}
           <View style={styles.continueButton}>
-            <Button
-              onPress={navigateToDiffictiesMenu}
-              disabled={step < 3}
-            >
+            <Button onPress={navigateToDiffictiesMenu} disabled={step < 3}>
               <Text style={styles.continueButtonLabel}>Continuer</Text>
             </Button>
           </View>

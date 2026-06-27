@@ -46,15 +46,11 @@ export default function CircularProgressBar({
   );
 
   const trackPath = useMemo(() => {
-    const path = Skia.Path.Make();
-    path.addOval(oval);
-    return path;
+    return Skia.PathBuilder.Make().addOval(oval).detach();
   }, [oval]);
 
   const progressPath = useDerivedValue(() => {
-    const path = Skia.Path.Make();
-    path.addArc(oval, -90, (progress.value / 100) * 360);
-    return path;
+    return Skia.PathBuilder.Make().addArc(oval, -90, (progress.value / 100) * 360).detach();
   });
 
   return (

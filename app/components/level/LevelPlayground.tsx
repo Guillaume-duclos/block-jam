@@ -11,7 +11,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { InteractionManager, StyleSheet, View, ViewStyle } from "react-native";
+import { StyleSheet, View, ViewStyle } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { goalCaseIndex, gridCount } from "../../config/config";
 import { caseSize, playgroundSize } from "../../constants/dimension";
@@ -129,12 +129,12 @@ const LevelPlayground = memo(
       resetLevelData();
 
       if (isAnimatabled.current) {
-        const interaction = InteractionManager.runAfterInteractions(() => {
+        const id = requestIdleCallback(() => {
           computeBlockPositions();
         });
 
         return () => {
-          interaction.cancel();
+          cancelIdleCallback(id);
           isAnimatabled.current = false;
         };
       } else {

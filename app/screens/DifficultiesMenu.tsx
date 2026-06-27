@@ -1,9 +1,9 @@
 import { FlashList, FlashListRef } from "@shopify/flash-list";
-import { Canvas, LinearGradient, Rect, vec } from "@shopify/react-native-skia";
 import React, { useEffect, useRef, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import {
+import Animated, {
   interpolateColor,
+  useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
 } from "react-native-reanimated";
@@ -20,13 +20,15 @@ import { useLevelStore } from "../store/level.store";
 import { darken } from "../utils/color";
 import { getStorageString } from "../utils/storage";
 
-export default function DifficultiesMenu() {
+type Props = { onMount?: () => void };
+
+export default function DifficultiesMenu({ onMount }: Props) {
   const [activeViewIndex, setActiveViewIndex] = useState(0);
 
   const listRef = useRef<FlashListRef<any>>(null);
   const setScores = useLevelStore((value) => value.setScores);
   const insets = useSafeAreaInsets();
-  const { width, height } = useSafeAreaFrame();
+  const { height } = useSafeAreaFrame();
 
   useEffect(() => {
     const savedLevelScores = getStorageString(StorageKey.LEVEL_SCORE);
@@ -34,6 +36,8 @@ export default function DifficultiesMenu() {
     if (savedLevelScores) {
       setScores(JSON.parse(savedLevelScores));
     }
+
+    onMount?.();
   }, []);
 
   const pageHeight = height - insets.top - difficultyMenuHeaderHeight;
@@ -44,20 +48,17 @@ export default function DifficultiesMenu() {
     difficulties.map((_, index) => index * pageHeight),
   ).current;
 
-  const startColors = useRef(
+  const bgColors = useRef(
     difficulties.map((d) => darken(d.colors.primary, 0.3)),
   ).current;
 
-  const endColors = useRef(
-    difficulties.map((d) => darken(d.colors.primary, 0.3)),
-  ).current;
+  const backgroundColor = useDerivedValue(() =>
+    interpolateColor(scroll.value, scrollRange, bgColors),
+  );
 
-  const gradientColors = useDerivedValue(() => {
-    const start = interpolateColor(scroll.value, scrollRange, startColors);
-    const end = interpolateColor(scroll.value, scrollRange, endColors);
-
-    return [start, end];
-  });
+  const backgroundStyle = useAnimatedStyle(() => ({
+    backgroundColor: backgroundColor.value,
+  }));
 
   const levelItemsConfig = useRef({
     minimumViewTime: 0,
@@ -75,18 +76,7 @@ export default function DifficultiesMenu() {
   };
 
   return (
-    <View style={{ ...styles.container, paddingTop: insets.top }}>
-      {/* BACKGROUND */}
-      <Canvas style={styles.background}>
-        <Rect x={0} y={0} width={width} height={height}>
-          <LinearGradient
-            start={vec(0, 0)}
-            end={vec(width, height)}
-            colors={gradientColors}
-          />
-        </Rect>
-      </Canvas>
-
+    <Animated.View style={[styles.container, backgroundStyle, { paddingTop: insets.top }]}>
       {/* HEADER */}
       <DifficultiesMenuHeader
         difficulty={activeViewIndex}
@@ -137,16 +127,13 @@ export default function DifficultiesMenu() {
         updateActiveIndex={updateActiveIndex}
         pressColor={difficulties[activeViewIndex]?.colors?.primary}
       /> */}
-    </View>
+    </Animated.View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  background: {
-    ...StyleSheet.absoluteFillObject,
   },
   list: {
     flex: 1,

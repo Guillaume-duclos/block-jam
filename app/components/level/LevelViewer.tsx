@@ -71,13 +71,13 @@ const CANVAS_HEIGHT = PLAYGROUND_SIZE + 7;
 const imageCache = new Map<string, SkImage>();
 
 const GRID_PATH = (() => {
-  const path = Skia.Path.Make();
+  const builder = Skia.PathBuilder.Make();
 
   for (let index = 0; index < 36; index++) {
     const col = index % 6;
     const row = Math.floor(index / 6);
 
-    path.addRRect({
+    builder.addRRect({
       rect: {
         x: row * CASE_SIZE + 4,
         y: col * CASE_SIZE + 4,
@@ -89,7 +89,7 @@ const GRID_PATH = (() => {
     });
   }
 
-  return path;
+  return builder.detach();
 })();
 
 const LevelViewer = memo(
@@ -200,24 +200,22 @@ const LevelViewer = memo(
 
     const blockPaths = useMemo(() => {
       if (cachedImage) return [];
-      type Category = {
-        outer: ReturnType<typeof Skia.Path.Make>;
-        inner: ReturnType<typeof Skia.Path.Make>;
-        color: string;
-      };
+      type Builder = ReturnType<typeof Skia.PathBuilder.Make>;
+      type Category = { outer: Builder; inner: Builder; color: string };
+
       const main: Category = {
-        outer: Skia.Path.Make(),
-        inner: Skia.Path.Make(),
+        outer: Skia.PathBuilder.Make(),
+        inner: Skia.PathBuilder.Make(),
         color: colors.mainBlock,
       };
       const frame: Category = {
-        outer: Skia.Path.Make(),
-        inner: Skia.Path.Make(),
+        outer: Skia.PathBuilder.Make(),
+        inner: Skia.PathBuilder.Make(),
         color: colors.frame,
       };
       const wall: Category = {
-        outer: Skia.Path.Make(),
-        inner: Skia.Path.Make(),
+        outer: Skia.PathBuilder.Make(),
+        inner: Skia.PathBuilder.Make(),
         color: colors.fixedBlock,
       };
 
@@ -243,14 +241,8 @@ const LevelViewer = memo(
           const cat = data.label === BlockType.MAIN_BLOCK ? main : frame;
           const rrect = { rx: BLOCK_RADIUS, ry: BLOCK_RADIUS };
 
-          cat.outer.addRRect({
-            rect: { x: xStart + 2, y: yStart + 2, width: w, height: h },
-            ...rrect,
-          });
-          cat.inner.addRRect({
-            rect: { x: xStart + 2, y: yStart + 2, width: w, height: h - 2 },
-            ...rrect,
-          });
+          cat.outer.addRRect({ rect: { x: xStart + 2, y: yStart + 2, width: w, height: h }, ...rrect });
+          cat.inner.addRRect({ rect: { x: xStart + 2, y: yStart + 2, width: w, height: h - 2 }, ...rrect });
         } else {
           data.position.forEach((position) => {
             const col = position % gridCount;
@@ -259,29 +251,17 @@ const LevelViewer = memo(
             const y = GRID_OFFSET_Y + row * CASE_SIZE;
             const rrect = { rx: BLOCK_RADIUS, ry: BLOCK_RADIUS };
 
-            wall.outer.addRRect({
-              rect: {
-                x: x + 2,
-                y: y + 2,
-                width: CELL_INNER,
-                height: CELL_INNER,
-              },
-              ...rrect,
-            });
-            wall.inner.addRRect({
-              rect: {
-                x: x + 2,
-                y: y + 2,
-                width: CELL_INNER,
-                height: CELL_INNER - GAP,
-              },
-              ...rrect,
-            });
+            wall.outer.addRRect({ rect: { x: x + 2, y: y + 2, width: CELL_INNER, height: CELL_INNER }, ...rrect });
+            wall.inner.addRRect({ rect: { x: x + 2, y: y + 2, width: CELL_INNER, height: CELL_INNER - GAP }, ...rrect });
           });
         }
       });
 
-      return [main, frame, wall];
+      return [main, frame, wall].map(({ outer, inner, color }) => ({
+        outer: outer.detach(),
+        inner: inner.detach(),
+        color,
+      }));
     }, [vehiclePositions, colors.mainBlock, colors.frame, colors.fixedBlock]);
 
     // Redirection vers le niveau

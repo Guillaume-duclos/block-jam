@@ -1,9 +1,9 @@
 import { RouteProp, useRoute } from "@react-navigation/native";
-import { Canvas, LinearGradient, Rect, vec } from "@shopify/react-native-skia";
 import React, { useEffect, useRef } from "react";
-import { StyleSheet, View } from "react-native";
-import {
+import { StyleSheet } from "react-native";
+import Animated, {
   interpolateColor,
+  useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
 } from "react-native-reanimated";
@@ -39,14 +39,6 @@ export default function LevelsMenu() {
     ),
   ).current;
 
-  const endColorRange = useRef(
-    data.map(
-      (_, i) =>
-        darken(data[i].colors.primary, 0.34) ??
-        darken(data[data.length - 1].colors.primary, 0.34),
-    ),
-  ).current;
-
   useEffect(() => {
     const savedLevelScores = getStorageString(StorageKey.LEVEL_SCORE);
 
@@ -55,30 +47,19 @@ export default function LevelsMenu() {
     }
   }, []);
 
-  const gradientColors = useDerivedValue(() => {
-    const start = interpolateColor(scroll.value, scrollRange, startColorRange);
-    const end = interpolateColor(scroll.value, scrollRange, endColorRange);
+  const backgroundColor = useDerivedValue(() =>
+    interpolateColor(scroll.value, scrollRange, startColorRange),
+  );
 
-    return [start, end];
-  });
+  const backgroundStyle = useAnimatedStyle(() => ({
+    backgroundColor: backgroundColor.value,
+  }));
 
   return (
     <FocusProvider>
-      <View style={styles.container}>
-        {/* BACKGROUND GRADIENT */}
-        <Canvas style={styles.canvas}>
-          <Rect x={0} y={0} width={windowWidth} height={windowHeight}>
-            <LinearGradient
-              start={vec(0, 0)}
-              end={vec(windowWidth, windowHeight)}
-              colors={gradientColors}
-            />
-          </Rect>
-        </Canvas>
-
-        {/* LEVELS LIST */}
+      <Animated.View style={[styles.container, backgroundStyle]}>
         <LevelItemsList level={levels} />
-      </View>
+      </Animated.View>
     </FocusProvider>
   );
 }
@@ -87,11 +68,5 @@ const styles = StyleSheet.create({
   container: {
     width: windowWidth,
     minHeight: windowHeight,
-  },
-  list: {
-    width: "100%",
-  },
-  canvas: {
-    ...StyleSheet.absoluteFillObject,
   },
 });

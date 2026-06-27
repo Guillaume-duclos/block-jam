@@ -2,6 +2,7 @@ import {
   createNativeStackNavigator,
   NativeStackNavigationOptions,
 } from "@react-navigation/native-stack";
+import * as SplashScreen from "expo-splash-screen";
 import { StyleSheet, View } from "react-native";
 import { Screen } from "../enums/screen.enum";
 import { StorageKey } from "../enums/storageKey.enum";
@@ -54,12 +55,15 @@ const Navigation = () => {
         screenOptions={screenOptions}
         initialRouteName={initialRouteName}
       >
-        <Stack.Screen name={Screen.TUTORIAL} component={Tutorial} />
+        <Stack.Screen name={Screen.TUTORIAL}>
+          {() => <Tutorial onMount={SplashScreen.hideAsync} />}
+        </Stack.Screen>
         <Stack.Screen
           name={Screen.DIFFICULTIES_MENU}
-          component={DifficultiesMenu}
           options={{ gestureEnabled: false }}
-        />
+        >
+          {() => <DifficultiesMenu onMount={SplashScreen.hideAsync} />}
+        </Stack.Screen>
         <Stack.Screen
           name={Screen.LEVELS_MENU}
           component={LevelsMenu}
